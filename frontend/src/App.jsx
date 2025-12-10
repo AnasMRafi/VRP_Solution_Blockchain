@@ -7,6 +7,10 @@ import Dashboard from './components/Dashboard/Dashboard';
 import RouteForm from './components/Dashboard/RouteForm';
 import RouteDetail from './components/Dashboard/RouteDetail';
 import Profile from './components/Dashboard/Profile';
+import AnalyticsDashboard from './components/Analytics/AnalyticsDashboard';
+import CustomerList from './components/Customers/CustomerList';
+import DepotList from './components/Depots/DepotList';
+import AdminDashboard from './components/Admin/AdminDashboard';
 import Header from './components/Layout/Header';
 import { Loader } from 'lucide-react';
 
@@ -78,6 +82,42 @@ const AppRoutes = () => {
           <>
             <Header />
             <Profile />
+          </>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/analytics" element={
+        <ProtectedRoute>
+          <>
+            <Header />
+            <AnalyticsDashboard />
+          </>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/customers" element={
+        <ProtectedRoute>
+          <>
+            <Header />
+            <CustomerList />
+          </>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/depots" element={
+        <ProtectedRoute>
+          <>
+            <Header />
+            <DepotList />
+          </>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/admin" element={
+        <ProtectedRoute>
+          <>
+            <Header />
+            <AdminDashboard />
           </>
         </ProtectedRoute>
       } />

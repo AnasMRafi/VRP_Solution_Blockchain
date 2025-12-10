@@ -184,14 +184,14 @@ const Register = () => {
                             <label className="block text-sm font-medium mb-1">
                                 Full Name *
                             </label>
-                            <div className="relative">
-                                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                            <div className="relative flex items-center">
+                                <User className="absolute left-4 w-5 h-5 text-gray-400 z-10 pointer-events-none" />
                                 <input
                                     type="text"
                                     name="full_name"
                                     value={formData.full_name}
                                     onChange={handleChange}
-                                    className={`input pl-10 ${errors.full_name ? 'input-error' : ''}`}
+                                    className={`input !pl-12 ${errors.full_name ? 'input-error' : ''}`}
                                     placeholder="Mohammed El Amrani"
                                 />
                             </div>
@@ -205,14 +205,14 @@ const Register = () => {
                             <label className="block text-sm font-medium mb-1">
                                 Email Address *
                             </label>
-                            <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                            <div className="relative flex items-center">
+                                <Mail className="absolute left-4 w-5 h-5 text-gray-400 z-10 pointer-events-none" />
                                 <input
                                     type="email"
                                     name="email"
                                     value={formData.email}
                                     onChange={handleChange}
-                                    className={`input pl-10 ${errors.email ? 'input-error' : ''}`}
+                                    className={`input !pl-12 ${errors.email ? 'input-error' : ''}`}
                                     placeholder="driver@routechain.ma"
                                 />
                             </div>
@@ -226,14 +226,14 @@ const Register = () => {
                             <label className="block text-sm font-medium mb-1">
                                 Password *
                             </label>
-                            <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                            <div className="relative flex items-center">
+                                <Lock className="absolute left-4 w-5 h-5 text-gray-400 z-10 pointer-events-none" />
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     name="password"
                                     value={formData.password}
                                     onChange={handleChange}
-                                    className={`input pl-10 pr-20 ${errors.password ? 'input-error' : ''}`}
+                                    className={`input !pl-12 pr-20 ${errors.password ? 'input-error' : ''}`}
                                     placeholder="••••••••"
                                 />
                                 <button
@@ -252,10 +252,10 @@ const Register = () => {
                                         <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
                                             <div
                                                 className={`h-full transition-all ${passwordStrength === 'weak'
-                                                        ? 'w-1/3 bg-red-500'
-                                                        : passwordStrength === 'medium'
-                                                            ? 'w-2/3 bg-yellow-500'
-                                                            : 'w-full bg-green-500'
+                                                    ? 'w-1/3 bg-red-500'
+                                                    : passwordStrength === 'medium'
+                                                        ? 'w-2/3 bg-yellow-500'
+                                                        : 'w-full bg-green-500'
                                                     }`}
                                             />
                                         </div>
@@ -281,14 +281,14 @@ const Register = () => {
                             <label className="block text-sm font-medium mb-1">
                                 Confirm Password *
                             </label>
-                            <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                            <div className="relative flex items-center">
+                                <Lock className="absolute left-4 w-5 h-5 text-gray-400 z-10 pointer-events-none" />
                                 <input
                                     type="password"
                                     name="confirmPassword"
                                     value={formData.confirmPassword}
                                     onChange={handleChange}
-                                    className={`input pl-10 ${errors.confirmPassword ? 'input-error' : ''}`}
+                                    className={`input !pl-12 ${errors.confirmPassword ? 'input-error' : ''}`}
                                     placeholder="••••••••"
                                 />
                             </div>
@@ -302,14 +302,14 @@ const Register = () => {
                             <label className="block text-sm font-medium mb-1">
                                 Phone Number (optional)
                             </label>
-                            <div className="relative">
-                                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                            <div className="relative flex items-center">
+                                <Phone className="absolute left-4 w-5 h-5 text-gray-400 z-10 pointer-events-none" />
                                 <input
                                     type="tel"
                                     name="phone"
                                     value={formData.phone}
                                     onChange={handleChange}
-                                    className={`input pl-10 ${errors.phone ? 'input-error' : ''}`}
+                                    className={`input !pl-12 ${errors.phone ? 'input-error' : ''}`}
                                     placeholder="+212 661 234567"
                                 />
                             </div>
@@ -325,13 +325,13 @@ const Register = () => {
                                 <label className="block text-sm font-medium mb-1">
                                     Vehicle Type *
                                 </label>
-                                <div className="relative">
-                                    <Car className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                <div className="relative flex items-center">
+                                    <Car className="absolute left-4 w-5 h-5 text-gray-400 z-10 pointer-events-none" />
                                     <select
                                         name="vehicle_type"
                                         value={formData.vehicle_type}
                                         onChange={handleChange}
-                                        className="input pl-10"
+                                        className="input !pl-12"
                                     >
                                         <option value="bike">Bike/Motorcycle</option>
                                         <option value="car">Car</option>
@@ -367,14 +367,14 @@ const Register = () => {
                             <label className="block text-sm font-medium mb-1">
                                 Vehicle License Plate (optional)
                             </label>
-                            <div className="relative">
-                                <Hash className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                            <div className="relative flex items-center">
+                                <Hash className="absolute left-4 w-5 h-5 text-gray-400 z-10 pointer-events-none" />
                                 <input
                                     type="text"
                                     name="license_plate"
                                     value={formData.license_plate}
                                     onChange={handleChange}
-                                    className={`input pl-10 ${errors.license_plate ? 'input-error' : ''}`}
+                                    className={`input !pl-12 ${errors.license_plate ? 'input-error' : ''}`}
                                     placeholder="A-12345"
                                 />
                             </div>
@@ -387,11 +387,11 @@ const Register = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="btn-primary w-full"
+                            className="btn btn-primary w-full"
                         >
                             {loading ? (
                                 <>
-                                    <Loader className="w-4 h-4 mr-2 animate-spin" />
+                                    <Loader className="w-4 h-4 animate-spin" />
                                     Creating Account...
                                 </>
                             ) : (

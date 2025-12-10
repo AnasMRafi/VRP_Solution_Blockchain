@@ -48,3 +48,4 @@ build/
 
 # Blockchain
 blockchain/build/
+blockchain/*

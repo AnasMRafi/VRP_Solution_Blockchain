@@ -24,52 +24,52 @@ const Login = () => {
           <h1 className="text-2xl font-bold text-center mb-6">
             RouteChain Login
           </h1>
-          
+
           {error && (
             <div className="alert alert-error mb-4">
               {error}
             </div>
           )}
-          
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-1">Email</label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <div className="relative flex items-center">
+                <Mail className="absolute left-4 w-5 h-5 text-gray-400 z-10 pointer-events-none" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="input pl-10"
+                  className="input !pl-12 w-full"
                   placeholder="driver@routechain.ma"
                   required
                 />
               </div>
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium mb-1">Password</label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <div className="relative flex items-center">
+                <Lock className="absolute left-4 w-5 h-5 text-gray-400 z-10 pointer-events-none" />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="input pl-10"
+                  className="input !pl-12 w-full"
                   placeholder="••••••••"
                   required
                 />
               </div>
             </div>
-            
+
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full"
+              className="btn btn-primary w-full"
             >
               {loading ? (
                 <>
-                  <Loader className="w-4 h-4 mr-2 animate-spin" />
+                  <Loader className="w-4 h-4 animate-spin" />
                   Logging in...
                 </>
               ) : (
@@ -77,7 +77,7 @@ const Login = () => {
               )}
             </button>
           </form>
-          
+
           <p className="text-center text-sm text-gray-600 mt-4">
             Don't have an account?{' '}
             <Link to="/register" className="text-primary-600 hover:underline">

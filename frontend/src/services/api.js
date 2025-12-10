@@ -21,7 +21,7 @@ const apiClient = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
-    timeout: 30000, // 30 second timeout for VRP optimization
+    timeout: 120000, // 120 second timeout for VRP optimization (can take 30+ seconds)
 });
 
 /**
@@ -290,6 +290,172 @@ const api = {
         verifyBlockchain: async (routeId) => {
             const response = await apiClient.get(`/routes/${routeId}/verify-blockchain`);
             return response.data;
+        },
+    },
+
+    /**
+     * Customers API
+     */
+    customers: {
+        list: async (params = {}) => {
+            const response = await apiClient.get('/customers', { params });
+            return response.data;
+        },
+        get: async (customerId) => {
+            const response = await apiClient.get(`/customers/${customerId}`);
+            return response.data;
+        },
+        create: async (customerData) => {
+            const response = await apiClient.post('/customers', customerData);
+            return response.data;
+        },
+        update: async (customerId, customerData) => {
+            const response = await apiClient.put(`/customers/${customerId}`, customerData);
+            return response.data;
+        },
+        delete: async (customerId) => {
+            const response = await apiClient.delete(`/customers/${customerId}`);
+            return response.data;
+        },
+        getDeliveries: async (customerId) => {
+            const response = await apiClient.get(`/customers/${customerId}/deliveries`);
+            return response.data;
+        },
+    },
+
+    /**
+     * Depots API
+     */
+    depots: {
+        list: async () => {
+            const response = await apiClient.get('/depots');
+            return response.data;
+        },
+        get: async (depotId) => {
+            const response = await apiClient.get(`/depots/${depotId}`);
+            return response.data;
+        },
+        getDefault: async () => {
+            const response = await apiClient.get('/depots/default');
+            return response.data;
+        },
+        create: async (depotData) => {
+            const response = await apiClient.post('/depots', depotData);
+            return response.data;
+        },
+        update: async (depotId, depotData) => {
+            const response = await apiClient.put(`/depots/${depotId}`, depotData);
+            return response.data;
+        },
+        delete: async (depotId) => {
+            const response = await apiClient.delete(`/depots/${depotId}`);
+            return response.data;
+        },
+        setDefault: async (depotId) => {
+            const response = await apiClient.post(`/depots/${depotId}/set-default`);
+            return response.data;
+        },
+    },
+
+    /**
+     * Analytics API
+     */
+    analytics: {
+        getSummary: async (days = 30) => {
+            const response = await apiClient.get('/analytics/summary', { params: { days } });
+            return response.data;
+        },
+        getRoutesByStatus: async (days = 30) => {
+            const response = await apiClient.get('/analytics/routes-by-status', { params: { days } });
+            return response.data;
+        },
+        getRoutesOverTime: async (days = 30) => {
+            const response = await apiClient.get('/analytics/routes-over-time', { params: { days } });
+            return response.data;
+        },
+        getTopCustomers: async (limit = 10) => {
+            const response = await apiClient.get('/analytics/top-customers', { params: { limit } });
+            return response.data;
+        },
+        getPerformance: async () => {
+            const response = await apiClient.get('/analytics/performance-metrics');
+            return response.data;
+        },
+    },
+
+    /**
+     * Admin API
+     */
+    admin: {
+        listDrivers: async (params = {}) => {
+            const response = await apiClient.get('/admin/drivers', { params });
+            return response.data;
+        },
+        getDriver: async (driverId) => {
+            const response = await apiClient.get(`/admin/drivers/${driverId}`);
+            return response.data;
+        },
+        updateDriverRole: async (driverId, role) => {
+            const response = await apiClient.put(`/admin/drivers/${driverId}/role`, null, {
+                params: { role }
+            });
+            return response.data;
+        },
+        updateDriverStatus: async (driverId, status) => {
+            const response = await apiClient.put(`/admin/drivers/${driverId}/status`, null, {
+                params: { status_value: status }
+            });
+            return response.data;
+        },
+        deleteDriver: async (driverId) => {
+            const response = await apiClient.delete(`/admin/drivers/${driverId}`);
+            return response.data;
+        },
+        getOverview: async () => {
+            const response = await apiClient.get('/admin/stats/overview');
+            return response.data;
+        },
+        makeFirstAdmin: async (driverId) => {
+            const response = await apiClient.post(`/admin/make-admin/${driverId}`);
+            return response.data;
+        },
+    },
+
+    /**
+     * Navigation - OpenRouteService directions
+     */
+    navigation: {
+        getDirections: async (coordinates) => {
+            // Uses OpenRouteService API directly (free, open-source)
+            const ORS_API_KEY = import.meta.env.VITE_ORS_API_KEY || '';
+
+            if (!ORS_API_KEY) {
+                console.warn('OpenRouteService API key not configured');
+                return null;
+            }
+
+            const response = await axios.post(
+                'https://api.openrouteservice.org/v2/directions/driving-car',
+                { coordinates },
+                {
+                    headers: {
+                        'Authorization': ORS_API_KEY,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            return response.data;
+        },
+
+        // Open location in external map apps
+        openInGoogleMaps: (lat, lng) => {
+            window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
+        },
+        openInWaze: (lat, lng) => {
+            window.open(`https://waze.com/ul?ll=${lat},${lng}&navigate=yes`, '_blank');
+        },
+        openInAppleMaps: (lat, lng) => {
+            window.open(`http://maps.apple.com/?daddr=${lat},${lng}`, '_blank');
         },
     },
 

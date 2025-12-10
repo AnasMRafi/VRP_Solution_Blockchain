@@ -302,9 +302,9 @@ const RouteForm = () => {
                         <h1 className="text-3xl font-bold text-gray-900">Create New Route</h1>
                         <button
                             onClick={() => navigate('/dashboard')}
-                            className="btn-secondary"
+                            className="btn btn-secondary"
                         >
-                            <X className="w-4 h-4 mr-2" />
+                            <X className="w-4 h-4" />
                             Cancel
                         </button>
                     </div>
@@ -403,7 +403,7 @@ const RouteForm = () => {
                                             <button
                                                 type="button"
                                                 onClick={loadSampleData}
-                                                className="btn-sm btn-outline"
+                                                className="btn btn-sm btn-outline"
                                             >
                                                 Load Sample
                                             </button>
@@ -411,9 +411,9 @@ const RouteForm = () => {
                                                 type="button"
                                                 onClick={addDeliveryPoint}
                                                 disabled={deliveryPoints.length >= 20}
-                                                className="btn-sm btn-primary"
+                                                className="btn btn-sm btn-primary"
                                             >
-                                                <Plus className="w-4 h-4 mr-1" />
+                                                <Plus className="w-4 h-4" />
                                                 Add Point
                                             </button>
                                         </div>
@@ -535,25 +535,25 @@ const RouteForm = () => {
                                 <button
                                     type="button"
                                     onClick={() => setShowMap(!showMap)}
-                                    className="btn-outline"
+                                    className="btn btn-outline"
                                 >
-                                    <MapPin className="w-4 h-4 mr-2" />
+                                    <MapPin className="w-4 h-4" />
                                     {showMap ? 'Hide' : 'Show'} Map
                                 </button>
 
                                 <button
                                     type="submit"
                                     disabled={loading || deliveryPoints.length < 5}
-                                    className="btn-primary"
+                                    className="btn btn-primary"
                                 >
                                     {loading ? (
                                         <>
-                                            <Loader className="w-4 h-4 mr-2 animate-spin" />
+                                            <Loader className="w-4 h-4 animate-spin" />
                                             Optimizing Route...
                                         </>
                                     ) : (
                                         <>
-                                            <Save className="w-4 h-4 mr-2" />
+                                            <Save className="w-4 h-4" />
                                             Optimize Route
                                         </>
                                     )}

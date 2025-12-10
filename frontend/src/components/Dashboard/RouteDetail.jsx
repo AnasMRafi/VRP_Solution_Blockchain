@@ -250,6 +250,62 @@ const RouteDetail = () => {
     };
 
     /**
+     * Open route in Google Maps (FREE - uses deep link)
+     * Creates a multi-stop route with all delivery points
+     */
+    const openInGoogleMaps = () => {
+        if (!route?.delivery_points?.length) return;
+
+        const depot = route.depot_location;
+        const points = route.delivery_points;
+
+        // Build waypoints string
+        const waypoints = points
+            .map(p => `${p.location.latitude},${p.location.longitude}`)
+            .join('/');
+
+        // Google Maps URL with waypoints
+        const url = `https://www.google.com/maps/dir/${depot.latitude},${depot.longitude}/${waypoints}/${depot.latitude},${depot.longitude}`;
+        window.open(url, '_blank');
+    };
+
+    /**
+     * Open route in Waze (FREE - uses deep link)
+     * Opens first delivery point in Waze for turn-by-turn nav
+     */
+    const openInWaze = () => {
+        if (!route?.delivery_points?.length) return;
+
+        // Waze only supports single destination, use first stop
+        const firstStop = route.delivery_points[0];
+        const url = `https://waze.com/ul?ll=${firstStop.location.latitude},${firstStop.location.longitude}&navigate=yes`;
+        window.open(url, '_blank');
+    };
+
+    /**
+     * Open route in Apple Maps (FREE - uses deep link)
+     * Opens on iOS/macOS with the full route
+     */
+    const openInAppleMaps = () => {
+        if (!route?.delivery_points?.length) return;
+
+        const depot = route.depot_location;
+        const lastStop = route.delivery_points[route.delivery_points.length - 1];
+
+        // Apple Maps URL format
+        const url = `https://maps.apple.com/?saddr=${depot.latitude},${depot.longitude}&daddr=${lastStop.location.latitude},${lastStop.location.longitude}&dirflg=d`;
+        window.open(url, '_blank');
+    };
+
+    /**
+     * Navigate to a single delivery point
+     */
+    const navigateToPoint = (point) => {
+        const url = `https://www.google.com/maps/dir/?api=1&destination=${point.location.latitude},${point.location.longitude}&travelmode=driving`;
+        window.open(url, '_blank');
+    };
+
+    /**
      * Get status badge styling
      */
     const getStatusBadge = (status) => {
@@ -322,7 +378,7 @@ const RouteDetail = () => {
                     <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
                     <h2 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Route</h2>
                     <p className="text-gray-600 mb-4">{error}</p>
-                    <button onClick={() => navigate('/dashboard')} className="btn-primary">
+                    <button onClick={() => navigate('/dashboard')} className="btn btn-primary">
                         Return to Dashboard
                     </button>
                 </div>
@@ -338,7 +394,7 @@ const RouteDetail = () => {
                     <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                     <h2 className="text-xl font-semibold text-gray-900 mb-2">Route Not Found</h2>
                     <p className="text-gray-600 mb-4">The requested route does not exist.</p>
-                    <button onClick={() => navigate('/dashboard')} className="btn-primary">
+                    <button onClick={() => navigate('/dashboard')} className="btn btn-primary">
                         Return to Dashboard
                     </button>
                 </div>
@@ -433,6 +489,50 @@ const RouteDetail = () => {
                             </div>
                         </div>
 
+                        {/* Navigation Buttons - FREE external map apps */}
+                        <div className="card bg-gradient-to-r from-blue-50 to-green-50">
+                            <div className="card-body">
+                                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                                    <Navigation className="w-5 h-5 text-primary-600" />
+                                    Start Navigation (Free)
+                                </h3>
+                                <p className="text-sm text-gray-600 mb-4">
+                                    Open this route in your preferred navigation app for turn-by-turn directions.
+                                </p>
+                                <div className="grid grid-cols-3 gap-3">
+                                    <button
+                                        onClick={openInGoogleMaps}
+                                        className="flex flex-col items-center gap-2 p-4 bg-white rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all"
+                                    >
+                                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                            <MapPin className="w-5 h-5 text-blue-600" />
+                                        </div>
+                                        <span className="text-sm font-medium">Google Maps</span>
+                                    </button>
+
+                                    <button
+                                        onClick={openInWaze}
+                                        className="flex flex-col items-center gap-2 p-4 bg-white rounded-xl border-2 border-gray-200 hover:border-cyan-400 hover:bg-cyan-50 transition-all"
+                                    >
+                                        <div className="w-10 h-10 bg-cyan-100 rounded-full flex items-center justify-center">
+                                            <Navigation className="w-5 h-5 text-cyan-600" />
+                                        </div>
+                                        <span className="text-sm font-medium">Waze</span>
+                                    </button>
+
+                                    <button
+                                        onClick={openInAppleMaps}
+                                        className="flex flex-col items-center gap-2 p-4 bg-white rounded-xl border-2 border-gray-200 hover:border-gray-400 hover:bg-gray-50 transition-all"
+                                    >
+                                        <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                                            <MapPin className="w-5 h-5 text-gray-600" />
+                                        </div>
+                                        <span className="text-sm font-medium">Apple Maps</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                         {/* Delivery Points */}
                         <div className="card">
                             <div className="card-body">
@@ -489,7 +589,7 @@ const RouteDetail = () => {
                                                         <button
                                                             onClick={() => confirmDelivery(point.point_id)}
                                                             disabled={actionLoading === `confirm-${point.point_id}`}
-                                                            className="btn-sm btn-success"
+                                                            className="btn btn-sm btn-success"
                                                         >
                                                             {actionLoading === `confirm-${point.point_id}` ? (
                                                                 <Loader className="w-4 h-4 animate-spin" />
@@ -500,7 +600,7 @@ const RouteDetail = () => {
                                                         <button
                                                             onClick={() => failDelivery(point.point_id)}
                                                             disabled={actionLoading === `fail-${point.point_id}`}
-                                                            className="btn-sm btn-error"
+                                                            className="btn btn-sm btn-error"
                                                         >
                                                             {actionLoading === `fail-${point.point_id}` ? (
                                                                 <Loader className="w-4 h-4 animate-spin" />

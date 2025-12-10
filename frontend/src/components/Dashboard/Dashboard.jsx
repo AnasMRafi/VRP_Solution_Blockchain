@@ -21,7 +21,14 @@ import {
   Loader,
   AlertCircle,
   FileText,
-  Trash2
+  Trash2,
+  BarChart3,
+  Users,
+  Warehouse,
+  Shield,
+  ArrowRight,
+  Search,
+  X
 } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -30,6 +37,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all');
+  const [search, setSearch] = useState('');
   const [deleting, setDeleting] = useState(null);
 
   const { driver } = useAuth();
@@ -40,7 +48,7 @@ const Dashboard = () => {
    */
   useEffect(() => {
     fetchRoutes();
-  }, [filter]);
+  }, [filter, search]);
 
   /**
    * Fetch routes from API
@@ -55,6 +63,10 @@ const Dashboard = () => {
       // Add status filter if not 'all'
       if (filter !== 'all') {
         params.status_filter = filter;
+      }
+
+      if (search.trim()) {
+        params.search = search.trim();
       }
 
       const data = await api.routes.listRoutes(params);
@@ -239,6 +251,98 @@ const Dashboard = () => {
           </div>
         </div>
 
+        {/* Quick Actions Section */}
+        <div className="mb-8">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {/* Analytics */}
+            <Link
+              to="/analytics"
+              className="card group hover:shadow-lg transition-all hover:scale-105 cursor-pointer"
+            >
+              <div className="card-body text-center">
+                <div className="w-14 h-14 mx-auto bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                  <BarChart3 className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="font-semibold text-gray-900">Analytics</h3>
+                <p className="text-sm text-gray-500 mt-1">View reports & charts</p>
+                <div className="flex items-center justify-center gap-1 mt-2 text-primary-600 text-sm font-medium">
+                  Open <ArrowRight className="w-4 h-4" />
+                </div>
+              </div>
+            </Link>
+
+            {/* Customers */}
+            <Link
+              to="/customers"
+              className="card group hover:shadow-lg transition-all hover:scale-105 cursor-pointer"
+            >
+              <div className="card-body text-center">
+                <div className="w-14 h-14 mx-auto bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                  <Users className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="font-semibold text-gray-900">Customers</h3>
+                <p className="text-sm text-gray-500 mt-1">Manage customer database</p>
+                <div className="flex items-center justify-center gap-1 mt-2 text-primary-600 text-sm font-medium">
+                  Open <ArrowRight className="w-4 h-4" />
+                </div>
+              </div>
+            </Link>
+
+            {/* Depots */}
+            <Link
+              to="/depots"
+              className="card group hover:shadow-lg transition-all hover:scale-105 cursor-pointer"
+            >
+              <div className="card-body text-center">
+                <div className="w-14 h-14 mx-auto bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                  <Warehouse className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="font-semibold text-gray-900">Depots</h3>
+                <p className="text-sm text-gray-500 mt-1">Warehouse locations</p>
+                <div className="flex items-center justify-center gap-1 mt-2 text-primary-600 text-sm font-medium">
+                  Open <ArrowRight className="w-4 h-4" />
+                </div>
+              </div>
+            </Link>
+
+            {/* Admin Panel - Only shown to admins */}
+            {driver?.role === 'admin' ? (
+              <Link
+                to="/admin"
+                className="card group hover:shadow-lg transition-all hover:scale-105 cursor-pointer border-2 border-purple-200"
+              >
+                <div className="card-body text-center">
+                  <div className="w-14 h-14 mx-auto bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                    <Shield className="w-7 h-7 text-white" />
+                  </div>
+                  <h3 className="font-semibold text-purple-700">Admin Panel</h3>
+                  <p className="text-sm text-gray-500 mt-1">Manage drivers & system</p>
+                  <div className="flex items-center justify-center gap-1 mt-2 text-purple-600 text-sm font-medium">
+                    Open <ArrowRight className="w-4 h-4" />
+                  </div>
+                </div>
+              </Link>
+            ) : (
+              <Link
+                to="/profile"
+                className="card group hover:shadow-lg transition-all hover:scale-105 cursor-pointer"
+              >
+                <div className="card-body text-center">
+                  <div className="w-14 h-14 mx-auto bg-gradient-to-br from-gray-500 to-gray-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                    <Users className="w-7 h-7 text-white" />
+                  </div>
+                  <h3 className="font-semibold text-gray-900">Profile</h3>
+                  <p className="text-sm text-gray-500 mt-1">Your account settings</p>
+                  <div className="flex items-center justify-center gap-1 mt-2 text-primary-600 text-sm font-medium">
+                    Open <ArrowRight className="w-4 h-4" />
+                  </div>
+                </div>
+              </Link>
+            )}
+          </div>
+        </div>
+
         {/* Routes Section */}
         <div className="card">
           <div className="card-body">
@@ -246,7 +350,27 @@ const Dashboard = () => {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
               <h2 className="text-xl font-bold text-gray-900">Your Routes</h2>
 
-              <div className="flex items-center gap-3 w-full sm:w-auto">
+              <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                {/* Search Input */}
+                <div className="relative flex items-center">
+                  <Search className="absolute left-4 w-4 h-4 text-gray-400 z-10 pointer-events-none" />
+                  <input
+                    type="text"
+                    placeholder="Search routes..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="input !pl-11 pr-8 text-sm w-48"
+                  />
+                  {search && (
+                    <button
+                      onClick={() => setSearch('')}
+                      className="absolute right-2 text-gray-400 hover:text-gray-600 z-10"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+
                 {/* Status Filter */}
                 <select
                   value={filter}
@@ -283,7 +407,7 @@ const Dashboard = () => {
               <div className="alert alert-error">
                 <AlertCircle className="w-5 h-5" />
                 <span>{error}</span>
-                <button onClick={fetchRoutes} className="btn-sm btn-outline">
+                <button onClick={fetchRoutes} className="btn btn-sm btn-outline">
                   Retry
                 </button>
               </div>
@@ -299,8 +423,8 @@ const Dashboard = () => {
                 <p className="text-gray-600 mb-4">
                   Create your first optimized delivery route to get started
                 </p>
-                <Link to="/routes/new" className="btn-primary">
-                  <Plus className="w-4 h-4 mr-2" />
+                <Link to="/routes/new" className="btn btn-primary">
+                  <Plus className="w-4 h-4" />
                   Create First Route
                 </Link>
               </div>

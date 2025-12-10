@@ -25,7 +25,7 @@ from app.services.database import db_manager
 from app.services.distance import distance_service
 
 # Import routers
-from app.routers import auth, routes
+from app.routers import auth, routes, customers, depots, analytics, admin
 
 # Configure logging
 logging.basicConfig(
@@ -244,6 +244,10 @@ async def general_exception_handler(request: Request, exc: Exception):
 # Include routers
 app.include_router(auth.router)
 app.include_router(routes.router)
+app.include_router(customers.router)
+app.include_router(depots.router)
+app.include_router(analytics.router)
+app.include_router(admin.router)
 
 
 # Root endpoint

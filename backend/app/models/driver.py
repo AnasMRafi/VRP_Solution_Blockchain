@@ -40,6 +40,17 @@ class VehicleType(str, Enum):
     TRUCK = "truck"              # Large truck
 
 
+class DriverRole(str, Enum):
+    """
+    Driver Role Enumeration
+    
+    Defines access levels for drivers.
+    """
+    DRIVER = "driver"            # Regular driver
+    ADMIN = "admin"              # Admin with full access
+    DISPATCHER = "dispatcher"    # Can manage routes but not admin settings
+
+
 class DriverBase(BaseModel):
     """
     Base Driver Model
@@ -67,6 +78,9 @@ class DriverBase(BaseModel):
     
     # Driver's current status
     status: DriverStatus = Field(default=DriverStatus.AVAILABLE, description="Current driver status")
+    
+    # Driver's role (driver, admin, dispatcher)
+    role: DriverRole = Field(default=DriverRole.DRIVER, description="Driver's access role")
     
     # Driver's home base/preferred depot
     home_store_id: Optional[str] = Field(None, description="Assigned depot/store ID")
@@ -245,6 +259,7 @@ class DriverResponse(BaseModel):
     license_plate: Optional[str] = None
     max_capacity: int
     status: DriverStatus
+    role: DriverRole = DriverRole.DRIVER  # Added role field
     home_store_id: Optional[str] = None
     created_at: datetime
     last_login: Optional[datetime] = None
