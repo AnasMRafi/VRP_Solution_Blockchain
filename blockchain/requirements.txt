@@ -1,0 +1,11 @@
+# Web3 for Ethereum interaction
+web3
+
+# Account management
+eth-account
+
+# Smart contract compilation
+py-solc-x
+
+# For JSON handling
+python-dotenv

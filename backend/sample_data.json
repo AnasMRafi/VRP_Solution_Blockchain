@@ -1,0 +1,273 @@
+{
+  "depot": {
+    "name": "Centre de Distribution Casablanca",
+    "address": {
+      "street": "Boulevard Mohammed V",
+      "city": "Casablanca",
+      "postal_code": "20000",
+      "country": "Morocco"
+    },
+    "location": {
+      "latitude": 33.5731,
+      "longitude": -7.5898
+    }
+  },
+  "delivery_points": [
+    {
+      "customer_name": "Fatima Zahra Bennani",
+      "address": {
+        "street": "15 Rue Allal Ben Abdellah",
+        "city": "Casablanca",
+        "postal_code": "20250",
+        "country": "Morocco"
+      },
+      "location": {
+        "latitude": 33.5880,
+        "longitude": -7.6114
+      },
+      "phone": "+212 662 345678",
+      "instructions": "Appartement 3, 2ème étage. Sonner deux fois.",
+      "time_window_start": "14:00",
+      "time_window_end": "18:00",
+      "package_count": 2
+    },
+    {
+      "customer_name": "Mohammed El Amrani",
+      "address": {
+        "street": "45 Avenue Hassan II",
+        "city": "Casablanca",
+        "postal_code": "20100",
+        "country": "Morocco"
+      },
+      "location": {
+        "latitude": 33.5950,
+        "longitude": -7.6187
+      },
+      "phone": "+212 661 234567",
+      "instructions": "Bureau au rez-de-chaussée, entrée principale",
+      "time_window_start": "09:00",
+      "time_window_end": "17:00",
+      "package_count": 1
+    },
+    {
+      "customer_name": "Amina Lahlou",
+      "address": {
+        "street": "78 Boulevard Zerktouni",
+        "city": "Casablanca",
+        "postal_code": "20300",
+        "country": "Morocco"
+      },
+      "location": {
+        "latitude": 33.5844,
+        "longitude": -7.6261
+      },
+      "phone": "+212 663 456789",
+      "instructions": "Villa avec portail vert. Code: 1234",
+      "time_window_start": "10:00",
+      "time_window_end": "16:00",
+      "package_count": 3
+    },
+    {
+      "customer_name": "Youssef Tazi",
+      "address": {
+        "street": "22 Rue Ibn Batouta",
+        "city": "Casablanca",
+        "postal_code": "20100",
+        "country": "Morocco"
+      },
+      "location": {
+        "latitude": 33.5672,
+        "longitude": -7.6019
+      },
+      "phone": "+212 664 567890",
+      "instructions": "Magasin au coin de la rue",
+      "time_window_start": "08:00",
+      "time_window_end": "20:00",
+      "package_count": 1
+    },
+    {
+      "customer_name": "Khadija Chafik",
+      "address": {
+        "street": "33 Rue de Fès",
+        "city": "Casablanca",
+        "postal_code": "20070",
+        "country": "Morocco"
+      },
+      "location": {
+        "latitude": 33.5917,
+        "longitude": -7.6024
+      },
+      "phone": "+212 665 678901",
+      "instructions": "Immeuble blanc, appartement 12",
+      "time_window_start": "13:00",
+      "time_window_end": "19:00",
+      "package_count": 2
+    },
+    {
+      "customer_name": "Rachid Alami",
+      "address": {
+        "street": "56 Avenue Mers Sultan",
+        "city": "Casablanca",
+        "postal_code": "20450",
+        "country": "Morocco"
+      },
+      "location": {
+        "latitude": 33.5803,
+        "longitude": -7.6325
+      },
+      "phone": "+212 666 789012",
+      "instructions": "Café au premier étage, demander le patron",
+      "time_window_start": "11:00",
+      "time_window_end": "15:00",
+      "package_count": 1
+    },
+    {
+      "customer_name": "Salma Berrada",
+      "address": {
+        "street": "89 Rue Prince Moulay Abdellah",
+        "city": "Casablanca",
+        "postal_code": "20000",
+        "country": "Morocco"
+      },
+      "location": {
+        "latitude": 33.5756,
+        "longitude": -7.5943
+      },
+      "phone": "+212 667 890123",
+      "instructions": "Résidence Al Amal, bloc B, 4ème étage",
+      "time_window_start": "14:00",
+      "time_window_end": "18:00",
+      "package_count": 2
+    },
+    {
+      "customer_name": "Hassan Benjelloun",
+      "address": {
+        "street": "12 Boulevard Moulay Youssef",
+        "city": "Casablanca",
+        "postal_code": "20100",
+        "country": "Morocco"
+      },
+      "location": {
+        "latitude": 33.5889,
+        "longitude": -7.6098
+      },
+      "phone": "+212 668 901234",
+      "instructions": "Centre commercial, entrée nord",
+      "time_window_start": "10:00",
+      "time_window_end": "20:00",
+      "package_count": 4
+    }
+  ],
+  "sample_rabat_depot": {
+    "name": "Dépôt Logistique Rabat",
+    "address": {
+      "street": "Avenue Mohammed V",
+      "city": "Rabat",
+      "postal_code": "10000",
+      "country": "Morocco"
+    },
+    "location": {
+      "latitude": 34.0209,
+      "longitude": -6.8416
+    }
+  },
+  "sample_rabat_deliveries": [
+    {
+      "customer_name": "Nadia Idrissi",
+      "address": {
+        "street": "25 Avenue Allal Ben Abdellah",
+        "city": "Rabat",
+        "postal_code": "10010",
+        "country": "Morocco"
+      },
+      "location": {
+        "latitude": 34.0252,
+        "longitude": -6.8361
+      },
+      "phone": "+212 661 111222",
+      "instructions": "Appartement face à la mosquée",
+      "time_window_start": "09:00",
+      "time_window_end": "17:00",
+      "package_count": 1
+    },
+    {
+      "customer_name": "Omar Fassi",
+      "address": {
+        "street": "78 Rue Patrice Lumumba",
+        "city": "Rabat",
+        "postal_code": "10020",
+        "country": "Morocco"
+      },
+      "location": {
+        "latitude": 34.0089,
+        "longitude": -6.8499
+      },
+      "phone": "+212 662 222333",
+      "instructions": "Villa moderne, portail marron",
+      "time_window_start": "14:00",
+      "time_window_end": "19:00",
+      "package_count": 2
+    },
+    {
+      "customer_name": "Laila Chraibi",
+      "address": {
+        "street": "34 Avenue Hassan II",
+        "city": "Rabat",
+        "postal_code": "10000",
+        "country": "Morocco"
+      },
+      "location": {
+        "latitude": 34.0143,
+        "longitude": -6.8321
+      },
+      "phone": "+212 663 333444",
+      "instructions": "Bureau 203, 2ème étage",
+      "time_window_start": "08:00",
+      "time_window_end": "18:00",
+      "package_count": 1
+    },
+    {
+      "customer_name": "Karim Benjelloun",
+      "address": {
+        "street": "56 Rue Oued Fès",
+        "city": "Rabat",
+        "postal_code": "10050",
+        "country": "Morocco"
+      },
+      "location": {
+        "latitude": 34.0311,
+        "longitude": -6.8442
+      },
+      "phone": "+212 664 444555",
+      "instructions": "Pharmacie au rez-de-chaussée",
+      "time_window_start": "10:00",
+      "time_window_end": "16:00",
+      "package_count": 3
+    },
+    {
+      "customer_name": "Samira Tazi",
+      "address": {
+        "street": "91 Boulevard Tariq Ibn Ziyad",
+        "city": "Rabat",
+        "postal_code": "10030",
+        "country": "Morocco"
+      },
+      "location": {
+        "latitude": 34.0178,
+        "longitude": -6.8278
+      },
+      "phone": "+212 665 555666",
+      "instructions": "Résidence Les Orangers, bloc 3",
+      "time_window_start": "13:00",
+      "time_window_end": "18:00",
+      "package_count": 2
+    }
+  ],
+  "notes": {
+    "usage": "This file contains sample delivery data for testing the RouteChain application with real Moroccan locations.",
+    "coordinates": "All coordinates are actual locations in Casablanca and Rabat, Morocco.",
+    "phone_format": "Phone numbers use the Moroccan format: +212 6XX XXX XXX",
+    "time_windows": "Time windows are in 24-hour format (HH:MM)",
+    "instructions": "Delivery instructions are in French, commonly used in Morocco for addresses"
+  }
+}

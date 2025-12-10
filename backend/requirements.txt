@@ -1,0 +1,51 @@
+# FastAPI Framework - Modern Python web framework for building APIs
+fastapi
+
+# Uvicorn - ASGI server for running FastAPI (with standard extras)
+uvicorn[standard]
+
+# Pydantic - Data validation using Python type annotations
+pydantic
+pydantic-settings
+email-validator  # Required for Pydantic EmailStr type
+
+# MongoDB Driver - Official MongoDB driver for Python
+pymongo
+motor  # Async MongoDB driver for FastAPI
+
+# Google OR-Tools - Vehicle Routing Problem solver
+ortools
+
+# HTTP Client - For calling OpenRouteService API
+httpx
+requests
+
+# Authentication & Security
+python-jose[cryptography]  # JWT token handling
+passlib[bcrypt]  # Password hashing
+python-multipart  # Form data parsing
+
+# Environment Variables
+python-dotenv
+
+# PDF Generation - For route export
+reportlab
+
+# Excel/CSV Export
+openpyxl
+pandas
+
+# Date/Time handling
+python-dateutil
+
+# Testing (optional but recommended)
+pytest
+pytest-asyncio
+
+# Code Quality (optional)
+black  # Code formatter
+flake8  # Linter
+
+# Web3 for Blockchain (will be used in final step)
+web3
+eth-account
