@@ -14,7 +14,7 @@ These exports are useful for:
 import csv
 import io
 from typing import Dict, Any
-from datetime import datetime
+from datetime import datetime, timedelta
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4, letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -108,7 +108,14 @@ class ExportService:
         writer.writerow(['Route Name:', route.get('route_name')])
         writer.writerow(['Driver ID:', route.get('driver_id')])
         writer.writerow(['Status:', route.get('status')])
-        writer.writerow(['Created:', route.get('created_at', '').strftime('%Y-%m-%d %H:%M') if route.get('created_at') else 'N/A'])
+        
+        # Apply timezone offset (Morocco is UTC+1)
+        created_at = route.get('created_at')
+        if created_at:
+            created_at_local = created_at + timedelta(hours=1)
+            writer.writerow(['Created:', created_at_local.strftime('%Y-%m-%d %H:%M')])
+        else:
+            writer.writerow(['Created:', 'N/A'])
         
         # Add optimization statistics
         opt_result = route.get('optimization_result', {})
@@ -123,7 +130,16 @@ class ExportService:
         depot_address = route.get('depot_address', {})
         depot_location = route.get('depot_location', {})
         if depot_address:
-            writer.writerow(['Address:', depot_address.get('full_address', 'N/A')])
+            # Combine address fields into full address
+            address_parts = []
+            if depot_address.get('street'):
+                address_parts.append(depot_address['street'])
+            if depot_address.get('city'):
+                address_parts.append(depot_address['city'])
+            if depot_address.get('country'):
+                address_parts.append(depot_address['country'])
+            full_address = ', '.join(address_parts) if address_parts else 'N/A'
+            writer.writerow(['Address:', full_address])
         if depot_location:
             writer.writerow(['Coordinates:', f"{depot_location.get('latitude')}, {depot_location.get('longitude')}"])
         
@@ -245,12 +261,20 @@ class ExportService:
             ['Route Name:', route.get('route_name', 'N/A')],
             ['Driver ID:', route.get('driver_id', 'N/A')],
             ['Status:', route.get('status', 'N/A').upper()],
-            ['Created:', route.get('created_at', '').strftime('%Y-%m-%d %H:%M') if route.get('created_at') else 'N/A'],
         ]
         
-        # Add completion date if completed
+        # Apply timezone offset for created_at (Morocco is UTC+1)
+        created_at = route.get('created_at')
+        if created_at:
+            created_at_local = created_at + timedelta(hours=1)
+            route_info.append(['Created:', created_at_local.strftime('%Y-%m-%d %H:%M')])
+        else:
+            route_info.append(['Created:', 'N/A'])
+        
+        # Add completion date if completed (with timezone offset)
         if route.get('completed_at'):
-            route_info.append(['Completed:', route['completed_at'].strftime('%Y-%m-%d %H:%M')])
+            completed_at_local = route['completed_at'] + timedelta(hours=1)
+            route_info.append(['Completed:', completed_at_local.strftime('%Y-%m-%d %H:%M')])
         
         route_info_table = Table(route_info, colWidths=[2*inch, 4*inch])
         route_info_table.setStyle(TableStyle([
@@ -297,7 +321,16 @@ class ExportService:
         
         depot_info = []
         if depot_address:
-            depot_info.append(['Address:', depot_address.get('full_address', 'N/A')])
+            # Combine address fields into full address
+            address_parts = []
+            if depot_address.get('street'):
+                address_parts.append(depot_address['street'])
+            if depot_address.get('city'):
+                address_parts.append(depot_address['city'])
+            if depot_address.get('country'):
+                address_parts.append(depot_address['country'])
+            full_address = ', '.join(address_parts) if address_parts else 'N/A'
+            depot_info.append(['Address:', full_address])
         if depot_location:
             depot_info.append([
                 'Coordinates:',

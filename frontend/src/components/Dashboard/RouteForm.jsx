@@ -354,6 +354,55 @@ const RouteForm = () => {
                                 <div className="card-body">
                                     <h3 className="text-lg font-semibold mb-4">Depot Location</h3>
 
+                                    {/* Address Input */}
+                                    <div className="mb-4">
+                                        <label className="block text-sm font-medium mb-1">
+                                            Address
+                                        </label>
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="text"
+                                                value={depot.address?.street || ''}
+                                                onChange={(e) => setDepot({
+                                                    ...depot,
+                                                    address: { ...depot.address, street: e.target.value }
+                                                })}
+                                                className="input flex-1"
+                                                placeholder="Enter address (e.g., Boulevard Mohammed V, Casablanca)"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={async () => {
+                                                    if (!depot.address?.street) {
+                                                        setError('Please enter an address first');
+                                                        return;
+                                                    }
+                                                    setLoading(true);
+                                                    setError(null);
+                                                    const fullAddress = `${depot.address.street}, ${depot.address.city || 'Morocco'}`;
+                                                    const result = await api.geocoding.geocodeAddress(fullAddress);
+                                                    if (result) {
+                                                        setDepot({
+                                                            ...depot,
+                                                            location: { latitude: result.lat, longitude: result.lng }
+                                                        });
+                                                    } else {
+                                                        setError('Could not find coordinates for this address');
+                                                    }
+                                                    setLoading(false);
+                                                }}
+                                                disabled={loading}
+                                                className="btn btn-secondary btn-sm whitespace-nowrap"
+                                            >
+                                                {loading ? <Loader className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
+                                                Get Coords
+                                            </button>
+                                        </div>
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            Enter address and click "Get Coords" to auto-fill latitude/longitude
+                                        </p>
+                                    </div>
+
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
                                             <label className="block text-sm font-medium mb-1">
@@ -365,7 +414,7 @@ const RouteForm = () => {
                                                 value={depot.location.latitude}
                                                 onChange={(e) => setDepot({
                                                     ...depot,
-                                                    location: { ...depot.location, latitude: parseFloat(e.target.value) }
+                                                    location: { ...depot.location, latitude: parseFloat(e.target.value) || 0 }
                                                 })}
                                                 className="input"
                                                 required
@@ -382,12 +431,51 @@ const RouteForm = () => {
                                                 value={depot.location.longitude}
                                                 onChange={(e) => setDepot({
                                                     ...depot,
-                                                    location: { ...depot.location, longitude: parseFloat(e.target.value) }
+                                                    location: { ...depot.location, longitude: parseFloat(e.target.value) || 0 }
                                                 })}
                                                 className="input"
                                                 required
                                             />
                                         </div>
+                                    </div>
+
+                                    {/* Get Address from Coordinates */}
+                                    <div className="mt-3">
+                                        <button
+                                            type="button"
+                                            onClick={async () => {
+                                                if (!depot.location.latitude || !depot.location.longitude) {
+                                                    setError('Please enter coordinates first');
+                                                    return;
+                                                }
+                                                setLoading(true);
+                                                setError(null);
+                                                const result = await api.geocoding.reverseGeocode(
+                                                    depot.location.latitude,
+                                                    depot.location.longitude
+                                                );
+                                                if (result) {
+                                                    const addr = result.address;
+                                                    setDepot({
+                                                        ...depot,
+                                                        address: {
+                                                            street: addr.road || addr.pedestrian || addr.building || result.display_name.split(',')[0] || '',
+                                                            city: addr.city || addr.town || addr.village || 'Unknown',
+                                                            postal_code: addr.postcode || '',
+                                                            country: addr.country || 'Morocco'
+                                                        }
+                                                    });
+                                                } else {
+                                                    setError('Could not find address for these coordinates');
+                                                }
+                                                setLoading(false);
+                                            }}
+                                            disabled={loading}
+                                            className="btn btn-outline btn-sm"
+                                        >
+                                            {loading ? <Loader className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
+                                            Get Address from Coordinates
+                                        </button>
                                     </div>
                                 </div>
                             </div>

@@ -460,6 +460,79 @@ const api = {
     },
 
     /**
+     * Geocoding API - Uses Nominatim (OpenStreetMap, free, no API key)
+     */
+    geocoding: {
+        /**
+         * Forward geocode - Convert address to coordinates
+         * @param {string} address - Address string to geocode
+         * @returns {Promise<{lat: number, lng: number, display_name: string} | null>}
+         */
+        geocodeAddress: async (address) => {
+            try {
+                const response = await axios.get('https://nominatim.openstreetmap.org/search', {
+                    params: {
+                        q: address,
+                        format: 'json',
+                        limit: 1,
+                        addressdetails: 1
+                    },
+                    headers: {
+                        'User-Agent': 'RouteChain/1.0'  // Required by Nominatim TOS
+                    }
+                });
+
+                if (response.data && response.data.length > 0) {
+                    const result = response.data[0];
+                    return {
+                        lat: parseFloat(result.lat),
+                        lng: parseFloat(result.lon),
+                        display_name: result.display_name,
+                        address_details: result.address
+                    };
+                }
+                return null;
+            } catch (error) {
+                console.error('Geocoding error:', error);
+                return null;
+            }
+        },
+
+        /**
+         * Reverse geocode - Convert coordinates to address
+         * @param {number} lat - Latitude
+         * @param {number} lng - Longitude
+         * @returns {Promise<{display_name: string, address: object} | null>}
+         */
+        reverseGeocode: async (lat, lng) => {
+            try {
+                const response = await axios.get('https://nominatim.openstreetmap.org/reverse', {
+                    params: {
+                        lat: lat,
+                        lon: lng,
+                        format: 'json',
+                        addressdetails: 1
+                    },
+                    headers: {
+                        'User-Agent': 'RouteChain/1.0'  // Required by Nominatim TOS
+                    }
+                });
+
+                if (response.data && response.data.display_name) {
+                    return {
+                        display_name: response.data.display_name,
+                        address: response.data.address || {}
+                    };
+                }
+                return null;
+            } catch (error) {
+                console.error('Reverse geocoding error:', error);
+                return null;
+            }
+        },
+    },
+
+    /**
      * Health Check
      */
     health: async () => {
