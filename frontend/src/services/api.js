@@ -10,8 +10,18 @@
 
 import axios from 'axios';
 
-// Base URL for API - change this in production
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// Base URL for API - auto-detect based on current hostname
+// This allows the app to work from any device (phone, laptop) without config changes
+const getApiBaseUrl = () => {
+    if (import.meta.env.VITE_API_URL) {
+        return import.meta.env.VITE_API_URL;
+    }
+    // Use same hostname as frontend, but port 8000
+    const hostname = window.location.hostname;
+    return `http://${hostname}:8000`;
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 /**
  * Create axios instance with default configuration

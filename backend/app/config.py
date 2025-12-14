@@ -52,8 +52,10 @@ class Settings(BaseSettings):
     def cors_origins_list(self) -> List[str]:
         """
         Convert CORS_ORIGINS string to a list of URLs.
-        This allows the frontend to make API requests from allowed origins.
+        Use '*' to allow all origins (useful for development).
         """
+        if self.CORS_ORIGINS.strip() == "*":
+            return ["*"]  # Allow all origins
         return [origin.strip() for origin in self.CORS_ORIGINS.split(",")]
     
     # Blockchain Configuration (for later use)
