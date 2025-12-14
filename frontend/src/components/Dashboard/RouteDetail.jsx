@@ -757,16 +757,16 @@ const RouteDetail = () => {
                                         <button
                                             onClick={verifyBlockchain}
                                             disabled={verifying}
-                                            className="btn-outline w-full"
+                                            className="btn btn-outline w-full"
                                         >
                                             {verifying ? (
                                                 <>
-                                                    <Loader className="w-4 h-4 mr-2 animate-spin" />
+                                                    <Loader className="w-4 h-4 animate-spin" />
                                                     Verifying...
                                                 </>
                                             ) : (
                                                 <>
-                                                    <RefreshCw className="w-4 h-4 mr-2" />
+                                                    <RefreshCw className="w-4 h-4" />
                                                     Verify Integrity
                                                 </>
                                             )}

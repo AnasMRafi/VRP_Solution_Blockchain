@@ -97,31 +97,55 @@ class BlockchainService:
     
     def calculate_data_hash(self, data: Dict[str, Any]) -> str:
         """
-        Calculate SHA-256 Hash of Data
+        Calculate SHA-256 Hash of Immutable Route Data
         
-        Creates a deterministic hash of route data for blockchain storage.
+        Creates a deterministic hash of ONLY immutable route fields.
+        This ensures verification works even after status/delivery updates.
+        
+        Immutable fields:
+        - route_id
+        - route_name
+        - depot_location
+        - delivery_points (addresses and locations only, not status)
         
         Args:
             data: Dictionary containing route data
             
         Returns:
             str: Hexadecimal hash string (with 0x prefix)
-            
-        Example:
-            hash_str = service.calculate_data_hash({
-                "route_id": "ROUTE_001",
-                "deliveries": [...],
-                "status": "completed"
-            })
         """
+        # Extract only immutable fields for hashing
+        immutable_data = {
+            "route_id": data.get("route_id"),
+            "route_name": data.get("route_name"),
+            "depot_location": data.get("depot_location"),
+            "delivery_points": []
+        }
+        
+        # For delivery points, only include immutable fields (not status)
+        for point in data.get("delivery_points", []):
+            immutable_point = {
+                "customer_name": point.get("customer_name"),
+                "address": point.get("address"),
+                "location": point.get("location"),
+                "point_id": point.get("point_id")
+            }
+            immutable_data["delivery_points"].append(immutable_point)
+        
         # Sort keys for deterministic hashing
-        json_str = json.dumps(data, sort_keys=True, default=str)
+        json_str = json.dumps(immutable_data, sort_keys=True, default=str)
+        
+        # Debug logging
+        logger.debug(f"Hash input (first 200 chars): {json_str[:200]}")
         
         # Calculate SHA-256 hash
         hash_bytes = hashlib.sha256(json_str.encode('utf-8')).digest()
         
         # Convert to hex with 0x prefix (Ethereum format)
-        return '0x' + hash_bytes.hex()
+        result_hash = '0x' + hash_bytes.hex()
+        logger.info(f"Calculated hash: {result_hash[:20]}...")
+        
+        return result_hash
     
     async def record_route_creation(
         self,
@@ -262,30 +286,38 @@ class BlockchainService:
         """
         Verify Route Data Integrity
         
-        Checks if route data matches blockchain record.
+        Compares current route data hash with the stored hash from when
+        the route was recorded on blockchain.
         
         Args:
             route_id: Route identifier
-            route_data: Route data to verify
+            route_data: Route data to verify (from database)
             
         Returns:
-            bool: True if data is valid, False otherwise
+            bool: True if data is valid (hash matches), False otherwise
         """
         if not self.is_available:
             logger.warning("Blockchain not available - cannot verify route")
             return False
         
         try:
+            # Get the stored hash from when route was created
+            stored_hash = route_data.get("data_hash")
+            
+            if not stored_hash:
+                logger.warning(f"No stored hash for route {route_id}")
+                return False
+            
             # Calculate current data hash
-            data_hash = self.calculate_data_hash(route_data)
+            current_hash = self.calculate_data_hash(route_data)
             
-            # Query blockchain
-            is_valid = self.contract.functions.verifyRoute(
-                route_id,
-                self.w3.to_bytes(hexstr=data_hash)
-            ).call()
+            # Compare hashes
+            is_valid = stored_hash == current_hash
             
-            logger.info(f"Route verification: {route_id} - {'✓ Valid' if is_valid else '✗ Invalid'}")
+            logger.info(f"Route verification: {route_id}")
+            logger.info(f"  Stored hash:  {stored_hash[:20]}...")
+            logger.info(f"  Current hash: {current_hash[:20]}...")
+            logger.info(f"  Result: {'✓ Valid' if is_valid else '✗ Invalid'}")
             
             return is_valid
             

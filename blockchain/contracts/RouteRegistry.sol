@@ -174,7 +174,14 @@ contract RouteRegistry {
      * Retrieves complete route record from blockchain.
      * 
      * @param _routeId Route identifier
-     * @return RouteRecord struct with all route data
+     * @return routeId The route ID
+     * @return dataHash The data hash
+     * @return timestamp The creation timestamp
+     * @return driver The driver address
+     * @return status The route status
+     * @return totalDistance Total distance in meters
+     * @return deliveryCount Number of deliveries
+     * @return completedDeliveries Number of completed deliveries
      */
     function getRoute(string memory _routeId) public view returns (
         string memory routeId,
