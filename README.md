@@ -304,12 +304,6 @@ npm run lint
 
 ---
 
-## 📄 License
-
-MIT License - See [LICENSE](LICENSE)
-
----
-
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -320,4 +314,3 @@ MIT License - See [LICENSE](LICENSE)
 
 ---
 
-**Made with ❤️ for PFA Project**
