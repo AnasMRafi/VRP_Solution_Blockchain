@@ -114,19 +114,18 @@ RouteChain adopte une architecture trois-tiers classique, séparant clairement l
     system/.style={rectangle, draw=primaryblue!50, fill=blue!3, thick, rounded corners=10pt},
     actorbox/.style={rectangle, draw=none, fill=none}
 ]
-    % System boundary
+    % System boundary - no title inside
     \draw[system] (1,-5.5) rectangle (10,3.5);
-    \node[font=\Large\bfseries, primaryblue, anchor=north west] at (1.3,3.3) {RouteChain};
     
     % Actor - Chauffeur
-    \stickman{(-1, 1)}
-    \node[font=\small\bfseries] at (-1, -0.5) {Chauffeur};
+    \stickman{(-1, 0.5)}
+    \node[font=\small\bfseries] at (-1, -1) {Chauffeur};
     
     % Actor - Admin
     \stickman{(-1, -4)}
     \node[font=\small\bfseries] at (-1, -5.5) {Admin};
     
-    % Use cases
+    % Use cases - positioned to fit within boundary
     \node[usecase] (auth) at (5.5, 3) {S'authentifier};
     \node[usecase] (create) at (5.5, 1.5) {Créer une tournée};
     \node[usecase] (optimize) at (5.5, 0) {Optimiser itinéraire};
@@ -160,15 +159,14 @@ RouteChain adopte une architecture trois-tiers classique, séparant clairement l
     system/.style={rectangle, draw=primaryblue!50, fill=blue!3, thick, rounded corners=10pt},
     include/.style={->, dashed, thick, gray}
 ]
-    % System boundary
+    % System boundary - no title inside
     \draw[system] (1,-5) rectangle (9,2.5);
-    \node[font=\large\bfseries, primaryblue, anchor=north west] at (1.3,2.3) {Gestion des Tournées};
     
     % Actor
     \stickman{(-1, -1)}
     \node[font=\small\bfseries] at (-1, -2.5) {Chauffeur};
     
-    % Use cases
+    % Use cases - positioned to fit within boundary
     \node[usecase] (new) at (5, 2) {Créer nouvelle tournée};
     \node[usecase] (add) at (5, 0.7) {Ajouter points de livraison};
     \node[usecase] (opt) at (5, -0.6) {Lancer optimisation VRP};
@@ -201,20 +199,19 @@ RouteChain adopte une architecture trois-tiers classique, séparant clairement l
     usecase/.style={ellipse, draw=secondarypurple, fill=secondarypurple!8, thick, minimum width=3.8cm, minimum height=1cm, text centered, font=\footnotesize, drop shadow={opacity=0.2}},
     system/.style={rectangle, draw=secondarypurple!50, fill=purple!3, thick, rounded corners=10pt}
 ]
-    % System boundary
-    \draw[system] (1,-3.5) rectangle (9,2);
-    \node[font=\large\bfseries, secondarypurple, anchor=north west] at (1.3,1.8) {Administration};
+    % System boundary - no title inside
+    \draw[system] (1,-4.5) rectangle (9,2);
     
     % Actor
     \stickman{(-1, -0.5)}
     \node[font=\small\bfseries] at (-1, -2) {Admin};
     
-    % Use cases
+    % Use cases - positioned to fit within boundary
     \node[usecase] (drivers) at (5, 1.5) {Lister tous les chauffeurs};
-    \node[usecase] (role) at (5, 0.3) {Modifier rôle utilisateur};
-    \node[usecase] (routes) at (5, -0.9) {Voir toutes les tournées};
-    \node[usecase, fill=successgreen!8, draw=successgreen] (analytics) at (5, -2.1) {Accéder aux analytics};
-    \node[usecase] (manage) at (5, -3.3) {Gérer clients et dépôts};
+    \node[usecase] (role) at (5, 0.2) {Modifier rôle utilisateur};
+    \node[usecase] (routes) at (5, -1.1) {Voir toutes les tournées};
+    \node[usecase, fill=successgreen!8, draw=successgreen] (analytics) at (5, -2.4) {Accéder aux analytics};
+    \node[usecase] (manage) at (5, -3.7) {Gérer clients et dépôts};
     
     % Connections
     \draw[->, thick, secondarypurple!70] (-0.2, -0.1) -- (drivers.west);
