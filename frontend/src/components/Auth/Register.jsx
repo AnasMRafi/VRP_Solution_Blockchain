@@ -320,18 +320,18 @@ const Register = () => {
 
                         {/* Two column layout for vehicle info */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* Vehicle Type */}
                             <div>
                                 <label className="block text-sm font-medium mb-1">
                                     Vehicle Type *
                                 </label>
                                 <div className="relative flex items-center">
-                                    <Car className="absolute left-4 w-5 h-5 text-gray-400 z-10 pointer-events-none" />
+                                    <Car className="absolute left-3 w-5 h-5 text-gray-400 z-10 pointer-events-none" />
                                     <select
                                         name="vehicle_type"
                                         value={formData.vehicle_type}
                                         onChange={handleChange}
-                                        className="input !pl-12"
+                                        className="input pl-10 appearance-none bg-white cursor-pointer"
+                                        style={{ paddingLeft: '2.5rem' }}
                                     >
                                         <option value="bike">Bike/Motorcycle</option>
                                         <option value="car">Car</option>

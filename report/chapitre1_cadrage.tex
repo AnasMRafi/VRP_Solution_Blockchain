@@ -1,0 +1,170 @@
+%=====================================================================
+%            CHAPITRE 1 : CADRAGE DU PROJET
+%=====================================================================
+
+\chapter{Cadrage du Projet}
+
+%---------------------------------------------------------------------
+\section{Introduction}
+%---------------------------------------------------------------------
+
+Ce premier chapitre a pour objectif de poser les fondements du projet RouteChain en présentant le contexte général dans lequel il s'inscrit. Nous commencerons par analyser les problématiques actuelles liées à la logistique du dernier kilomètre et au besoin de transparence dans les chaînes de livraison. Ensuite, nous examinerons les solutions existantes sur le marché, avant d'en proposer une critique constructive. Enfin, nous présenterons notre proposition de solution et les objectifs que nous nous sommes fixés.
+
+%---------------------------------------------------------------------
+\section{Contexte et Motivations du Projet}
+%---------------------------------------------------------------------
+
+\subsection{Le Défi de la Logistique du Dernier Kilomètre}
+
+La logistique du dernier kilomètre (\textit{Last-Mile Delivery}) représente l'étape finale de la chaîne d'approvisionnement, consistant à acheminer un produit depuis un centre de distribution jusqu'au consommateur final. Cette phase, bien que représentant généralement moins de 20\% de la distance totale parcourue par un colis, génère paradoxalement entre 40\% et 50\% des coûts logistiques totaux.
+
+Plusieurs facteurs expliquent cette disproportion :
+
+\begin{itemize}[leftmargin=2cm]
+    \item \textbf{La fragmentation des livraisons} : Chaque colis a une destination unique, contrairement aux phases précédentes où les marchandises sont consolidées.
+    \item \textbf{Les contraintes temporelles} : Les créneaux de livraison imposés par les clients réduisent la flexibilité d'organisation des tournées.
+    \item \textbf{L'environnement urbain} : La congestion routière, les restrictions de circulation et la difficulté à stationner complexifient les opérations.
+    \item \textbf{Les échecs de livraison} : L'absence du destinataire engendre des coûts supplémentaires liés aux tentatives répétées.
+\end{itemize}
+
+Face à ces défis, l'optimisation des tournées de véhicules devient un levier essentiel pour réduire les coûts opérationnels tout en maintenant un niveau de service satisfaisant.
+
+\subsection{Le Besoin de Transparence et de Confiance dans les Chaînes de Livraison}
+
+Au-delà de l'efficacité opérationnelle, un second enjeu majeur émerge dans le secteur de la livraison : la transparence et la traçabilité des opérations. Les consommateurs modernes, habitués aux services numériques, attendent une visibilité en temps réel sur l'état de leurs commandes.
+
+Plus fondamentalement, la question de la \textbf{preuve de livraison} constitue un point de friction récurrent entre les expéditeurs, les transporteurs et les destinataires. Les litiges portant sur des colis prétendument non livrés ou livrés endommagés représentent un coût significatif pour l'ensemble des acteurs de la chaîne.
+
+Les systèmes traditionnels de preuve de livraison, qu'il s'agisse de signatures manuscrites ou de photographies, présentent plusieurs limites :
+
+\begin{itemize}[leftmargin=2cm]
+    \item \textbf{Falsifiabilité} : Les données stockées dans des bases de données centralisées peuvent être modifiées.
+    \item \textbf{Manque de confiance} : En cas de litige, aucune partie ne dispose d'une preuve incontestable.
+    \item \textbf{Absence d'horodatage fiable} : Les timestamps peuvent être manipulés.
+\end{itemize}
+
+C'est précisément pour répondre à ces problématiques que la technologie Blockchain apparaît comme une solution particulièrement adaptée, offrant des garanties d'immuabilité et de transparence que les systèmes traditionnels ne peuvent égaler.
+
+%---------------------------------------------------------------------
+\section{Étude des Solutions Existantes}
+%---------------------------------------------------------------------
+
+\subsection{Outils Traditionnels de Planification d'Itinéraires}
+
+Le marché propose aujourd'hui de nombreuses solutions de planification d'itinéraires, allant des applications grand public aux plateformes professionnelles sophistiquées.
+
+\begin{table}[H]
+\centering
+\caption{Comparaison des solutions de planification d'itinéraires existantes}
+\label{tab:solutions_existantes}
+\begin{tabular}{|p{3cm}|p{4cm}|p{4cm}|p{3cm}|}
+\hline
+\textbf{Solution} & \textbf{Points Forts} & \textbf{Limitations} & \textbf{Blockchain} \\
+\hline
+Google Maps & Interface intuitive, données cartographiques précises & Limité à la navigation simple, pas d'optimisation VRP & Non \\
+\hline
+Route4Me & Optimisation multi-stops, API disponible & Coût élevé, pas de traçabilité blockchain & Non \\
+\hline
+OptimoRoute & Gestion de flotte, contraintes temporelles & Propriétaire, données centralisées & Non \\
+\hline
+Circuit & Simple d'utilisation, gratuit pour petits volumes & Fonctionnalités limitées & Non \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{La Blockchain dans la Gestion de la Chaîne d'Approvisionnement}
+
+L'adoption de la technologie Blockchain dans le domaine de la supply chain connaît une croissance significative. Plusieurs initiatives majeures ont émergé ces dernières années :
+
+\begin{itemize}[leftmargin=2cm]
+    \item \textbf{IBM Food Trust} : Plateforme de traçabilité alimentaire utilisée par des géants comme Walmart et Carrefour.
+    \item \textbf{TradeLens} : Solution de suivi des conteneurs maritimes développée par IBM et Maersk.
+    \item \textbf{VeChain} : Blockchain publique dédiée à la traçabilité des produits de luxe et pharmaceutiques.
+\end{itemize}
+
+Ces initiatives démontrent la pertinence de la Blockchain pour assurer la traçabilité et l'intégrité des données logistiques. Cependant, elles se concentrent principalement sur le suivi des marchandises à grande échelle et n'adressent pas spécifiquement la problématique de l'optimisation des tournées de livraison.
+
+%---------------------------------------------------------------------
+\section{Critique des Solutions Existantes}
+%---------------------------------------------------------------------
+
+\subsection{Absence d'Intégration entre Optimisation et Traçabilité}
+
+L'analyse des solutions existantes révèle une dichotomie marquée entre deux catégories d'outils :
+
+\begin{enumerate}[leftmargin=2cm]
+    \item \textbf{Les outils d'optimisation} qui se concentrent sur la planification des itinéraires sans offrir de mécanismes de traçabilité avancés.
+    \item \textbf{Les solutions blockchain} qui assurent la traçabilité mais n'intègrent pas de fonctionnalités d'optimisation logistique.
+\end{enumerate}
+
+Cette fragmentation oblige les entreprises à utiliser plusieurs systèmes en parallèle, engendrant des problèmes d'interopérabilité et une complexité accrue dans la gestion des opérations.
+
+\subsection{Enregistrements Centralisés et Mutables}
+
+La majorité des solutions de gestion de livraison reposent sur des architectures centralisées où les données sont stockées dans des bases de données traditionnelles. Cette approche présente plusieurs inconvénients :
+
+\begin{itemize}[leftmargin=2cm]
+    \item Les données peuvent être modifiées a posteriori par l'administrateur du système.
+    \item En cas de litige, l'entreprise détentrice des données est à la fois juge et partie.
+    \item La confiance repose entièrement sur la bonne foi de l'opérateur du système.
+\end{itemize}
+
+%---------------------------------------------------------------------
+\section{Solution Proposée : RouteChain}
+%---------------------------------------------------------------------
+
+\subsection{Combinaison de l'Optimisation VRP et de l'Immuabilité Blockchain}
+
+Face aux limitations identifiées, nous proposons \textbf{RouteChain}, une application web full-stack qui combine de manière innovante :
+
+\begin{itemize}[leftmargin=2cm]
+    \item \textbf{Un moteur d'optimisation VRP} basé sur Google OR-Tools, permettant de calculer les itinéraires optimaux en minimisant la distance totale parcourue.
+    \item \textbf{Un smart contract Ethereum} déployé sur une blockchain locale (Ganache), assurant l'enregistrement immuable des données de chaque tournée.
+    \item \textbf{Une interface utilisateur moderne} permettant aux chauffeurs et aux administrateurs de gérer efficacement les opérations de livraison.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    box/.style={rectangle, draw=primaryblue, fill=primaryblue!10, thick, minimum width=3cm, minimum height=1.5cm, text centered, rounded corners=5pt, align=center},
+    arrow/.style={-{Stealth[length=3mm]}, thick, primaryblue}
+]
+    % Boxes
+    \node[box] (frontend) at (0,0) {\textbf{Frontend}\\ React + Vite};
+    \node[box] (backend) at (5,0) {\textbf{Backend}\\ FastAPI};
+    \node[box] (mongodb) at (10,1.5) {\textbf{MongoDB}\\ Base de données};
+    \node[box] (blockchain) at (10,-1.5) {\textbf{Blockchain}\\ Ethereum/Ganache};
+    \node[box] (ortools) at (5,-3) {\textbf{OR-Tools}\\ Optimisation VRP};
+    
+    % Arrows
+    \draw[arrow] (frontend) -- (backend);
+    \draw[arrow] (backend) -- (mongodb);
+    \draw[arrow] (backend) -- (blockchain);
+    \draw[arrow] (backend) -- (ortools);
+    
+\end{tikzpicture}
+\caption{Architecture globale de RouteChain}
+\label{fig:architecture_globale}
+\end{figure}
+
+\subsection{Objectifs et Périmètre du Projet}
+
+Les objectifs principaux de RouteChain sont les suivants :
+
+\begin{enumerate}[leftmargin=2cm]
+    \item \textbf{Optimiser les tournées de livraison} en utilisant des algorithmes de résolution du VRP pour minimiser les distances et les temps de parcours.
+    \item \textbf{Garantir l'intégrité des données} en enregistrant un hash cryptographique de chaque tournée sur la blockchain.
+    \item \textbf{Offrir une interface intuitive} permettant aux utilisateurs de créer, visualiser et gérer leurs itinéraires de livraison.
+    \item \textbf{Fournir des outils d'administration} pour la gestion des chauffeurs, des clients et des dépôts.
+    \item \textbf{Proposer des analyses statistiques} sur les performances des livraisons.
+\end{enumerate}
+
+Le périmètre du projet se limite à une application web responsive, déployée localement avec une blockchain privée (Ganache). L'évolution vers une blockchain publique (testnet ou mainnet) est envisagée comme perspective future.
+
+%---------------------------------------------------------------------
+\section{Conclusion}
+%---------------------------------------------------------------------
+
+Ce premier chapitre a permis de situer le projet RouteChain dans son contexte économique et technologique. Nous avons identifié les deux problématiques majeures auxquelles notre solution répond : l'optimisation des tournées de livraison et la garantie d'intégrité des données via la blockchain.
+
+L'analyse des solutions existantes a révélé l'absence d'outils combinant efficacement ces deux dimensions, justifiant ainsi la pertinence de notre proposition. Le chapitre suivant sera consacré à la spécification détaillée des besoins fonctionnels et non fonctionnels de l'application RouteChain.

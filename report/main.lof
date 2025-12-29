@@ -1,0 +1,39 @@
+\babel@toc {french}{}\relax 
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Architecture globale de RouteChain}}{4}{figure.caption.8}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Architecture trois-tiers de RouteChain}}{10}{figure.caption.21}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Diagramme d'interaction des composants}}{11}{figure.caption.22}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Diagramme de cas d'utilisation global du système RouteChain}}{11}{figure.caption.23}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Diagramme de cas d'utilisation - Sous-système Chauffeur}}{12}{figure.caption.24}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Diagramme de cas d'utilisation - Sous-système Administrateur}}{12}{figure.caption.25}%
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Diagramme de classes - Modèle du domaine}}{13}{figure.caption.26}%
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Diagramme de séquence - Processus d'authentification JWT}}{13}{figure.caption.27}%
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Diagramme de séquence - Processus complet d'optimisation VRP avec enregistrement blockchain}}{14}{figure.caption.28}%
+\contentsline {figure}{\numberline {3.9}{\ignorespaces Diagramme de séquence - Vérification de l'intégrité via blockchain}}{14}{figure.caption.29}%
+\contentsline {figure}{\numberline {3.10}{\ignorespaces Structure du smart contract RouteRegistry}}{16}{figure.caption.32}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Logo Python}}{17}{figure.caption.34}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Logo FastAPI}}{18}{figure.caption.35}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Logo MongoDB}}{18}{figure.caption.36}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Logo Google OR-Tools}}{18}{figure.caption.37}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Logo React}}{19}{figure.caption.38}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Logo Vite}}{19}{figure.caption.39}%
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Logo Tailwind CSS}}{20}{figure.caption.40}%
+\contentsline {figure}{\numberline {4.8}{\ignorespaces Logo Leaflet}}{20}{figure.caption.41}%
+\contentsline {figure}{\numberline {4.9}{\ignorespaces Logo Axios}}{20}{figure.caption.42}%
+\contentsline {figure}{\numberline {4.10}{\ignorespaces Logo Ganache}}{21}{figure.caption.43}%
+\contentsline {figure}{\numberline {4.11}{\ignorespaces Page de connexion de l'application RouteChain}}{21}{figure.caption.44}%
+\contentsline {figure}{\numberline {4.12}{\ignorespaces Page d'inscription avec formulaire de création de compte chauffeur}}{22}{figure.caption.45}%
+\contentsline {figure}{\numberline {4.13}{\ignorespaces Dashboard principal affichant la liste des tournées}}{22}{figure.caption.46}%
+\contentsline {figure}{\numberline {4.14}{\ignorespaces Formulaire de création de tournée - Section dépôt et informations}}{23}{figure.caption.47}%
+\contentsline {figure}{\numberline {4.15}{\ignorespaces Formulaire de création de tournée - Points de livraison et carte}}{23}{figure.caption.48}%
+\contentsline {figure}{\numberline {4.16}{\ignorespaces Page de détail d'une tournée avec informations et carte}}{24}{figure.caption.49}%
+\contentsline {figure}{\numberline {4.17}{\ignorespaces Visualisation cartographique et informations blockchain}}{24}{figure.caption.50}%
+\contentsline {figure}{\numberline {4.18}{\ignorespaces Page de profil du chauffeur avec informations personnelles}}{25}{figure.caption.51}%
+\contentsline {figure}{\numberline {4.19}{\ignorespaces Interface de gestion des clients avec recherche et géocodage}}{25}{figure.caption.52}%
+\contentsline {figure}{\numberline {4.20}{\ignorespaces Interface de gestion des dépôts avec géocodage automatique}}{26}{figure.caption.53}%
+\contentsline {figure}{\numberline {4.21}{\ignorespaces Panel d'administration avec gestion des chauffeurs}}{26}{figure.caption.54}%
+\contentsline {figure}{\numberline {4.22}{\ignorespaces Tableau de bord analytique avec indicateurs de performance}}{27}{figure.caption.55}%
+\addvspace {10\p@ }

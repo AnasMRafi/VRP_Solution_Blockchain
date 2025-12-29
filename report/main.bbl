@@ -1,0 +1,87 @@
+\begin{thebibliography}{10}
+
+\bibitem{leaflet2025}
+Volodymyr Agafonkin.
+\newblock Leaflet: Open-source javascript library for interactive maps.
+\newblock \url{https://leafletjs.com}, 2025.
+\newblock Consulté entre le 21 novembre et le 25 décembre 2025.
+
+\bibitem{dantzig1959vrp}
+George~B. Dantzig and John~H. Ramser.
+\newblock The truck dispatching problem.
+\newblock {\em Management Science}, 6:80--91, 1959.
+\newblock Consulté entre le 21 novembre et le 25 décembre 2025.
+
+\bibitem{ethereum2025}
+Ethereum Foundation.
+\newblock Ethereum: A decentralized platform for smart contracts.
+\newblock \url{https://ethereum.org}, 2025.
+\newblock Consulté entre le 21 novembre et le 25 décembre 2025.
+
+\bibitem{solidity2025}
+Ethereum Foundation.
+\newblock Solidity programming language.
+\newblock \url{https://soliditylang.org}, 2025.
+\newblock Consulté entre le 21 novembre et le 25 décembre 2025.
+
+\bibitem{web3py2025}
+Ethereum Foundation.
+\newblock Web3.py: Python library for ethereum.
+\newblock \url{https://web3py.readthedocs.io}, 2025.
+\newblock Consulté entre le 21 novembre et le 25 décembre 2025.
+
+\bibitem{nominatim2025}
+OpenStreetMap Foundation.
+\newblock Nominatim: Openstreetmap geocoding.
+\newblock \url{https://nominatim.org}, 2025.
+\newblock Consulté entre le 21 novembre et le 25 décembre 2025.
+
+\bibitem{ortools2025}
+Google.
+\newblock Google or-tools.
+\newblock \url{https://developers.google.com/optimization}, 2025.
+\newblock Consulté entre le 21 novembre et le 25 décembre 2025.
+
+\bibitem{openrouteservice2025}
+HeiGIT.
+\newblock Openrouteservice: Routing api.
+\newblock \url{https://openrouteservice.org}, 2025.
+\newblock Consulté entre le 21 novembre et le 25 décembre 2025.
+
+\bibitem{mongodb2025}
+MongoDB Inc.
+\newblock Mongodb: Document database.
+\newblock \url{https://www.mongodb.com}, 2025.
+\newblock Consulté entre le 21 novembre et le 25 décembre 2025.
+
+\bibitem{tailwindcss2025}
+Tailwind Labs.
+\newblock Tailwind css: Utility-first css framework.
+\newblock \url{https://tailwindcss.com}, 2025.
+\newblock Consulté entre le 21 novembre et le 25 décembre 2025.
+
+\bibitem{react2025}
+Meta.
+\newblock React: A javascript library for building user interfaces.
+\newblock \url{https://react.dev}, 2025.
+\newblock Consulté entre le 21 novembre et le 25 décembre 2025.
+
+\bibitem{ganache2025}
+Truffle Suite.
+\newblock Ganache: Personal ethereum blockchain.
+\newblock \url{https://trufflesuite.com/ganache}, 2025.
+\newblock Consulté entre le 21 novembre et le 25 décembre 2025.
+
+\bibitem{fastapi2025}
+Sebasti{\'a}n~Ram{\'i}rez Tiangolo.
+\newblock Fastapi: Modern web framework for python apis.
+\newblock \url{https://fastapi.tiangolo.com}, 2025.
+\newblock Consulté entre le 21 novembre et le 25 décembre 2025.
+
+\bibitem{toth2014vrp}
+Paolo Toth and Daniele Vigo.
+\newblock {\em Vehicle Routing: Problems, Methods, and Applications}.
+\newblock SIAM, 2014.
+\newblock Consulté entre le 21 novembre et le 25 décembre 2025.
+
+\end{thebibliography}

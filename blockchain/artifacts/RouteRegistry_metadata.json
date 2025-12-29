@@ -1,0 +1,463 @@
+{
+	"compiler": {
+		"version": "0.8.0+commit.c7dfd78e"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "string",
+						"name": "routeId",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "finalDataHash",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "completedDeliveries",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					}
+				],
+				"name": "RouteCompleted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "string",
+						"name": "routeId",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "dataHash",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "driver",
+						"type": "address"
+					}
+				],
+				"name": "RouteCreated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "string",
+						"name": "routeId",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "newDataHash",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "newStatus",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					}
+				],
+				"name": "RouteUpdated",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_routeId",
+						"type": "string"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_dataHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "_status",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_totalDistance",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_deliveryCount",
+						"type": "uint256"
+					}
+				],
+				"name": "createRoute",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_routeId",
+						"type": "string"
+					}
+				],
+				"name": "getRoute",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "routeId",
+						"type": "string"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "dataHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "driver",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "status",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalDistance",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "deliveryCount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "completedDeliveries",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getRouteCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_index",
+						"type": "uint256"
+					}
+				],
+				"name": "getRouteIdByIndex",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "routeIds",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"name": "routes",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "routeId",
+						"type": "string"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "dataHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "driver",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "status",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalDistance",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "deliveryCount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "completedDeliveries",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "exists",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_routeId",
+						"type": "string"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_newDataHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "_newStatus",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_completedDeliveries",
+						"type": "uint256"
+					}
+				],
+				"name": "updateRoute",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_routeId",
+						"type": "string"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_dataHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "verifyRoute",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"createRoute(string,bytes32,string,uint256,uint256)": {
+					"params": {
+						"_dataHash": "SHA-256 hash of the route data",
+						"_deliveryCount": "Number of deliveries in the route",
+						"_routeId": "Unique route identifier",
+						"_status": "Initial status (typically \"optimized\")",
+						"_totalDistance": "Total route distance in meters"
+					}
+				},
+				"getRoute(string)": {
+					"params": {
+						"_routeId": "Route identifier"
+					},
+					"returns": {
+						"completedDeliveries": "Number of completed deliveries",
+						"dataHash": "The data hash",
+						"deliveryCount": "Number of deliveries",
+						"driver": "The driver address",
+						"routeId": "The route ID",
+						"status": "The route status",
+						"timestamp": "The creation timestamp",
+						"totalDistance": "Total distance in meters"
+					}
+				},
+				"getRouteCount()": {
+					"returns": {
+						"_0": "uint256 Total count of registered routes"
+					}
+				},
+				"getRouteIdByIndex(uint256)": {
+					"params": {
+						"_index": "Index in routeIds array"
+					},
+					"returns": {
+						"_0": "string Route ID"
+					}
+				},
+				"updateRoute(string,bytes32,string,uint256)": {
+					"params": {
+						"_completedDeliveries": "Number of completed deliveries",
+						"_newDataHash": "Updated SHA-256 hash of route data",
+						"_newStatus": "New status",
+						"_routeId": "Route identifier"
+					}
+				},
+				"verifyRoute(string,bytes32)": {
+					"params": {
+						"_dataHash": "Hash to verify",
+						"_routeId": "Route identifier"
+					},
+					"returns": {
+						"_0": "bool True if hash matches, false otherwise"
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"createRoute(string,bytes32,string,uint256,uint256)": {
+					"notice": "Record a new route on the blockchain  This function should be called when a route is first optimized. It creates an immutable record of the route's initial state. "
+				},
+				"getRoute(string)": {
+					"notice": "Get route details  Retrieves complete route record from blockchain. "
+				},
+				"getRouteCount()": {
+					"notice": "Get total number of routes "
+				},
+				"getRouteIdByIndex(uint256)": {
+					"notice": "Get route ID by index  Useful for iterating through all routes. "
+				},
+				"updateRoute(string,bytes32,string,uint256)": {
+					"notice": "Update route status and data hash  Called when route status changes (e.g., optimized -> in_progress -> completed). Updates the data hash to reflect current state. "
+				},
+				"verifyRoute(string,bytes32)": {
+					"notice": "Verify route data integrity  Checks if the provided data hash matches the stored hash. Used to verify that route data hasn't been tampered with. "
+				}
+			},
+			"notice": "RouteRegistry Smart Contract  This contract stores immutable records of delivery routes on the Ethereum blockchain.  Features: - Store route completion data with hash verification - Verify route integrity using stored hashes - Track route status progression - Emit events for external monitoring  Use Cases: - Proof of delivery completion - Immutable audit trail - Dispute resolution - Regulatory compliance",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/RouteRegistry.sol": "RouteRegistry"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/RouteRegistry.sol": {
+			"keccak256": "0x1bc3c92f435c8606567ca8e54bcafc7cc2732cbd9a0635a38449d4974c90f0c3",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://e3a0f9dec9da85bbf728eee5741eac62717513590d87513c0554bb22ec4afcd6",
+				"dweb:/ipfs/QmfM2hHYpzSECMxqYAg3PQtRP4EHBhVh1GQmcgteqcVUzp"
+			]
+		}
+	},
+	"version": 1
+}

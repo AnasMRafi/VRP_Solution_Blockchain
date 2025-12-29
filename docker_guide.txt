@@ -1,0 +1,197 @@
+===============================================
+         ROUTECHAIN DOCKER GUIDE
+===============================================
+
+This guide explains how to run RouteChain using Docker.
+
+
+PREREQUISITES
+=============
+
+1. Install Docker Desktop
+   - Mac: https://docs.docker.com/desktop/install/mac-install/
+   - Windows: https://docs.docker.com/desktop/install/windows-install/
+   - Linux: https://docs.docker.com/engine/install/
+
+2. Make sure Docker is running (check the whale icon in menu bar)
+
+
+QUICK START
+===========
+
+1. Create environment file:
+
+   Create a file named ".env" in the project root with:
+
+   OPENROUTESERVICE_API_KEY=your_api_key_here
+   SECRET_KEY=your_secret_key_here
+   CONTRACT_ADDRESS=
+
+   (Get ORS key from: https://openrouteservice.org/dev/#/signup)
+   (Generate secret: openssl rand -hex 32)
+
+
+2. Build and start all services:
+
+   docker-compose up --build
+
+   This will start:
+   - MongoDB on port 27017
+   - Ganache (blockchain) on port 7545
+   - Backend API on port 8000
+   - Frontend on port 80
+
+
+3. Access the application:
+
+   - Frontend: http://localhost
+   - API Docs: http://localhost:8000/docs
+
+
+COMMANDS
+========
+
+Start all services:
+   docker-compose up
+
+Start in background:
+   docker-compose up -d
+
+Stop all services:
+   docker-compose down
+
+Rebuild after code changes:
+   docker-compose up --build
+
+View logs:
+   docker-compose logs -f
+
+View specific service logs:
+   docker-compose logs -f backend
+
+Stop and remove all data:
+   docker-compose down -v
+
+
+SERVICES
+========
+
++------------+------+----------------------------------+
+| Service    | Port | Description                      |
++------------+------+----------------------------------+
+| frontend   | 80   | React app (via Nginx)            |
+| backend    | 8000 | FastAPI REST API                 |
+| mongodb    | 27017| MongoDB database                 |
+| ganache    | 7545 | Local Ethereum blockchain        |
++------------+------+----------------------------------+
+
+
+BLOCKCHAIN SETUP
+================
+
+After starting containers, deploy the smart contract:
+
+1. Open Remix: https://remix.ethereum.org
+
+2. Paste contract from: blockchain/contracts/RouteRegistry.sol
+
+3. Compile with Solidity 0.8.0
+
+4. Deploy:
+   - Environment: Custom RPC
+   - URL: http://localhost:7545
+
+5. Copy contract address and add to .env:
+   CONTRACT_ADDRESS=0xYourContractAddress
+
+6. Restart backend:
+   docker-compose restart backend
+
+
+DEVELOPMENT MODE
+================
+
+For development with hot-reload, run services separately:
+
+# Terminal 1 - MongoDB & Ganache only
+docker-compose up mongodb ganache
+
+# Terminal 2 - Backend (local)
+cd backend
+source venv/bin/activate
+uvicorn app.main:app --reload
+
+# Terminal 3 - Frontend (local)
+cd frontend
+npm run dev
+
+
+TROUBLESHOOTING
+===============
+
+1. "Port already in use"
+   Stop other services using that port, or change ports in docker-compose.yml
+
+2. "Cannot connect to MongoDB"
+   Wait a few seconds for MongoDB to fully start
+
+3. "Permission denied on Docker socket"
+   Run: sudo chmod 666 /var/run/docker.sock
+
+4. "Build fails - npm install error"
+   Clear Docker cache: docker-compose build --no-cache
+
+5. Check service status:
+   docker-compose ps
+
+6. Restart a specific service:
+   docker-compose restart backend
+
+
+PRODUCTION DEPLOYMENT
+=====================
+
+For production:
+
+1. Change credentials in docker-compose.yml
+2. Set DEBUG=False
+3. Use proper CORS_ORIGINS (not *)
+4. Use docker-compose -f docker-compose.prod.yml up
+
+
+FILE STRUCTURE
+==============
+
+PFA_VRP/
+├── docker-compose.yml      # Main orchestration file
+├── .env                    # Environment variables (create this)
+├── backend/
+│   └── Dockerfile         # Backend container config
+├── frontend/
+│   ├── Dockerfile         # Frontend container config
+│   └── nginx.conf         # Nginx configuration
+└── docker_guide.txt       # This file
+
+
+USEFUL DOCKER COMMANDS
+======================
+
+# List running containers
+docker ps
+
+# Enter container shell
+docker exec -it routechain-backend /bin/bash
+
+# View container logs
+docker logs routechain-backend
+
+# Remove all stopped containers
+docker container prune
+
+# Remove all unused images
+docker image prune
+
+# View disk usage
+docker system df
+
+===============================================

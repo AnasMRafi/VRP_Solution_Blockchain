@@ -1,0 +1,21 @@
+%=====================================================================
+%                    CONCLUSION GÉNÉRALE
+%=====================================================================
+
+\chapter*{Conclusion Générale}
+\addcontentsline{toc}{chapter}{Conclusion Générale}
+\markboth{Conclusion Générale}{Conclusion Générale}
+
+\vspace{1cm}
+
+Le projet RouteChain, présenté dans ce rapport, constitue une contribution significative à l'intersection de deux domaines technologiques majeurs : l'optimisation combinatoire appliquée à la logistique et la technologie Blockchain pour la garantie d'intégrité des données. Face aux défis croissants de la logistique du dernier kilomètre, exacerbés par l'explosion du commerce électronique, nous avons développé une solution complète permettant aux entreprises de livraison d'optimiser leurs tournées tout en garantissant une traçabilité irréfutable de leurs opérations.
+
+L'application développée répond pleinement aux objectifs initialement fixés. L'intégration de Google OR-Tools permet de calculer des séquences de livraison optimales, réduisant significativement les distances parcourues et les temps de trajet. Le smart contract RouteRegistry, déployé sur Ethereum, assure l'enregistrement immuable des données de chaque tournée, offrant une preuve vérifiable de l'intégrité des informations. L'interface utilisateur moderne, développée avec React et Tailwind CSS, offre une expérience fluide tant sur desktop que sur mobile. Enfin, l'architecture évolutive basée sur FastAPI et MongoDB garantit la maintenabilité et l'extensibilité du système.
+
+D'un point de vue technique, ce projet nous a permis d'approfondir nos compétences dans plusieurs domaines : le développement full-stack avec des frameworks modernes, la résolution de problèmes d'optimisation combinatoire, et le développement de smart contracts pour la blockchain Ethereum.
+
+Cependant, la solution actuelle présente certaines limitations qu'il convient de mentionner. L'utilisation de Ganache comme blockchain locale limite le déploiement à un environnement de développement, car un passage vers un testnet ou mainnet Ethereum nécessiterait une gestion des coûts de gas réels. L'algorithme VRP implémenté, bien que performant pour des tournées de taille moyenne, devrait être optimisé ou distribué pour gérer des flottes multi-véhicules ou des centaines de points de livraison. Par ailleurs, le système ne propose pas de suivi GPS en temps réel des véhicules, et son fonctionnement optimal dépend de la disponibilité des APIs externes OpenRouteService et Nominatim.
+
+Ces limitations ouvrent néanmoins des perspectives d'évolution prometteuses. Le déploiement sur une blockchain publique, en commençant par un testnet Ethereum comme Sepolia avant d'envisager le mainnet, constitue une première étape vers une solution de production. Le développement d'une application mobile native avec Flutter ou React Native, intégrant le GPS du smartphone, améliorerait considérablement l'expérience des chauffeurs sur le terrain. L'intégration de modèles de machine learning pour la prédiction des temps de livraison et l'optimisation dynamique représente une piste d'amélioration significative. L'extension du solveur VRP pour gérer des flottes multi-véhicules avec contraintes de capacité élargirait le champ d'application de la solution. Enfin, le développement de connecteurs pour les systèmes de gestion d'entreprise (SAP, Odoo) faciliterait l'intégration dans les écosystèmes existants.
+
+En définitive, RouteChain démontre la faisabilité et la pertinence de combiner optimisation algorithmique et technologie blockchain pour répondre aux enjeux contemporains de la logistique. Cette approche hybride, alliant efficacité opérationnelle et transparence des données, représente une voie d'avenir pour le secteur de la livraison du dernier kilomètre.

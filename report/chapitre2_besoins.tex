@@ -1,0 +1,305 @@
+%=====================================================================
+%            CHAPITRE 2 : SPÉCIFICATION DES BESOINS
+%=====================================================================
+
+\chapter{Spécification des Besoins}
+
+%---------------------------------------------------------------------
+\section{Introduction}
+%---------------------------------------------------------------------
+
+Ce chapitre est consacré à la spécification détaillée des besoins de l'application RouteChain. Nous commencerons par identifier les différents acteurs du système, puis nous détaillerons les exigences fonctionnelles regroupées par domaine métier. Enfin, nous présenterons les exigences non fonctionnelles qui garantissent la qualité globale de la solution.
+
+%---------------------------------------------------------------------
+\section{Identification des Acteurs}
+%---------------------------------------------------------------------
+
+L'application RouteChain distingue deux profils d'utilisateurs principaux, chacun disposant de droits et de fonctionnalités spécifiques.
+
+\subsection{Administrateur}
+
+L'administrateur est responsable de la gestion globale de la plateforme. Son rôle comprend :
+
+\begin{itemize}[leftmargin=2cm]
+    \item La gestion des comptes chauffeurs (création, modification, suppression)
+    \item La supervision de l'ensemble des tournées créées dans le système
+    \item L'accès aux tableaux de bord analytiques globaux
+    \item La gestion des clients et des dépôts
+    \item La configuration des paramètres système
+\end{itemize}
+
+\subsection{Chauffeur}
+
+Le chauffeur est l'utilisateur principal de l'application sur le terrain. Ses responsabilités incluent :
+
+\begin{itemize}[leftmargin=2cm]
+    \item La création et l'optimisation de ses propres tournées de livraison
+    \item L'exécution des livraisons avec confirmation de chaque point
+    \item La consultation de l'historique de ses tournées
+    \item L'accès aux statistiques personnelles de performance
+    \item La vérification de l'intégrité blockchain de ses données
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\caption{Récapitulatif des acteurs et leurs droits}
+\label{tab:acteurs}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Fonctionnalité} & \textbf{Administrateur} & \textbf{Chauffeur} \\
+\hline
+Créer une tournée & \checkmark & \checkmark \\
+Gérer ses propres tournées & \checkmark & \checkmark \\
+Voir toutes les tournées & \checkmark & -- \\
+Gérer les chauffeurs & \checkmark & -- \\
+Gérer les clients & \checkmark & \checkmark \\
+Gérer les dépôts & \checkmark & \checkmark \\
+Accès analytics global & \checkmark & -- \\
+Vérification blockchain & \checkmark & \checkmark \\
+\hline
+\end{tabular}
+\end{table}
+
+%---------------------------------------------------------------------
+\section{Besoins Fonctionnels}
+%---------------------------------------------------------------------
+
+\subsection{Gestion des Utilisateurs}
+
+\subsubsection{Authentification}
+
+\begin{table}[H]
+\centering
+\caption{Exigences fonctionnelles - Authentification}
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{ID} & \textbf{Description} \\
+\hline
+RF-AUTH-01 & Le système doit permettre l'inscription d'un nouveau chauffeur avec email, mot de passe, nom et prénom. \\
+\hline
+RF-AUTH-02 & Le système doit permettre la connexion via email et mot de passe. \\
+\hline
+RF-AUTH-03 & Le système doit générer un token JWT valide pour 7 jours après authentification réussie. \\
+\hline
+RF-AUTH-04 & Le système doit permettre la déconnexion en invalidant le token côté client. \\
+\hline
+RF-AUTH-05 & Le système doit afficher le profil de l'utilisateur connecté. \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Gestion des Rôles}
+
+\begin{table}[H]
+\centering
+\caption{Exigences fonctionnelles - Gestion des rôles}
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{ID} & \textbf{Description} \\
+\hline
+RF-ROLE-01 & Le système doit distinguer deux rôles : Administrateur et Chauffeur. \\
+\hline
+RF-ROLE-02 & L'administrateur doit pouvoir promouvoir un chauffeur au rôle d'administrateur. \\
+\hline
+RF-ROLE-03 & Le système doit restreindre l'accès aux fonctionnalités selon le rôle de l'utilisateur. \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Gestion des Clients et Dépôts}
+
+\begin{table}[H]
+\centering
+\caption{Exigences fonctionnelles - Clients et Dépôts}
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{ID} & \textbf{Description} \\
+\hline
+RF-CUST-01 & Le système doit permettre la création d'un client avec nom, adresse et coordonnées GPS. \\
+\hline
+RF-CUST-02 & Le système doit permettre la modification et la suppression d'un client. \\
+\hline
+RF-CUST-03 & Le système doit proposer un géocodage automatique pour convertir une adresse en coordonnées. \\
+\hline
+RF-DEPOT-01 & Le système doit permettre la création d'un dépôt avec nom, adresse et coordonnées GPS. \\
+\hline
+RF-DEPOT-02 & Le système doit permettre de sélectionner un dépôt comme point de départ d'une tournée. \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Création et Optimisation des Tournées}
+
+\begin{table}[H]
+\centering
+\caption{Exigences fonctionnelles - Tournées}
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{ID} & \textbf{Description} \\
+\hline
+RF-ROUTE-01 & Le système doit permettre la création d'une tournée avec un nom, un dépôt et une liste de points de livraison. \\
+\hline
+RF-ROUTE-02 & Le système doit calculer la matrice des distances entre tous les points via OpenRouteService. \\
+\hline
+RF-ROUTE-03 & Le système doit exécuter l'algorithme VRP (Google OR-Tools) pour déterminer l'ordre optimal de visite. \\
+\hline
+RF-ROUTE-04 & Le système doit afficher l'itinéraire optimisé sur une carte interactive. \\
+\hline
+RF-ROUTE-05 & Le système doit calculer la distance totale et la durée estimée de la tournée. \\
+\hline
+RF-ROUTE-06 & Le système doit permettre de modifier une tournée non démarrée. \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Exécution des Livraisons}
+
+\begin{table}[H]
+\centering
+\caption{Exigences fonctionnelles - Exécution}
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{ID} & \textbf{Description} \\
+\hline
+RF-EXEC-01 & Le système doit permettre de démarrer une tournée (passage au statut "En cours"). \\
+\hline
+RF-EXEC-02 & Le système doit permettre de confirmer la livraison de chaque point individuellement. \\
+\hline
+RF-EXEC-03 & Le système doit mettre à jour le compteur de livraisons effectuées. \\
+\hline
+RF-EXEC-04 & Le système doit marquer automatiquement la tournée comme "Terminée" lorsque tous les points sont livrés. \\
+\hline
+RF-EXEC-05 & Le système doit permettre l'ouverture de l'itinéraire dans une application de navigation externe (Google Maps, Waze). \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Interaction avec la Blockchain}
+
+\begin{table}[H]
+\centering
+\caption{Exigences fonctionnelles - Blockchain}
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{ID} & \textbf{Description} \\
+\hline
+RF-BC-01 & Le système doit enregistrer automatiquement le hash des données d'une tournée lors de sa création sur la blockchain. \\
+\hline
+RF-BC-02 & Le système doit mettre à jour l'enregistrement blockchain lors du changement de statut d'une tournée. \\
+\hline
+RF-BC-03 & Le système doit permettre de vérifier l'intégrité des données d'une tournée en comparant le hash actuel avec celui stocké sur la blockchain. \\
+\hline
+RF-BC-04 & Le système doit afficher les informations de transaction blockchain (hash, numéro de bloc). \\
+\hline
+RF-BC-05 & Le système doit fonctionner en mode dégradé (sans blockchain) si Ganache n'est pas disponible. \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Analytique et Reporting}
+
+\begin{table}[H]
+\centering
+\caption{Exigences fonctionnelles - Analytique}
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{ID} & \textbf{Description} \\
+\hline
+RF-STAT-01 & Le système doit afficher des statistiques globales : nombre de tournées, distance totale, livraisons effectuées. \\
+\hline
+RF-STAT-02 & Le système doit présenter des graphiques d'évolution des performances. \\
+\hline
+RF-STAT-03 & Le système doit permettre l'export d'une tournée au format PDF. \\
+\hline
+RF-STAT-04 & Le système doit permettre l'export d'une tournée au format CSV. \\
+\hline
+\end{tabular}
+\end{table}
+
+%---------------------------------------------------------------------
+\section{Besoins Non Fonctionnels}
+%---------------------------------------------------------------------
+
+\subsection{Performance et Scalabilité}
+
+\begin{table}[H]
+\centering
+\caption{Exigences non fonctionnelles - Performance}
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{ID} & \textbf{Description} \\
+\hline
+RNF-PERF-01 & Le temps de réponse de l'API doit être inférieur à 500ms pour les opérations courantes. \\
+\hline
+RNF-PERF-02 & L'optimisation VRP doit s'exécuter en moins de 10 secondes pour une tournée de 20 points. \\
+\hline
+RNF-PERF-03 & L'interface utilisateur doit rester fluide (60 fps) lors des interactions cartographiques. \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Sécurité}
+
+\begin{table}[H]
+\centering
+\caption{Exigences non fonctionnelles - Sécurité}
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{ID} & \textbf{Description} \\
+\hline
+RNF-SEC-01 & Les mots de passe doivent être hashés avec bcrypt avant stockage. \\
+\hline
+RNF-SEC-02 & L'authentification doit utiliser des tokens JWT signés avec une clé secrète. \\
+\hline
+RNF-SEC-03 & Les données sensibles doivent être hashées (SHA-256) avant enregistrement blockchain. \\
+\hline
+RNF-SEC-04 & L'API doit valider toutes les entrées utilisateur pour prévenir les injections. \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Utilisabilité et Accessibilité}
+
+\begin{table}[H]
+\centering
+\caption{Exigences non fonctionnelles - Utilisabilité}
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{ID} & \textbf{Description} \\
+\hline
+RNF-UX-01 & L'interface doit être responsive et utilisable sur mobile, tablette et desktop. \\
+\hline
+RNF-UX-02 & L'application doit être installable en tant que PWA (Progressive Web App). \\
+\hline
+RNF-UX-03 & Les messages d'erreur doivent être explicites et guider l'utilisateur. \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Intégrité des Données}
+
+\begin{table}[H]
+\centering
+\caption{Exigences non fonctionnelles - Intégrité}
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{ID} & \textbf{Description} \\
+\hline
+RNF-INT-01 & Les enregistrements blockchain doivent être immuables une fois créés. \\
+\hline
+RNF-INT-02 & Le système doit permettre de prouver qu'une donnée n'a pas été modifiée depuis son enregistrement. \\
+\hline
+RNF-INT-03 & Les horodatages doivent être synchronisés avec le timestamp du bloc blockchain. \\
+\hline
+\end{tabular}
+\end{table}
+
+%---------------------------------------------------------------------
+\section{Conclusion}
+%---------------------------------------------------------------------
+
+Ce chapitre a permis de définir de manière exhaustive les exigences fonctionnelles et non fonctionnelles de l'application RouteChain. Nous avons identifié deux acteurs principaux (Administrateur et Chauffeur) et détaillé leurs besoins respectifs.
+
+Les exigences fonctionnelles couvrent l'ensemble du cycle de vie d'une tournée de livraison : création, optimisation, exécution, et vérification blockchain. Les exigences non fonctionnelles garantissent la performance, la sécurité, l'utilisabilité et l'intégrité du système.
+
+Le chapitre suivant sera consacré à la conception du système, avec la modélisation UML des différents aspects de l'application.

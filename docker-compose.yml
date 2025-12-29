@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: routechain-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: routechain
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - routechain-network
+
+  # Ganache - Local Blockchain
+  ganache:
+    image: trufflesuite/ganache:latest
+    container_name: routechain-ganache
+    restart: unless-stopped
+    ports:
+      - "7545:8545"
+    command: ["--host", "0.0.0.0", "--port", "8545", "--accounts", "10"]
+    networks:
+      - routechain-network
+
+  # Backend - FastAPI
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: routechain-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/routechain?authSource=admin
+      - MONGODB_DB_NAME=routechain
+      - OPENROUTESERVICE_API_KEY=${OPENROUTESERVICE_API_KEY}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=10080
+      - CORS_ORIGINS=*
+      - GANACHE_URL=http://ganache:8545
+      - CONTRACT_ADDRESS=${CONTRACT_ADDRESS:-}
+      - DEBUG=True
+    depends_on:
+      - mongodb
+      - ganache
+    networks:
+      - routechain-network
+
+  # Frontend - React + Nginx
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: routechain-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - routechain-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  routechain-network:
+    driver: bridge

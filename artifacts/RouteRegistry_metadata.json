@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.0+commit.c7dfd78e"
+		"version": "0.8.30+commit.73712a01"
 	},
 	"language": "Solidity",
 	"output": {
@@ -438,7 +438,7 @@
 		"compilationTarget": {
 			"blockchain/contracts/RouteRegistry.sol": "RouteRegistry"
 		},
-		"evmVersion": "istanbul",
+		"evmVersion": "prague",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"

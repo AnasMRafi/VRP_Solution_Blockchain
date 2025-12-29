@@ -174,7 +174,7 @@ const DepotList = () => {
                     </button>
                 </div>
 
-                {error && (
+                {error && !showForm && (
                     <div className="alert alert-error mb-6">
                         <AlertCircle className="w-5 h-5" />
                         <span>{error}</span>
@@ -283,12 +283,21 @@ const DepotList = () => {
                                         {editingDepot ? 'Edit Depot' : 'Add Depot'}
                                     </h2>
                                     <button
-                                        onClick={() => { setShowForm(false); setEditingDepot(null); }}
+                                        onClick={() => { setShowForm(false); setEditingDepot(null); setError(null); }}
                                         className="p-2 hover:bg-gray-100 rounded-lg"
                                     >
                                         <X className="w-5 h-5" />
                                     </button>
                                 </div>
+
+                                {/* Error inside modal */}
+                                {error && (
+                                    <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700 text-sm">
+                                        <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                                        <span>{error}</span>
+                                        <button type="button" onClick={() => setError(null)} className="ml-auto"><X className="w-4 h-4" /></button>
+                                    </div>
+                                )}
 
                                 <form onSubmit={handleSubmit} className="space-y-4">
                                     <div>
@@ -310,35 +319,82 @@ const DepotList = () => {
                                             value={formData.location.address}
                                             onChange={(e) => setFormData({ ...formData, location: { ...formData.location, address: e.target.value } })}
                                             className="input w-full"
-                                            placeholder="123 Industrial Zone"
+                                            placeholder="123 Industrial Zone, Casablanca"
                                         />
                                     </div>
 
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Latitude *</label>
-                                            <input
-                                                type="number"
-                                                step="any"
-                                                required
-                                                value={formData.location.latitude}
-                                                onChange={(e) => setFormData({ ...formData, location: { ...formData.location, latitude: e.target.value } })}
-                                                className="input w-full"
-                                                placeholder="33.5731"
-                                            />
+                                    {/* GPS Coordinates with Geocoding */}
+                                    <div className="bg-blue-50 p-3 rounded-lg">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <label className="block text-sm font-medium text-gray-700">
+                                                <MapPin className="w-4 h-4 inline mr-1" />
+                                                GPS Coordinates *
+                                            </label>
+                                            <button
+                                                type="button"
+                                                onClick={async () => {
+                                                    if (!formData.location.address) {
+                                                        setError('Please enter an address first');
+                                                        return;
+                                                    }
+                                                    setLoading(true);
+                                                    setError(null);
+                                                    const fullAddress = `${formData.location.address}, Morocco`;
+                                                    try {
+                                                        const result = await api.geocoding.geocodeAddress(fullAddress);
+                                                        if (result) {
+                                                            setFormData({
+                                                                ...formData,
+                                                                location: {
+                                                                    ...formData.location,
+                                                                    latitude: result.lat,
+                                                                    longitude: result.lng
+                                                                }
+                                                            });
+                                                        } else {
+                                                            setError('Could not find coordinates for this address');
+                                                        }
+                                                    } catch (err) {
+                                                        setError('Geocoding failed');
+                                                    }
+                                                    setLoading(false);
+                                                }}
+                                                disabled={loading}
+                                                className="btn btn-sm btn-secondary"
+                                            >
+                                                {loading ? <Loader className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
+                                                Get GPS from Address
+                                            </button>
                                         </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Longitude *</label>
-                                            <input
-                                                type="number"
-                                                step="any"
-                                                required
-                                                value={formData.location.longitude}
-                                                onChange={(e) => setFormData({ ...formData, location: { ...formData.location, longitude: e.target.value } })}
-                                                className="input w-full"
-                                                placeholder="-7.5898"
-                                            />
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-xs font-medium text-gray-600 mb-1">Latitude *</label>
+                                                <input
+                                                    type="number"
+                                                    step="any"
+                                                    required
+                                                    value={formData.location.latitude}
+                                                    onChange={(e) => setFormData({ ...formData, location: { ...formData.location, latitude: e.target.value } })}
+                                                    className="input w-full text-sm"
+                                                    placeholder="33.5731"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-medium text-gray-600 mb-1">Longitude *</label>
+                                                <input
+                                                    type="number"
+                                                    step="any"
+                                                    required
+                                                    value={formData.location.longitude}
+                                                    onChange={(e) => setFormData({ ...formData, location: { ...formData.location, longitude: e.target.value } })}
+                                                    className="input w-full text-sm"
+                                                    placeholder="-7.5898"
+                                                />
+                                            </div>
                                         </div>
+                                        <p className="text-xs text-gray-500 mt-2">
+                                            Click "Get GPS from Address" to auto-fill via Nominatim geocoding
+                                        </p>
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4">
@@ -380,7 +436,7 @@ const DepotList = () => {
                                     <div className="flex gap-3 pt-4">
                                         <button
                                             type="button"
-                                            onClick={() => { setShowForm(false); setEditingDepot(null); }}
+                                            onClick={() => { setShowForm(false); setEditingDepot(null); setError(null); }}
                                             className="btn btn-secondary flex-1"
                                         >
                                             Cancel

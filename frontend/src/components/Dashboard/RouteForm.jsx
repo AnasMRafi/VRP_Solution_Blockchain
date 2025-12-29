@@ -3,14 +3,14 @@
  * 
  * Form to create and optimize a new delivery route.
  * Features:
- * - Depot location input
- * - Dynamic delivery points (5-20)
+ * - Depot location input with selection from saved depots
+ * - Dynamic delivery points (5-20) with customer selection
  * - Form validation
  * - Route optimization trigger
  * - Preview on map
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import InteractiveMap from '../Map/InteractiveMap';
@@ -21,14 +21,23 @@ import {
     Loader,
     AlertCircle,
     Save,
-    X
+    X,
+    Warehouse,
+    Users,
+    ChevronDown
 } from 'lucide-react';
 
 const RouteForm = () => {
     const navigate = useNavigate();
 
+    // Saved depots and customers from database
+    const [savedDepots, setSavedDepots] = useState([]);
+    const [savedCustomers, setSavedCustomers] = useState([]);
+    const [loadingData, setLoadingData] = useState(true);
+
     // Form state
     const [routeName, setRouteName] = useState('');
+    const [selectedDepotId, setSelectedDepotId] = useState('');
     const [depot, setDepot] = useState({
         location: { latitude: 33.5731, longitude: -7.5898 },
         address: {
@@ -46,6 +55,74 @@ const RouteForm = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [showMap, setShowMap] = useState(false);
+
+    // Fetch saved depots and customers on mount
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoadingData(true);
+            try {
+                const [depotsData, customersData] = await Promise.all([
+                    api.depots.list().catch(() => []),
+                    api.customers.list().catch(() => ({ customers: [] }))
+                ]);
+                setSavedDepots(depotsData || []);
+                setSavedCustomers(customersData.customers || []);
+
+                // Set default depot if available
+                const defaultDepot = (depotsData || []).find(d => d.is_default);
+                if (defaultDepot) {
+                    selectDepot(defaultDepot);
+                }
+            } catch (err) {
+                console.error('Failed to load data:', err);
+            } finally {
+                setLoadingData(false);
+            }
+        };
+        fetchData();
+    }, []);
+
+    /**
+     * Select a depot from saved list
+     */
+    const selectDepot = (depotData) => {
+        setSelectedDepotId(depotData.depot_id);
+        setDepot({
+            location: {
+                latitude: depotData.location?.latitude || 0,
+                longitude: depotData.location?.longitude || 0
+            },
+            address: {
+                street: depotData.location?.address || depotData.name,
+                city: 'Casablanca',
+                postal_code: '',
+                country: 'Morocco'
+            }
+        });
+    };
+
+    /**
+     * Select a customer for a delivery point
+     */
+    const selectCustomer = (index, customer) => {
+        const newPoints = [...deliveryPoints];
+        newPoints[index] = {
+            ...newPoints[index],
+            customer_name: customer.name || '',
+            phone: customer.phone || '',
+            address: {
+                street: customer.address?.street || '',
+                city: customer.address?.city || 'Casablanca',
+                postal_code: customer.address?.postal_code || '',
+                country: customer.address?.country || 'Morocco'
+            },
+            location: {
+                latitude: customer.address?.latitude || 0,
+                longitude: customer.address?.longitude || 0
+            }
+        };
+        setDeliveryPoints(newPoints);
+    };
 
     /**
      * Create empty delivery point
@@ -354,10 +431,39 @@ const RouteForm = () => {
                                 <div className="card-body">
                                     <h3 className="text-lg font-semibold mb-4">Depot Location</h3>
 
-                                    {/* Address Input */}
+                                    {/* Saved Depots Selector */}
+                                    {savedDepots.length > 0 && (
+                                        <div className="mb-4">
+                                            <label className="block text-sm font-medium mb-1">
+                                                <Warehouse className="w-4 h-4 inline mr-1" />
+                                                Select Saved Depot
+                                            </label>
+                                            <select
+                                                value={selectedDepotId}
+                                                onChange={(e) => {
+                                                    const selected = savedDepots.find(d => d.depot_id === e.target.value);
+                                                    if (selected) {
+                                                        selectDepot(selected);
+                                                    } else {
+                                                        setSelectedDepotId('');
+                                                    }
+                                                }}
+                                                className="input w-full"
+                                            >
+                                                <option value="">-- Select a depot or enter manually --</option>
+                                                {savedDepots.map((d) => (
+                                                    <option key={d.depot_id} value={d.depot_id}>
+                                                        {d.name} {d.is_default ? '(Default)' : ''} - {d.location?.address || 'No address'}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    )}
+
+                                    {/* Manual Address Input */}
                                     <div className="mb-4">
                                         <label className="block text-sm font-medium mb-1">
-                                            Address
+                                            Address {savedDepots.length > 0 ? '(or enter manually)' : ''}
                                         </label>
                                         <div className="flex gap-2">
                                             <input
@@ -528,15 +634,72 @@ const RouteForm = () => {
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                                     <div>
                                                         <label className="block text-xs font-medium mb-1">
-                                                            Customer Name *
+                                                            <Users className="w-3 h-3 inline mr-1" />
+                                                            Customer *
                                                         </label>
-                                                        <input
-                                                            type="text"
-                                                            value={point.customer_name}
-                                                            onChange={(e) => updateDeliveryPoint(index, 'customer_name', e.target.value)}
-                                                            className="input text-sm"
-                                                            required
-                                                        />
+
+                                                        {/* Toggle: Select Existing vs Enter New */}
+                                                        {savedCustomers.length > 0 && (
+                                                            <div className="flex gap-1 mb-2">
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => updateDeliveryPoint(index, 'useExistingCustomer', true)}
+                                                                    className={`flex-1 py-1 px-2 text-xs rounded-l-lg border transition-colors ${point.useExistingCustomer !== false
+                                                                            ? 'bg-primary-100 border-primary-500 text-primary-700 font-medium'
+                                                                            : 'bg-gray-50 border-gray-300 text-gray-600 hover:bg-gray-100'
+                                                                        }`}
+                                                                >
+                                                                    Select Existing
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => updateDeliveryPoint(index, 'useExistingCustomer', false)}
+                                                                    className={`flex-1 py-1 px-2 text-xs rounded-r-lg border transition-colors ${point.useExistingCustomer === false
+                                                                            ? 'bg-primary-100 border-primary-500 text-primary-700 font-medium'
+                                                                            : 'bg-gray-50 border-gray-300 text-gray-600 hover:bg-gray-100'
+                                                                        }`}
+                                                                >
+                                                                    Enter New
+                                                                </button>
+                                                            </div>
+                                                        )}
+
+                                                        {/* Show dropdown OR input based on toggle */}
+                                                        {savedCustomers.length > 0 && point.useExistingCustomer !== false ? (
+                                                            <select
+                                                                value=""
+                                                                onChange={(e) => {
+                                                                    const customer = savedCustomers.find(c => c.customer_id === e.target.value);
+                                                                    if (customer) {
+                                                                        selectCustomer(index, customer);
+                                                                    }
+                                                                }}
+                                                                className="input text-sm w-full"
+                                                            >
+                                                                <option value="">-- Select a customer --</option>
+                                                                {savedCustomers.map((c) => (
+                                                                    <option key={c.customer_id} value={c.customer_id}>
+                                                                        {c.name} - {c.address?.street || c.email || 'No address'}
+                                                                    </option>
+                                                                ))}
+                                                            </select>
+                                                        ) : (
+                                                            <input
+                                                                type="text"
+                                                                value={point.customer_name}
+                                                                onChange={(e) => updateDeliveryPoint(index, 'customer_name', e.target.value)}
+                                                                className="input text-sm"
+                                                                placeholder="Enter customer name"
+                                                                required
+                                                            />
+                                                        )}
+
+                                                        {/* Show selected customer name if using existing */}
+                                                        {savedCustomers.length > 0 && point.useExistingCustomer !== false && point.customer_name && (
+                                                            <p className="text-xs text-green-600 mt-1">
+                                                                ✓ Selected: {point.customer_name}
+                                                            </p>
+                                                        )}
                                                     </div>
 
                                                     <div>

@@ -1,0 +1,41 @@
+%=====================================================================
+%                         RÉSUMÉ
+%=====================================================================
+
+\chapter*{Résumé}
+\addcontentsline{toc}{chapter}{Résumé}
+
+\vspace{0.5cm}
+
+L'essor fulgurant du commerce électronique et l'augmentation constante des volumes de livraison représentent des défis majeurs pour le secteur logistique, exigeant une optimisation accrue des opérations tout en garantissant la traçabilité et la transparence des échanges. Ce projet de fin d'année s'inscrit dans le cadre du développement d'une solution innovante combinant optimisation des tournées de livraison et technologie blockchain.
+
+Notre approche intègre des techniques avancées d'optimisation combinatoire pour résoudre le problème de tournées de véhicules (VRP). Le système implémenté utilise \mbox{Google OR-Tools} avec des stratégies d'optimisation avancées pour calculer les itinéraires optimaux minimisant la distance totale parcourue. L'intégration de l'API OpenRouteService permet d'obtenir des matrices de distances réelles basées sur le réseau routier.
+
+La composante blockchain du projet assure l'immuabilité et la vérifiabilité des données de livraison. Un smart contract \textit{RouteRegistry}, développé en Solidity et déployé sur une blockchain Ethereum locale via Ganache, enregistre le hash cryptographique SHA-256 de chaque tournée. Ce mécanisme permet de garantir l'intégrité des données et de constituer une preuve irréfutable en cas de litige.
+
+L'implémentation pratique comprend une application web full-stack moderne développée avec FastAPI pour le backend et React avec Vite pour le frontend. L'interface offre un dashboard intuitif pour la gestion des tournées, la visualisation cartographique via Leaflet, le suivi des livraisons en temps réel et la vérification de l'intégrité blockchain. Le système intègre également une authentification JWT sécurisée et une gestion des rôles (administrateur/chauffeur).
+
+Ce projet contribue significativement à moderniser les opérations de livraison du dernier kilomètre, offrant une solution adaptée aux défis de transparence et d'efficacité du secteur logistique et ouvrant la voie à de futures innovations dans la traçabilité des chaînes d'approvisionnement.
+
+% \vspace{0.3cm}
+% \noindent\textbf{Mots-clés :} VRP, Optimisation, Blockchain, Ethereum, Solidity, FastAPI, React, OR-Tools, Logistique
+
+\vspace{1.5cm}
+
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+\vspace{0.5cm}
+
+The rapid growth of e-commerce and the ever-increasing volume of deliveries pose significant challenges for the logistics sector, requiring enhanced operational optimization while ensuring traceability and transparency of exchanges. This final year project focuses on developing an innovative solution that combines delivery route optimization with blockchain technology.
+
+Our approach integrates advanced combinatorial optimization techniques to solve the Vehicle Routing Problem (VRP). The implemented system uses \mbox{Google OR-Tools} with advanced optimization strategies to calculate optimal routes that minimize total travel distance. Integration with the OpenRouteService API provides real distance matrices based on the actual road network.
+
+The blockchain component of the project ensures immutability and verifiability of delivery data. A \textit{RouteRegistry} smart contract, developed in Solidity and deployed on a local Ethereum blockchain via Ganache, records the SHA-256 cryptographic hash of each route. This mechanism guarantees data integrity and provides irrefutable proof in case of disputes.
+
+The practical implementation includes a modern full-stack web application developed with FastAPI for the backend and React with Vite for the frontend. The interface offers an intuitive dashboard for route management, map visualization via Leaflet, real-time delivery tracking, and blockchain integrity verification. The system also integrates secure JWT authentication and role management (administrator/driver).
+
+This project significantly contributes to modernizing last-mile delivery operations, providing a solution tailored to the transparency and efficiency challenges of the logistics sector and paving the way for future innovations in supply chain traceability.
+
+% \vspace{0.3cm}
+% \noindent\textbf{Keywords:} VRP, Optimization, Blockchain, Ethereum, Solidity, FastAPI, React, OR-Tools, Logistics

@@ -1,0 +1,220 @@
+%=====================================================================
+%            CHAPITRE 5 : DISCUSSION ET ÉVALUATION
+%=====================================================================
+
+\chapter{Discussion et Évaluation}
+
+%---------------------------------------------------------------------
+\section{Introduction}
+%---------------------------------------------------------------------
+
+Ce chapitre propose une analyse critique du projet RouteChain. Nous examinerons les défis techniques rencontrés durant le développement, les stratégies adoptées pour la gestion des données, ainsi qu'une évaluation globale du système. Nous conclurons par une discussion sur les limitations actuelles et les perspectives d'évolution.
+
+%---------------------------------------------------------------------
+\section{Défis Techniques Rencontrés}
+%---------------------------------------------------------------------
+
+\subsection{Latence de l'Optimisation VRP}
+
+L'un des premiers défis rencontrés concerne le temps de calcul de l'algorithme d'optimisation VRP. Pour des tournées comportant un grand nombre de points de livraison (au-delà de 20 points), le temps de réponse pouvait dépasser les attentes utilisateur.
+
+\textbf{Solutions mises en œuvre :}
+\begin{itemize}[leftmargin=2cm]
+    \item Limitation du temps d'exécution du solveur OR-Tools à 30 secondes maximum
+    \item Utilisation de la stratégie \texttt{PATH\_CHEAPEST\_ARC} pour obtenir rapidement une solution initiale
+    \item Affichage d'un indicateur de progression pendant le calcul
+\end{itemize}
+
+\subsection{Coûts de Gas et Délais Blockchain}
+
+L'interaction avec la blockchain Ethereum, même en environnement local (Ganache), introduit des contraintes spécifiques liées aux transactions.
+
+\textbf{Problématiques identifiées :}
+\begin{itemize}[leftmargin=2cm]
+    \item Chaque transaction blockchain consomme du "gas" (unité de coût computationnel)
+    \item Les transactions nécessitent un temps de confirmation
+    \item En cas d'erreur, les transactions échouées consomment quand même du gas
+\end{itemize}
+
+\textbf{Optimisations réalisées :}
+\begin{itemize}[leftmargin=2cm]
+    \item Stockage uniquement du hash des données (32 bytes) plutôt que des données complètes
+    \item Mode dégradé permettant le fonctionnement sans blockchain disponible
+    \item Gestion des erreurs avec retry automatique
+\end{itemize}
+
+\subsection{Synchronisation MongoDB - Blockchain}
+
+Un défi architectural majeur réside dans la synchronisation entre les données stockées dans MongoDB et les enregistrements blockchain.
+
+\textbf{Stratégie adoptée :}
+\begin{itemize}[leftmargin=2cm]
+    \item MongoDB reste la source principale des données détaillées
+    \item La blockchain stocke uniquement les hash et métadonnées critiques
+    \item Les informations de transaction (hash, bloc) sont enregistrées dans MongoDB pour référence
+\end{itemize}
+
+% \subsection{Gestion du CORS pour l'Accès Mobile}
+
+% L'accès à l'application depuis des appareils mobiles sur le même réseau local a nécessité une configuration particulière du CORS (Cross-Origin Resource Sharing).
+
+% \textbf{Solution :}
+% \begin{itemize}[leftmargin=2cm]
+%     \item Configuration du backend pour accepter toutes les origines en développement
+%     \item Détection automatique de l'URL de l'API basée sur le hostname d'accès
+%     \item Documentation claire pour le déploiement en production avec des origines spécifiques
+% \end{itemize}
+
+%---------------------------------------------------------------------
+\section{Gestion des Données et Intégrité}
+%---------------------------------------------------------------------
+
+\subsection{Mécanisme de Vérification par Hash}
+
+Le système de vérification d'intégrité repose sur le calcul d'un hash SHA-256 des données immuables d'une tournée.
+
+\begin{table}[H]
+\centering
+\caption{Données incluses dans le calcul du hash}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Champ} & \textbf{Justification} \\
+\hline
+route\_id & Identifiant unique de la tournée \\
+route\_name & Nom donné par l'utilisateur \\
+depot\_location & Coordonnées du point de départ \\
+delivery\_points (adresses et coordonnées) & Définition des livraisons \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Important :} Les champs mutables (statut, horodatages, livraisons confirmées) sont exclus du calcul du hash pour permettre les mises à jour légitimes sans invalider la vérification.
+
+\subsection{Distinction entre Données Mutables et Immuables}
+
+\begin{table}[H]
+\centering
+\caption{Classification des données de tournée}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Catégorie} & \textbf{Exemples} & \textbf{Traitement} \\
+\hline
+Immuables & route\_id, points de livraison, dépôt & Inclus dans le hash blockchain \\
+\hline
+Mutables & status, completed\_at, confirmations & Exclus du hash, mis à jour librement \\
+\hline
+\end{tabular}
+\end{table}
+
+Cette distinction permet de garantir que les données fondamentales de la tournée (qui l'a créée, où sont les livraisons) restent vérifiables, tout en autorisant l'évolution normale du statut d'exécution.
+
+%---------------------------------------------------------------------
+% \section{Évaluation du Système}
+% %---------------------------------------------------------------------
+
+% \subsection{Tests Fonctionnels}
+
+% L'ensemble des fonctionnalités définies dans le cahier des charges ont été implémentées et testées.
+
+% \begin{table}[H]
+% \centering
+% \caption{Couverture des exigences fonctionnelles}
+% \begin{tabular}{|l|c|c|}
+% \hline
+% \textbf{Module} & \textbf{Exigences} & \textbf{Implémentées} \\
+% \hline
+% Authentification & 5 & 5 (100\%) \\
+% Gestion des rôles & 3 & 3 (100\%) \\
+% Clients et Dépôts & 5 & 5 (100\%) \\
+% Tournées & 6 & 6 (100\%) \\
+% Exécution & 5 & 5 (100\%) \\
+% Blockchain & 5 & 5 (100\%) \\
+% Analytique & 4 & 4 (100\%) \\
+% \hline
+% \textbf{Total} & \textbf{33} & \textbf{33 (100\%)} \\
+% \hline
+% \end{tabular}
+% \end{table}
+
+% \subsection{Métriques de Performance}
+
+% \begin{table}[H]
+% \centering
+% \caption{Métriques de performance mesurées}
+% \begin{tabular}{|l|l|l|}
+% \hline
+% \textbf{Métrique} & \textbf{Valeur mesurée} & \textbf{Objectif} \\
+% \hline
+% Temps de réponse API (opérations courantes) & < 300 ms & < 500 ms \\
+% \hline
+% Temps d'optimisation VRP (10 points) & 2-3 secondes & < 10 secondes \\
+% \hline
+% Temps d'optimisation VRP (20 points) & 5-8 secondes & < 10 secondes \\
+% \hline
+% Confirmation transaction blockchain & 1-2 secondes & N/A (Ganache) \\
+% \hline
+% Chargement initial de l'application & < 2 secondes & < 3 secondes \\
+% \hline
+% \end{tabular}
+% \end{table}
+
+% \subsection{Retours Utilisateurs}
+
+% Des tests d'acceptation ont été réalisés avec des utilisateurs potentiels. Les principaux retours sont :
+
+% \textbf{Points positifs :}
+% \begin{itemize}[leftmargin=2cm]
+%     \item Interface intuitive et moderne
+%     \item Visualisation cartographique claire
+%     \item Rapidité de l'optimisation
+%     \item Concept innovant de la traçabilité blockchain
+% \end{itemize}
+
+% \textbf{Points d'amélioration identifiés :}
+% \begin{itemize}[leftmargin=2cm]
+%     \item Ajout d'une application mobile native pour les chauffeurs
+%     \item Intégration avec des systèmes GPS temps réel
+%     \item Export vers d'autres formats (Excel, KML)
+% \end{itemize}
+
+%---------------------------------------------------------------------
+% Section déplacée vers Conclusion Générale
+%---------------------------------------------------------------------
+% \section{Limitations et Perspectives}
+% %---------------------------------------------------------------------
+
+% \subsection{Limitations Actuelles}
+
+% \begin{enumerate}[leftmargin=2cm]
+%     \item \textbf{Blockchain locale :} L'utilisation de Ganache limite la solution à un environnement de développement. Un déploiement sur un testnet ou mainnet Ethereum nécessiterait une gestion des coûts de gas réels.
+    
+%     \item \textbf{Scalabilité VRP :} Pour des flottes avec plusieurs véhicules ou des centaines de points, l'algorithme actuel devrait être optimisé ou distribué.
+    
+%     \item \textbf{Absence de temps réel :} Le système ne propose pas de suivi GPS en temps réel des véhicules.
+    
+%     \item \textbf{Dépendance aux APIs externes :} Le fonctionnement optimal dépend de la disponibilité d'OpenRouteService et Nominatim.
+% \end{enumerate}
+
+% \subsection{Perspectives d'Évolution}
+
+% \begin{enumerate}[leftmargin=2cm]
+%     \item \textbf{Déploiement sur Blockchain publique :} Migration vers un testnet Ethereum (Sepolia, Goerli) puis vers le mainnet pour une utilisation en production.
+    
+%     \item \textbf{Application mobile native :} Développement d'une application Flutter ou React Native dédiée aux chauffeurs avec GPS intégré.
+    
+%     \item \textbf{Intelligence artificielle :} Intégration de modèles de machine learning pour la prédiction des temps de livraison et l'optimisation dynamique.
+    
+%     \item \textbf{Multi-véhicules :} Extension du solveur VRP pour gérer des flottes de plusieurs véhicules avec contraintes de capacité.
+    
+%     \item \textbf{Intégration ERP :} Connecteurs pour les systèmes de gestion d'entreprise (SAP, Odoo, etc.).
+% \end{enumerate}
+
+%---------------------------------------------------------------------
+\section{Conclusion}
+%---------------------------------------------------------------------
+
+Ce chapitre a permis d'analyser en profondeur les défis techniques rencontrés lors du développement de RouteChain et les solutions adoptées. L'évaluation du système montre une couverture complète des exigences fonctionnelles avec des performances satisfaisantes.
+
+Les limitations identifiées, principalement liées à l'environnement de développement (blockchain locale) et à la scalabilité, ouvrent des perspectives d'évolution intéressantes pour transformer RouteChain en une solution de production complète.
+
+Le système actuel constitue une preuve de concept fonctionnelle démontrant la faisabilité et l'intérêt de combiner optimisation VRP et traçabilité blockchain dans le domaine de la logistique du dernier kilomètre.

@@ -1,0 +1,590 @@
+%=====================================================================
+%            CHAPITRE 3 : CONCEPTION DU SYSTÈME
+%=====================================================================
+
+\chapter{Conception du Système}
+
+%---------------------------------------------------------------------
+\section{Introduction}
+%---------------------------------------------------------------------
+
+Ce chapitre présente la conception détaillée du système RouteChain à travers différents niveaux d'abstraction. Nous commencerons par une vue d'ensemble de l'architecture globale, puis nous utiliserons le langage de modélisation UML pour représenter les différents aspects du système : cas d'utilisation, structure statique et comportement dynamique. Nous terminerons par la conception du schéma de base de données et l'architecture du smart contract.
+
+%---------------------------------------------------------------------
+\section{Architecture Globale du Système}
+%---------------------------------------------------------------------
+
+\subsection{Architecture Trois-Tiers}
+
+RouteChain adopte une architecture trois-tiers classique, séparant clairement les responsabilités entre la présentation, la logique métier et la persistance des données.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    tier/.style={rectangle, draw=primaryblue, fill=primaryblue!15, thick, minimum width=13cm, minimum height=2.2cm, text centered, rounded corners=8pt, drop shadow},
+    component/.style={rectangle, draw=secondarypurple, fill=white, thick, minimum width=3.2cm, minimum height=1.1cm, text centered, rounded corners=5pt, font=\small\bfseries, drop shadow={opacity=0.3}},
+    arrow/.style={-{Stealth[length=4mm, width=3mm]}, line width=1.5pt, primaryblue}
+]
+    % Tiers with gradient effect
+    \node[tier] (presentation) at (0,7) {};
+    \node[font=\large\bfseries, primaryblue] at (0,8.2) {Couche Présentation};
+    
+    \node[tier, fill=successgreen!15, draw=successgreen] (logique) at (0,3.5) {};
+    \node[font=\large\bfseries, successgreen] at (0,4.7) {Couche Logique Métier};
+    
+    \node[tier, fill=warningorange!15, draw=warningorange] (donnees) at (0,0) {};
+    \node[font=\large\bfseries, warningorange] at (0,1.2) {Couche Données};
+    
+    % Components - Presentation
+    \node[component] at (-4,6.5) {React 18};
+    \node[component] at (0,6.5) {Leaflet Maps};
+    \node[component] at (4,6.5) {Tailwind CSS};
+    
+    % Components - Logic
+    \node[component, draw=successgreen] at (-4,3) {FastAPI};
+    \node[component, draw=successgreen] at (0,3) {Google OR-Tools};
+    \node[component, draw=successgreen] at (4,3) {Web3.py};
+    
+    % Components - Data
+    \node[component, draw=warningorange] at (-2.5,-0.5) {MongoDB Atlas};
+    \node[component, draw=warningorange] at (2.5,-0.5) {Ethereum};
+    
+    % Arrows
+    \draw[arrow] (0,5.8) -- (0,4.9);
+    \draw[arrow] (0,2.3) -- (0,1.4);
+    
+\end{tikzpicture}
+\caption{Architecture trois-tiers de RouteChain}
+\label{fig:architecture_3tiers}
+\end{figure}
+
+\subsection{Diagramme d'Interaction des Composants}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    box/.style={rectangle, draw=primaryblue, fill=primaryblue!10, thick, minimum width=2.8cm, minimum height=1.4cm, text centered, rounded corners=6pt, font=\small\bfseries, align=center, drop shadow={opacity=0.3}},
+    ext/.style={rectangle, draw=warningorange, fill=warningorange!10, thick, minimum width=2.8cm, minimum height=1.4cm, text centered, rounded corners=6pt, font=\small\bfseries, align=center, drop shadow={opacity=0.3}},
+    arrow/.style={-{Stealth[length=3mm]}, line width=1.2pt, gray!70},
+    label/.style={font=\tiny\bfseries, fill=white, inner sep=2pt}
+]
+    % Internal components
+    \node[box] (frontend) at (0,0) {Frontend\\React};
+    \node[box] (backend) at (4.5,0) {Backend\\FastAPI};
+    \node[box, fill=successgreen!10, draw=successgreen] (mongodb) at (9,2) {MongoDB\\Atlas};
+    \node[box, fill=secondarypurple!10, draw=secondarypurple] (blockchain) at (9,-2) {Ganache\\Ethereum};
+    
+    % External services
+    \node[ext] (ors) at (4.5,-3.5) {OpenRoute\\Service};
+    \node[ext] (nominatim) at (0,-3.5) {Nominatim\\Geocoding};
+    
+    % Arrows with labels
+    \draw[arrow] (frontend) -- node[label, above] {REST API} (backend);
+    \draw[arrow] (backend) -- node[label, sloped, above] {Motor} (mongodb);
+    \draw[arrow] (backend) -- node[label, sloped, above] {Web3} (blockchain);
+    \draw[arrow] (backend) -- node[label, right] {HTTP} (ors);
+    \draw[arrow] (frontend) -- node[label, left] {HTTP} (nominatim);
+    
+\end{tikzpicture}
+\caption{Diagramme d'interaction des composants}
+\label{fig:composants}
+\end{figure}
+
+%---------------------------------------------------------------------
+\section{Modélisation UML : Diagrammes de Cas d'Utilisation}
+%---------------------------------------------------------------------
+
+% Define stick figure command
+\newcommand{\stickman}[1]{%
+    \begin{scope}[shift={#1}, scale=0.4]
+        \draw[thick] (0,2) circle (0.4); % head
+        \draw[thick] (0,1.6) -- (0,0.5); % body
+        \draw[thick] (-0.5,1.3) -- (0,1.1) -- (0.5,1.3); % arms
+        \draw[thick] (0,0.5) -- (-0.4,0) -- (-0.5,-0.5); % left leg
+        \draw[thick] (0,0.5) -- (0.4,0) -- (0.5,-0.5); % right leg
+    \end{scope}
+}
+
+\subsection{Diagramme de Cas d'Utilisation Global}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    usecase/.style={ellipse, draw=primaryblue, fill=primaryblue!8, thick, minimum width=4cm, minimum height=1.2cm, text centered, font=\small, drop shadow={opacity=0.2}},
+    system/.style={rectangle, draw=primaryblue!50, fill=blue!3, thick, rounded corners=10pt},
+    actorbox/.style={rectangle, draw=none, fill=none}
+]
+    % System boundary
+    \draw[system] (1,-5.5) rectangle (10,3.5);
+    \node[font=\Large\bfseries, primaryblue, anchor=north west] at (1.3,3.3) {RouteChain};
+    
+    % Actor - Chauffeur
+    \stickman{(-1, 1)}
+    \node[font=\small\bfseries] at (-1, -0.5) {Chauffeur};
+    
+    % Actor - Admin
+    \stickman{(-1, -4)}
+    \node[font=\small\bfseries] at (-1, -5.5) {Admin};
+    
+    % Use cases
+    \node[usecase] (auth) at (5.5, 3) {S'authentifier};
+    \node[usecase] (create) at (5.5, 1.5) {Créer une tournée};
+    \node[usecase] (optimize) at (5.5, 0) {Optimiser itinéraire};
+    \node[usecase] (confirm) at (5.5, -1.5) {Confirmer livraison};
+    \node[usecase, fill=secondarypurple!8, draw=secondarypurple] (verify) at (5.5, -3) {Vérifier blockchain};
+    \node[usecase, fill=successgreen!8, draw=successgreen] (stats) at (5.5, -4.5) {Consulter analytics};
+    
+    % Connections - Driver (blue)
+    \draw[->, thick, primaryblue!70] (-0.2, 1.4) -- (auth.west);
+    \draw[->, thick, primaryblue!70] (-0.2, 1) -- (create.west);
+    \draw[->, thick, primaryblue!70] (-0.2, 0.6) -- (optimize.west);
+    \draw[->, thick, primaryblue!70] (-0.2, 0.2) -- (confirm.west);
+    \draw[->, thick, secondarypurple!70] (-0.2, -0.2) -- (verify.west);
+    
+    % Connections - Admin (orange)
+    \draw[->, thick, warningorange!70] (-0.2, -3.6) -- (auth.west);
+    \draw[->, thick, warningorange!70] (-0.2, -4) -- (stats.west);
+    \draw[->, thick, warningorange!70] (-0.2, -4.4) -- (verify.west);
+    
+\end{tikzpicture}
+\caption{Diagramme de cas d'utilisation global du système RouteChain}
+\label{fig:uc_global}
+\end{figure}
+
+\subsection{Diagramme de Cas d'Utilisation : Sous-système Chauffeur}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    usecase/.style={ellipse, draw=primaryblue, fill=primaryblue!8, thick, minimum width=3.8cm, minimum height=1cm, text centered, font=\footnotesize, drop shadow={opacity=0.2}},
+    system/.style={rectangle, draw=primaryblue!50, fill=blue!3, thick, rounded corners=10pt},
+    include/.style={->, dashed, thick, gray}
+]
+    % System boundary
+    \draw[system] (1,-5) rectangle (9,2.5);
+    \node[font=\large\bfseries, primaryblue, anchor=north west] at (1.3,2.3) {Gestion des Tournées};
+    
+    % Actor
+    \stickman{(-1, -1)}
+    \node[font=\small\bfseries] at (-1, -2.5) {Chauffeur};
+    
+    % Use cases
+    \node[usecase] (new) at (5, 2) {Créer nouvelle tournée};
+    \node[usecase] (add) at (5, 0.7) {Ajouter points de livraison};
+    \node[usecase] (opt) at (5, -0.6) {Lancer optimisation VRP};
+    \node[usecase] (view) at (5, -1.9) {Visualiser sur carte};
+    \node[usecase] (start) at (5, -3.2) {Démarrer la tournée};
+    \node[usecase, fill=successgreen!8, draw=successgreen] (deliver) at (5, -4.5) {Confirmer livraison};
+    
+    % Connections
+    \draw[->, thick, primaryblue!70] (-0.2, -0.6) -- (new.west);
+    \draw[->, thick, primaryblue!70] (-0.2, -0.8) -- (add.west);
+    \draw[->, thick, primaryblue!70] (-0.2, -1) -- (opt.west);
+    \draw[->, thick, primaryblue!70] (-0.2, -1.2) -- (view.west);
+    \draw[->, thick, primaryblue!70] (-0.2, -1.4) -- (start.west);
+    \draw[->, thick, successgreen!70] (-0.2, -1.6) -- (deliver.west);
+    
+    % Include relationships
+    \draw[include] (new.south) -- node[font=\tiny, right, pos=0.5] {<<include>>} (add.north);
+    \draw[include] (add.south) -- node[font=\tiny, right, pos=0.5] {<<include>>} (opt.north);
+    
+\end{tikzpicture}
+\caption{Diagramme de cas d'utilisation - Sous-système Chauffeur}
+\label{fig:uc_driver}
+\end{figure}
+
+\subsection{Diagramme de Cas d'Utilisation : Sous-système Administrateur}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    usecase/.style={ellipse, draw=secondarypurple, fill=secondarypurple!8, thick, minimum width=3.8cm, minimum height=1cm, text centered, font=\footnotesize, drop shadow={opacity=0.2}},
+    system/.style={rectangle, draw=secondarypurple!50, fill=purple!3, thick, rounded corners=10pt}
+]
+    % System boundary
+    \draw[system] (1,-3.5) rectangle (9,2);
+    \node[font=\large\bfseries, secondarypurple, anchor=north west] at (1.3,1.8) {Administration};
+    
+    % Actor
+    \stickman{(-1, -0.5)}
+    \node[font=\small\bfseries] at (-1, -2) {Admin};
+    
+    % Use cases
+    \node[usecase] (drivers) at (5, 1.5) {Lister tous les chauffeurs};
+    \node[usecase] (role) at (5, 0.3) {Modifier rôle utilisateur};
+    \node[usecase] (routes) at (5, -0.9) {Voir toutes les tournées};
+    \node[usecase, fill=successgreen!8, draw=successgreen] (analytics) at (5, -2.1) {Accéder aux analytics};
+    \node[usecase] (manage) at (5, -3.3) {Gérer clients et dépôts};
+    
+    % Connections
+    \draw[->, thick, secondarypurple!70] (-0.2, -0.1) -- (drivers.west);
+    \draw[->, thick, secondarypurple!70] (-0.2, -0.3) -- (role.west);
+    \draw[->, thick, secondarypurple!70] (-0.2, -0.5) -- (routes.west);
+    \draw[->, thick, successgreen!70] (-0.2, -0.7) -- (analytics.west);
+    \draw[->, thick, secondarypurple!70] (-0.2, -0.9) -- (manage.west);
+    
+\end{tikzpicture}
+\caption{Diagramme de cas d'utilisation - Sous-système Administrateur}
+\label{fig:uc_admin}
+\end{figure}
+
+%---------------------------------------------------------------------
+\section{Modélisation UML : Diagramme de Classes}
+%---------------------------------------------------------------------
+
+\subsection{Modèle du Domaine}
+
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{tikzpicture}[
+    classhead/.style={rectangle, draw=primaryblue, fill=primaryblue!20, thick, text width=4.2cm, text centered, font=\small\bfseries, minimum height=0.7cm},
+    classbody/.style={rectangle, draw=primaryblue, fill=white, thick, text width=4.2cm, font=\footnotesize, minimum height=2cm, align=left},
+    arrow/.style={->, thick, gray},
+    comp/.style={-{Diamond[fill=black, length=3mm, width=2mm]}, thick},
+    assoc/.style={-, thick},
+    mult/.style={font=\tiny\bfseries, fill=white, inner sep=1pt}
+]
+    % Driver class
+    \node[classhead] (driver_h) at (0, 5) {Driver};
+    \node[classbody, anchor=north] (driver_b) at (0, 4.65) {
+        \texttt{- driver\_id: String}\\
+        \texttt{- email: String}\\
+        \texttt{- password\_hash: String}\\
+        \texttt{- first\_name: String}\\
+        \texttt{- last\_name: String}\\
+        \texttt{- role: String}\\
+        \texttt{- created\_at: DateTime}
+    };
+    
+    % Route class
+    \node[classhead, fill=successgreen!20, draw=successgreen] (route_h) at (6, 5) {Route};
+    \node[classbody, draw=successgreen, anchor=north] (route_b) at (6, 4.65) {
+        \texttt{- route\_id: String}\\
+        \texttt{- route\_name: String}\\
+        \texttt{- status: String}\\
+        \texttt{- total\_distance: Float}\\
+        \texttt{- blockchain\_tx: String}\\
+        \texttt{- data\_hash: String}\\
+        \texttt{- created\_at: DateTime}
+    };
+    
+    % DeliveryPoint class
+    \node[classhead, fill=warningorange!20, draw=warningorange] (point_h) at (12, 5) {DeliveryPoint};
+    \node[classbody, draw=warningorange, anchor=north] (point_b) at (12, 4.65) {
+        \texttt{- point\_id: String}\\
+        \texttt{- customer\_name: String}\\
+        \texttt{- address: String}\\
+        \texttt{- latitude: Float}\\
+        \texttt{- longitude: Float}\\
+        \texttt{- status: String}\\
+        \texttt{- sequence\_order: Int}
+    };
+    
+    % Customer class
+    \node[classhead, fill=secondarypurple!20, draw=secondarypurple] (cust_h) at (0, -1) {Customer};
+    \node[classbody, draw=secondarypurple, anchor=north] (cust_b) at (0, -1.35) {
+        \texttt{- customer\_id: String}\\
+        \texttt{- name: String}\\
+        \texttt{- email: String}\\
+        \texttt{- phone: String}\\
+        \texttt{- address: String}
+    };
+    
+    % Depot class
+    \node[classhead] (depot_h) at (6, -1) {Depot};
+    \node[classbody, anchor=north] (depot_b) at (6, -1.35) {
+        \texttt{- depot\_id: String}\\
+        \texttt{- name: String}\\
+        \texttt{- address: String}\\
+        \texttt{- latitude: Float}\\
+        \texttt{- longitude: Float}
+    };
+    
+    % Relationships with multiplicities
+    \draw[assoc] (driver_b.east) -- node[mult, above, pos=0.2] {1} node[mult, above, pos=0.8] {*} node[mult, below, pos=0.5] {possède} (route_b.west);
+    \draw[comp] (route_b.east) -- node[mult, above, pos=0.2] {1} node[mult, above, pos=0.8] {*} node[mult, below, pos=0.5] {contient} (point_b.west);
+    \draw[assoc] (route_b.south) -- ++(0,-0.8) -| node[mult, above left, pos=0.25] {*} node[mult, below, pos=0.5] {part de} (depot_h.north) node[mult, above right, pos=0.95] {1};
+    \draw[assoc] (point_b.south) -- ++(0,-1.5) -| node[mult, above left, pos=0.25] {*} node[mult, below, pos=0.5] {référence} (cust_h.north) node[mult, above right, pos=0.95] {0..1};
+    
+\end{tikzpicture}
+}
+\caption{Diagramme de classes - Modèle du domaine}
+\label{fig:class_diagram}
+\end{figure}
+
+%---------------------------------------------------------------------
+\section{Modélisation UML : Diagrammes de Séquence}
+%---------------------------------------------------------------------
+
+\subsection{Diagramme de Séquence : Authentification}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    actor/.style={rectangle, draw=primaryblue, fill=primaryblue!15, minimum width=2cm, minimum height=0.8cm, font=\footnotesize\bfseries, rounded corners=3pt, drop shadow={opacity=0.2}},
+    lifeline/.style={dashed, thick, gray!60},
+    message/.style={-{Stealth[length=2.5mm]}, thick, primaryblue},
+    return/.style={-{Stealth[length=2.5mm]}, dashed, thick, successgreen},
+    activation/.style={fill=primaryblue!20, draw=primaryblue},
+    note/.style={rectangle, draw=warningorange, fill=warningorange!10, font=\tiny, text width=2cm, rounded corners=2pt}
+]
+    % Actors/Objects
+    \node[actor] (user) at (0,0) {Utilisateur};
+    \node[actor] (front) at (3.5,0) {Frontend};
+    \node[actor, fill=successgreen!15, draw=successgreen] (back) at (7,0) {Backend};
+    \node[actor, fill=warningorange!15, draw=warningorange] (db) at (10.5,0) {MongoDB};
+    
+    % Lifelines
+    \draw[lifeline] (0,-0.4) -- (0,-8);
+    \draw[lifeline] (3.5,-0.4) -- (3.5,-8);
+    \draw[lifeline] (7,-0.4) -- (7,-8);
+    \draw[lifeline] (10.5,-0.4) -- (10.5,-8);
+    
+    % Activation boxes
+    \draw[activation] (6.85,-2) rectangle (7.15,-5.5);
+    
+    % Messages
+    \draw[message] (0,-1) -- node[above, font=\tiny\bfseries] {1: saisie credentials} (3.5,-1);
+    \draw[message] (3.5,-2) -- node[above, font=\tiny\bfseries] {2: POST /auth/login} (7,-2);
+    \draw[message] (7,-2.8) -- node[above, font=\tiny\bfseries] {3: find\_one(email)} (10.5,-2.8);
+    \draw[return] (10.5,-3.5) -- node[above, font=\tiny\bfseries] {4: driver\_document} (7,-3.5);
+    
+    % Note for processing
+    \node[note] at (9,-4.5) {verify\_password\\generate\_jwt()};
+    
+    \draw[return] (7,-5.8) -- node[above, font=\tiny\bfseries] {5: \{token, user\}} (3.5,-5.8);
+    \draw[message] (3.5,-6.5) -- node[right, font=\tiny\bfseries] {6: store token} (3.5,-6.8);
+    \draw[return] (3.5,-7.2) -- node[above, font=\tiny\bfseries] {7: redirect dashboard} (0,-7.2);
+    
+\end{tikzpicture}
+\caption{Diagramme de séquence - Processus d'authentification JWT}
+\label{fig:seq_auth}
+\end{figure}
+
+\subsection{Diagramme de Séquence : Processus d'Optimisation VRP}
+
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{tikzpicture}[
+    actor/.style={rectangle, draw=primaryblue, fill=primaryblue!15, minimum width=1.6cm, minimum height=0.7cm, font=\tiny\bfseries, rounded corners=3pt},
+    lifeline/.style={dashed, thick, gray!50},
+    message/.style={-{Stealth[length=2mm]}, thick, primaryblue},
+    return/.style={-{Stealth[length=2mm]}, dashed, thick, successgreen},
+    activation/.style={fill=primaryblue!20, draw=primaryblue}
+]
+    % Actors/Objects
+    \node[actor] (user) at (0,0) {Chauffeur};
+    \node[actor] (front) at (2.5,0) {Frontend};
+    \node[actor, fill=successgreen!15, draw=successgreen] (back) at (5,0) {Backend};
+    \node[actor, fill=warningorange!15, draw=warningorange] (ors) at (7.5,0) {ORS API};
+    \node[actor, fill=secondarypurple!15, draw=secondarypurple] (vrp) at (10,0) {OR-Tools};
+    \node[actor] (db) at (12.5,0) {MongoDB};
+    \node[actor, fill=gray!20, draw=gray] (bc) at (15,0) {Blockchain};
+    
+    % Lifelines
+    \foreach \x in {0,2.5,5,7.5,10,12.5,15} {
+        \draw[lifeline] (\x,-0.35) -- (\x,-11);
+    }
+    
+    % Activation box for backend
+    \draw[activation] (4.85,-1.5) rectangle (5.15,-9.5);
+    
+    % Messages
+    \draw[message] (0,-0.8) -- node[above, font=\tiny\bfseries] {1: submit points} (2.5,-0.8);
+    \draw[message] (2.5,-1.5) -- node[above, font=\tiny\bfseries] {2: POST /routes/optimize} (5,-1.5);
+    
+    \draw[message] (5,-2.2) -- node[above, font=\tiny\bfseries] {3: distance\_matrix()} (7.5,-2.2);
+    \draw[return] (7.5,-3) -- node[above, font=\tiny\bfseries] {4: matrix[n×n]} (5,-3);
+    
+    \draw[message] (5,-3.8) -- node[above, font=\tiny\bfseries] {5: solve\_vrp(matrix)} (10,-3.8);
+    \draw[return] (10,-4.6) -- node[above, font=\tiny\bfseries] {6: optimal\_sequence} (5,-4.6);
+    
+    \draw[message] (5,-5.4) -- node[above, font=\tiny\bfseries] {7: insert\_one(route)} (12.5,-5.4);
+    \draw[return] (12.5,-6) -- node[above, font=\tiny\bfseries] {8: route\_id} (5,-6);
+    
+    \draw[message] (5,-6.8) -- node[above, font=\tiny\bfseries] {9: sha256(data)} (5,-7.1);
+    \draw[message] (5,-7.5) -- node[above, font=\tiny\bfseries] {10: createRoute(hash)} (15,-7.5);
+    \draw[return] (15,-8.3) -- node[above, font=\tiny\bfseries] {11: tx\_hash, block} (5,-8.3);
+    
+    \draw[message] (5,-9) -- node[above, font=\tiny\bfseries] {12: update\_one(tx)} (12.5,-9);
+    
+    \draw[return] (5,-9.8) -- node[above, font=\tiny\bfseries] {13: route\_response} (2.5,-9.8);
+    \draw[return] (2.5,-10.3) -- node[above, font=\tiny\bfseries] {14: display map} (0,-10.3);
+    
+\end{tikzpicture}
+}
+\caption{Diagramme de séquence - Processus complet d'optimisation VRP avec enregistrement blockchain}
+\label{fig:seq_vrp}
+\end{figure}
+
+\subsection{Diagramme de Séquence : Vérification de l'Intégrité Blockchain}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    actor/.style={rectangle, draw=primaryblue, fill=primaryblue!15, minimum width=2cm, minimum height=0.8cm, font=\footnotesize\bfseries, rounded corners=3pt},
+    lifeline/.style={dashed, thick, gray!50},
+    message/.style={-{Stealth[length=2.5mm]}, thick, primaryblue},
+    return/.style={-{Stealth[length=2.5mm]}, dashed, thick, successgreen},
+    activation/.style={fill=successgreen!20, draw=successgreen},
+    alt/.style={rectangle, draw=gray, thick, rounded corners=3pt},
+    altlabel/.style={font=\tiny\bfseries, fill=gray!20, inner sep=2pt}
+]
+    % Actors/Objects
+    \node[actor] (user) at (0,0) {Utilisateur};
+    \node[actor] (front) at (3.5,0) {Frontend};
+    \node[actor, fill=successgreen!15, draw=successgreen] (back) at (7,0) {Backend};
+    \node[actor, fill=warningorange!15, draw=warningorange] (db) at (10.5,0) {MongoDB};
+    
+    % Lifelines
+    \draw[lifeline] (0,-0.4) -- (0,-9);
+    \draw[lifeline] (3.5,-0.4) -- (3.5,-9);
+    \draw[lifeline] (7,-0.4) -- (7,-9);
+    \draw[lifeline] (10.5,-0.4) -- (10.5,-9);
+    
+    % Activation box
+    \draw[activation] (6.85,-2) rectangle (7.15,-6.5);
+    
+    % Messages
+    \draw[message] (0,-1) -- node[above, font=\tiny\bfseries] {1: click "Vérifier"} (3.5,-1);
+    \draw[message] (3.5,-2) -- node[above, font=\tiny\bfseries] {2: GET /routes/\{id\}/verify} (7,-2);
+    \draw[message] (7,-2.8) -- node[above, font=\tiny\bfseries] {3: find\_one(route\_id)} (10.5,-2.8);
+    \draw[return] (10.5,-3.5) -- node[above, font=\tiny\bfseries] {4: route\_data} (7,-3.5);
+    
+    % Processing note
+    \node[rectangle, draw=secondarypurple, fill=secondarypurple!10, font=\tiny, text width=3cm, rounded corners=2pt, align=left] at (10,-5) {
+        stored = route.data\_hash\\
+        current = sha256(data)\\
+        result = (stored == current)
+    };
+    
+    % Alt fragment
+    \draw[alt, fill=blue!3] (2.8,-6.8) rectangle (11,-8.8);
+    \node[altlabel] at (3.3,-6.95) {alt};
+    \draw[dashed, gray] (2.8,-7.7) -- (11,-7.7);
+    
+    \node[font=\tiny, anchor=west] at (3,-7.3) {[hashes égaux]};
+    \draw[return] (7,-7.4) -- node[above, font=\tiny\bfseries, fill=successgreen!20] {\{verified: true, status: "VALIDE"\}} (3.5,-7.4);
+    
+    \node[font=\tiny, anchor=west] at (3,-8) {[hashes différents]};
+    \draw[return, warningorange] (7,-8.4) -- node[above, font=\tiny\bfseries, fill=warningorange!20] {\{verified: false, status: "MODIFIÉ"\}} (3.5,-8.4);
+    
+    % Final return
+    \draw[return] (3.5,-8.8) -- node[above, font=\tiny\bfseries] {5: afficher résultat} (0,-8.8);
+    
+\end{tikzpicture}
+\caption{Diagramme de séquence - Vérification de l'intégrité via blockchain}
+\label{fig:seq_verify}
+\end{figure}
+
+%---------------------------------------------------------------------
+\section{Conception du Schéma de Base de Données}
+%---------------------------------------------------------------------
+
+\subsection{Collections MongoDB}
+
+RouteChain utilise MongoDB, une base de données NoSQL orientée documents. Les principales collections sont décrites ci-dessous.
+
+\begin{table}[H]
+\centering
+\caption{Structure de la collection \texttt{drivers}}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Champ} & \textbf{Type} & \textbf{Description} \\
+\hline
+\_id & ObjectId & Identifiant MongoDB \\
+driver\_id & String & Identifiant unique (DRV\_YYYYMMDD\_HHMMSS) \\
+email & String & Adresse email (unique) \\
+password\_hash & String & Mot de passe hashé (bcrypt) \\
+first\_name & String & Prénom \\
+last\_name & String & Nom de famille \\
+role & String & Rôle (admin ou driver) \\
+created\_at & DateTime & Date de création \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Structure de la collection \texttt{routes}}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Champ} & \textbf{Type} & \textbf{Description} \\
+\hline
+\_id & ObjectId & Identifiant MongoDB \\
+route\_id & String & Identifiant unique (ROUTE\_YYYYMMDD\_HHMMSS) \\
+route\_name & String & Nom de la tournée \\
+driver\_id & String & Référence au chauffeur \\
+status & String & Statut (optimized, in\_progress, completed) \\
+depot\_location & Object & Coordonnées du dépôt \\
+delivery\_points & Array & Liste des points de livraison \\
+optimization\_result & Object & Résultats de l'optimisation \\
+blockchain\_tx\_hash & String & Hash de la transaction blockchain \\
+blockchain\_block & Integer & Numéro du bloc \\
+data\_hash & String & Hash SHA-256 des données \\
+created\_at & DateTime & Date de création \\
+completed\_at & DateTime & Date de complétion \\
+\hline
+\end{tabular}
+\end{table}
+
+%---------------------------------------------------------------------
+\section{Architecture du Smart Contract}
+%---------------------------------------------------------------------
+
+\subsection{Structure du Contrat RouteRegistry}
+
+Le smart contract \texttt{RouteRegistry} est déployé sur la blockchain Ethereum (Ganache en développement) et assure l'immuabilité des enregistrements de tournées.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    contract/.style={rectangle, draw=secondarypurple, fill=secondarypurple!10, thick, minimum width=10cm, rounded corners=8pt},
+    section/.style={rectangle, draw=gray, fill=white, thick, minimum width=9cm, rounded corners=5pt, font=\footnotesize, align=left},
+    title/.style={font=\large\bfseries, secondarypurple}
+]
+    % Contract box
+    \node[contract, minimum height=8cm] (c) at (0,0) {};
+    \node[title] at (0,3.5) {<<contract>> RouteRegistry};
+    
+    % State variables
+    \node[section, anchor=north] at (0,3) {
+        \textbf{State Variables}\\[2pt]
+        \texttt{mapping(string => RouteRecord) routes}\\
+        \texttt{string[] routeIds}
+    };
+    
+    % Functions
+    \node[section, anchor=north] at (0,1.3) {
+        \textbf{Functions}\\[2pt]
+        \texttt{+ createRoute(routeId, dataHash, status, distance, count)}\\
+        \texttt{+ updateRoute(routeId, newHash, newStatus, completedCount)}\\
+        \texttt{+ getRoute(routeId) : RouteRecord}\\
+        \texttt{+ verifyRoute(routeId, dataHash) : bool}\\
+        \texttt{+ getRouteCount() : uint256}
+    };
+    
+    % Events
+    \node[section, anchor=north, fill=successgreen!10, draw=successgreen] at (0,-1.2) {
+        \textbf{Events}\\[2pt]
+        \texttt{event RouteCreated(routeId, dataHash, timestamp, driver)}\\
+        \texttt{event RouteUpdated(routeId, newHash, newStatus, timestamp)}\\
+        \texttt{event RouteCompleted(routeId, finalHash, completedCount)}
+    };
+    
+\end{tikzpicture}
+\caption{Structure du smart contract RouteRegistry}
+\label{fig:smart_contract}
+\end{figure}
+
+%---------------------------------------------------------------------
+\section{Conclusion}
+%---------------------------------------------------------------------
+
+Ce chapitre a présenté la conception complète du système RouteChain à travers différents niveaux d'abstraction. L'architecture trois-tiers garantit une séparation claire des responsabilités, tandis que les diagrammes UML offrent une vision globale et détaillée du fonctionnement du système.
+
+Les diagrammes de séquence mettent particulièrement en évidence les deux aspects innovants de l'application : le processus d'optimisation VRP avec ses multiples composants et l'interaction avec la blockchain pour la traçabilité des données.
+
+Le chapitre suivant sera consacré à la réalisation technique, présentant les technologies utilisées et les interfaces développées.
