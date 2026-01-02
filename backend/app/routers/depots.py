@@ -16,7 +16,7 @@ from app.models.depot import (
     DepotUpdate,
     DepotResponse
 )
-from app.models.driver import DriverInDB
+from app.models.driver import DriverInDB, DriverRole
 from app.services.database import get_database
 from app.routers.auth import get_current_driver
 
@@ -28,6 +28,11 @@ router = APIRouter(prefix="/depots", tags=["Depots"])
 def generate_depot_id() -> str:
     """Generate unique depot ID"""
     return f"depot_{uuid.uuid4().hex[:12]}"
+
+
+def is_admin(driver: DriverInDB) -> bool:
+    """Check if the driver has admin role"""
+    return driver.role == DriverRole.ADMIN
 
 
 @router.post("", response_model=DepotResponse, status_code=status.HTTP_201_CREATED)
@@ -70,15 +75,26 @@ async def list_depots(
     current_driver: DriverInDB = Depends(get_current_driver)
 ):
     """
-    List all depots for the current driver
+    List all depots for the current driver (admins see all depots)
     """
-    cursor = db.depots.find({"driver_id": current_driver.driver_id}).sort("name", 1)
+    # Admins can see all depots, drivers only see their own
+    if is_admin(current_driver):
+        query = {}
+    else:
+        query = {"driver_id": current_driver.driver_id}
+    
+    cursor = db.depots.find(query).sort("name", 1)
     depots = await cursor.to_list(length=100)
     
-    # Convert ObjectId
+    # Convert ObjectId and add creator name for admins
     for d in depots:
         if "_id" in d:
             d["_id"] = str(d["_id"])
+        # For admins, add the creator's name
+        if is_admin(current_driver) and d.get("driver_id") != current_driver.driver_id:
+            creator = await db.drivers.find_one({"driver_id": d.get("driver_id")})
+            if creator:
+                d["created_by"] = creator.get("full_name", creator.get("email", "Unknown"))
     
     return [DepotResponse(**d) for d in depots]
 

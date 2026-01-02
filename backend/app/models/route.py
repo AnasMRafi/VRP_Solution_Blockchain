@@ -330,6 +330,7 @@ class RouteListItem(BaseModel):
     total_duration_minutes: Optional[float]
     delivery_count: int
     completed_deliveries: int
+    created_by: Optional[str] = None  # Creator name for admin view
 
 
 class DeliveryConfirmation(BaseModel):

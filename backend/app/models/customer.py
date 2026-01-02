@@ -55,6 +55,7 @@ class CustomerResponse(CustomerBase):
     updated_at: datetime
     delivery_count: int = 0
     last_delivery: Optional[datetime] = None
+    created_by: Optional[str] = None  # Creator name for admin view
 
     class Config:
         from_attributes = True

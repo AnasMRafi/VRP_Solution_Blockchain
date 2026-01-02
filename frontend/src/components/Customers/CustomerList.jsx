@@ -249,6 +249,12 @@ const CustomerList = () => {
                                                 <Package className="w-4 h-4" />
                                                 {customer.delivery_count || 0} deliveries
                                             </span>
+                                            {customer.created_by && (
+                                                <span className="text-xs text-purple-600 bg-purple-50 px-2 py-1 rounded-full flex items-center gap-1">
+                                                    <Users className="w-3 h-3" />
+                                                    {customer.created_by}
+                                                </span>
+                                            )}
                                             <button
                                                 onClick={() => handleEdit(customer)}
                                                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"

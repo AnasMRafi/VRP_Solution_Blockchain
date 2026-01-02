@@ -29,7 +29,7 @@ from app.models.route import (
     DeliveryStatus,
     DeliveryPoint
 )
-from app.models.driver import DriverInDB
+from app.models.driver import DriverInDB, DriverRole
 from app.services.database import get_database
 from app.services.distance import distance_service
 from app.services.vrp_solver import vrp_solver
@@ -47,6 +47,16 @@ except ImportError:
     logging.warning("Blockchain service not available - running without blockchain")
 
 logger = logging.getLogger(__name__)
+
+
+def is_admin(driver: DriverInDB) -> bool:
+    """Check if the driver has admin role"""
+    return driver.role == DriverRole.ADMIN
+
+
+def check_route_access(route: dict, current_driver: DriverInDB) -> bool:
+    """Check if driver has access to route (owner or admin)"""
+    return route.get("driver_id") == current_driver.driver_id or is_admin(current_driver)
 
 # Create router
 router = APIRouter(prefix="/routes", tags=["Routes"])
@@ -252,13 +262,13 @@ async def list_routes(
     # Build query filter
     query = {}
     
-    # Non-admin drivers can only see their own routes
-    # (In a real app, you'd check an is_admin field)
+    # Admins can see all routes, drivers only see their own
     if driver_id:
         query["driver_id"] = driver_id
-    else:
-        # Default: show only current driver's routes
+    elif not is_admin(current_driver):
+        # Non-admin drivers can only see their own routes
         query["driver_id"] = current_driver.driver_id
+    # Admins without driver_id filter see all routes
     
     # Add status filter if provided
     if status_filter:
@@ -283,6 +293,13 @@ async def list_routes(
         # Get distance and duration from optimization result
         opt_result = route.get("optimization_result", {})
         
+        # Get creator name for admin viewing other drivers' routes
+        created_by = None
+        if is_admin(current_driver) and route.get("driver_id") != current_driver.driver_id:
+            creator = await db.drivers.find_one({"driver_id": route.get("driver_id")})
+            if creator:
+                created_by = creator.get("full_name", creator.get("email", "Unknown"))
+        
         route_item = RouteListItem(
             route_id=route["route_id"],
             route_name=route["route_name"],
@@ -292,7 +309,8 @@ async def list_routes(
             total_distance_km=opt_result.get("total_distance_km"),
             total_duration_minutes=opt_result.get("total_duration_minutes"),
             delivery_count=len(delivery_points),
-            completed_deliveries=completed_deliveries
+            completed_deliveries=completed_deliveries,
+            created_by=created_by
         )
         route_list.append(route_item)
     
@@ -333,8 +351,8 @@ async def get_route_details(
             detail=f"Route {route_id} not found"
         )
     
-    # Check access (drivers can only see their own routes)
-    if route.get("driver_id") != current_driver.driver_id:
+    # Check access (drivers can only see their own routes, admins can see all)
+    if not check_route_access(route, current_driver):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Access denied to this route"
@@ -383,8 +401,8 @@ async def update_route_status(
             detail=f"Route {route_id} not found"
         )
     
-    # Check access
-    if route.get("driver_id") != current_driver.driver_id:
+    # Check access (owner or admin)
+    if not check_route_access(route, current_driver):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Access denied to this route"
@@ -509,8 +527,8 @@ async def confirm_delivery(
             detail=f"Route {route_id} not found"
         )
     
-    # Check access
-    if route.get("driver_id") != current_driver.driver_id:
+    # Check access (owner or admin)
+    if not check_route_access(route, current_driver):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Access denied to this route"
@@ -654,8 +672,8 @@ async def complete_route(
             detail=f"Route {route_id} not found"
         )
     
-    # Check access
-    if route.get("driver_id") != current_driver.driver_id:
+    # Check access (owner or admin)
+    if not check_route_access(route, current_driver):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Access denied to this route"
@@ -796,8 +814,8 @@ async def delete_route(
             detail=f"Route {route_id} not found"
         )
     
-    # Check access
-    if route.get("driver_id") != current_driver.driver_id:
+    # Check access (owner or admin)
+    if not check_route_access(route, current_driver):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Access denied to this route"
@@ -875,8 +893,8 @@ async def export_route_csv(
             detail=f"Route {route_id} not found"
         )
     
-    # Check access
-    if route.get("driver_id") != current_driver.driver_id:
+    # Check access (owner or admin)
+    if not check_route_access(route, current_driver):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Access denied to this route"
@@ -933,8 +951,8 @@ async def export_route_pdf(
             detail=f"Route {route_id} not found"
         )
     
-    # Check access
-    if route.get("driver_id") != current_driver.driver_id:
+    # Check access (owner or admin)
+    if not check_route_access(route, current_driver):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Access denied to this route"

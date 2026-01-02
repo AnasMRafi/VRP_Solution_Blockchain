@@ -18,7 +18,7 @@ from app.models.customer import (
     CustomerResponse,
     CustomerListResponse
 )
-from app.models.driver import DriverInDB
+from app.models.driver import DriverInDB, DriverRole
 from app.services.database import get_database
 from app.routers.auth import get_current_driver
 
@@ -30,6 +30,11 @@ router = APIRouter(prefix="/customers", tags=["Customers"])
 def generate_customer_id() -> str:
     """Generate unique customer ID"""
     return f"cust_{uuid.uuid4().hex[:12]}"
+
+
+def is_admin(driver: DriverInDB) -> bool:
+    """Check if the driver has admin role"""
+    return driver.role == DriverRole.ADMIN
 
 
 @router.post("", response_model=CustomerResponse, status_code=status.HTTP_201_CREATED)
@@ -70,9 +75,13 @@ async def list_customers(
     current_driver: DriverInDB = Depends(get_current_driver)
 ):
     """
-    List all customers for the current driver
+    List all customers for the current driver (admins see all customers)
     """
-    query = {"driver_id": current_driver.driver_id}
+    # Admins can see all customers, drivers only see their own
+    if is_admin(current_driver):
+        query = {}
+    else:
+        query = {"driver_id": current_driver.driver_id}
     
     # Search filter
     if search:
@@ -95,10 +104,15 @@ async def list_customers(
     cursor = db.customers.find(query).sort("name", 1).skip(skip).limit(limit)
     customers = await cursor.to_list(length=limit)
     
-    # Convert ObjectId
+    # Convert ObjectId and add creator name for admins
     for c in customers:
         if "_id" in c:
             c["_id"] = str(c["_id"])
+        # For admins, add the creator's name
+        if is_admin(current_driver) and c.get("driver_id") != current_driver.driver_id:
+            creator = await db.drivers.find_one({"driver_id": c.get("driver_id")})
+            if creator:
+                c["created_by"] = creator.get("full_name", creator.get("email", "Unknown"))
     
     return CustomerListResponse(
         customers=[CustomerResponse(**c) for c in customers],

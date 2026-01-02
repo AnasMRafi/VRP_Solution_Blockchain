@@ -43,57 +43,54 @@
 \contentsline {subsection}{\numberline {3.2.1}Architecture Trois-Tiers}{10}{subsection.3.2.1}%
 \contentsline {subsection}{\numberline {3.2.2}Diagramme d'Interaction des Composants}{11}{subsection.3.2.2}%
 \contentsline {section}{\numberline {3.3}Modélisation UML : Diagrammes de Cas d'Utilisation}{11}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Diagramme de Cas d'Utilisation Global}{11}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Diagramme de Cas d'Utilisation : Sous-système Chauffeur}{12}{subsection.3.3.2}%
-\contentsline {subsection}{\numberline {3.3.3}Diagramme de Cas d'Utilisation : Sous-système Administrateur}{12}{subsection.3.3.3}%
-\contentsline {section}{\numberline {3.4}Modélisation UML : Diagramme de Classes}{13}{section.3.4}%
-\contentsline {subsection}{\numberline {3.4.1}Modèle du Domaine}{13}{subsection.3.4.1}%
+\contentsline {section}{\numberline {3.4}Modélisation UML : Diagramme de Classes}{12}{section.3.4}%
 \contentsline {section}{\numberline {3.5}Modélisation UML : Diagrammes de Séquence}{13}{section.3.5}%
 \contentsline {subsection}{\numberline {3.5.1}Diagramme de Séquence : Authentification}{13}{subsection.3.5.1}%
 \contentsline {subsection}{\numberline {3.5.2}Diagramme de Séquence : Processus d'Optimisation VRP}{14}{subsection.3.5.2}%
-\contentsline {subsection}{\numberline {3.5.3}Diagramme de Séquence : Vérification de l'Intégrité Blockchain}{14}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.3}Diagramme de Séquence : Vérification de l'Intégrité Blockchain}{15}{subsection.3.5.3}%
 \contentsline {section}{\numberline {3.6}Conception du Schéma de Base de Données}{15}{section.3.6}%
 \contentsline {subsection}{\numberline {3.6.1}Collections MongoDB}{15}{subsection.3.6.1}%
-\contentsline {section}{\numberline {3.7}Architecture du Smart Contract}{15}{section.3.7}%
-\contentsline {subsection}{\numberline {3.7.1}Structure du Contrat RouteRegistry}{15}{subsection.3.7.1}%
-\contentsline {section}{\numberline {3.8}Conclusion}{16}{section.3.8}%
-\contentsline {chapter}{\numberline {4}Réalisation}{17}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Introduction}{17}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Environnement de Développement}{17}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Outils de Développement}{17}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Structure du Projet}{17}{subsection.4.2.2}%
-\contentsline {section}{\numberline {4.3}Technologies Backend}{17}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Python}{17}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}FastAPI}{18}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}MongoDB}{18}{subsection.4.3.3}%
-\contentsline {subsection}{\numberline {4.3.4}Google OR-Tools}{18}{subsection.4.3.4}%
-\contentsline {section}{\numberline {4.4}Technologies Frontend}{19}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}React}{19}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}Vite}{19}{subsection.4.4.2}%
-\contentsline {subsection}{\numberline {4.4.3}Tailwind CSS}{20}{subsection.4.4.3}%
-\contentsline {subsection}{\numberline {4.4.4}Leaflet}{20}{subsection.4.4.4}%
-\contentsline {subsection}{\numberline {4.4.5}Axios}{20}{subsection.4.4.5}%
-\contentsline {section}{\numberline {4.5}Technologies Blockchain}{21}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}Ganache}{21}{subsection.4.5.1}%
-\contentsline {section}{\numberline {4.6}Présentation des Interfaces Utilisateur}{21}{section.4.6}%
-\contentsline {subsection}{\numberline {4.6.1}Écrans d'Authentification}{21}{subsection.4.6.1}%
-\contentsline {subsection}{\numberline {4.6.2}Dashboard et Gestion des Tournées}{22}{subsection.4.6.2}%
-\contentsline {subsection}{\numberline {4.6.3}Création de Tournée}{23}{subsection.4.6.3}%
-\contentsline {subsection}{\numberline {4.6.4}Détail de Tournée et Visualisation Cartographique}{24}{subsection.4.6.4}%
-\contentsline {subsection}{\numberline {4.6.5}Profil Utilisateur}{25}{subsection.4.6.5}%
-\contentsline {subsection}{\numberline {4.6.6}Gestion des Clients}{25}{subsection.4.6.6}%
-\contentsline {subsection}{\numberline {4.6.7}Gestion des Dépôts}{26}{subsection.4.6.7}%
-\contentsline {subsection}{\numberline {4.6.8}Panel Administrateur}{26}{subsection.4.6.8}%
-\contentsline {subsection}{\numberline {4.6.9}Dashboard Analytique}{27}{subsection.4.6.9}%
-\contentsline {section}{\numberline {4.7}Conclusion}{27}{section.4.7}%
-\contentsline {chapter}{\numberline {5}Discussion et Évaluation}{28}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Introduction}{28}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Défis Techniques Rencontrés}{28}{section.5.2}%
-\contentsline {subsection}{\numberline {5.2.1}Latence de l'Optimisation VRP}{28}{subsection.5.2.1}%
-\contentsline {subsection}{\numberline {5.2.2}Coûts de Gas et Délais Blockchain}{28}{subsection.5.2.2}%
-\contentsline {subsection}{\numberline {5.2.3}Synchronisation MongoDB - Blockchain}{28}{subsection.5.2.3}%
-\contentsline {section}{\numberline {5.3}Gestion des Données et Intégrité}{29}{section.5.3}%
-\contentsline {subsection}{\numberline {5.3.1}Mécanisme de Vérification par Hash}{29}{subsection.5.3.1}%
-\contentsline {subsection}{\numberline {5.3.2}Distinction entre Données Mutables et Immuables}{29}{subsection.5.3.2}%
-\contentsline {section}{\numberline {5.4}Conclusion}{29}{section.5.4}%
-\contentsline {chapter}{Conclusion Générale}{30}{chapter*.58}%
+\contentsline {section}{\numberline {3.7}Architecture du Smart Contract}{16}{section.3.7}%
+\contentsline {subsection}{\numberline {3.7.1}Structure du Contrat RouteRegistry}{16}{subsection.3.7.1}%
+\contentsline {subsubsection}{\numberline {3.7.1.1}Estimation du Gas Consommé}{17}{subsubsection.3.7.1.1}%
+\contentsline {section}{\numberline {3.8}Conclusion}{17}{section.3.8}%
+\contentsline {chapter}{\numberline {4}Réalisation}{18}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Introduction}{18}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Environnement de Développement}{18}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Outils de Développement}{18}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Structure du Projet}{18}{subsection.4.2.2}%
+\contentsline {section}{\numberline {4.3}Technologies Backend}{18}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Python}{18}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}FastAPI}{19}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}MongoDB}{19}{subsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.3.4}Google OR-Tools}{19}{subsection.4.3.4}%
+\contentsline {section}{\numberline {4.4}Technologies Frontend}{20}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}React}{20}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Vite}{20}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}Tailwind CSS}{21}{subsection.4.4.3}%
+\contentsline {subsection}{\numberline {4.4.4}Leaflet}{21}{subsection.4.4.4}%
+\contentsline {subsection}{\numberline {4.4.5}Axios}{21}{subsection.4.4.5}%
+\contentsline {section}{\numberline {4.5}Technologies Blockchain}{22}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Ganache}{22}{subsection.4.5.1}%
+\contentsline {section}{\numberline {4.6}Présentation des Interfaces Utilisateur}{22}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Écrans d'Authentification}{22}{subsection.4.6.1}%
+\contentsline {subsection}{\numberline {4.6.2}Dashboard et Gestion des Tournées}{23}{subsection.4.6.2}%
+\contentsline {subsection}{\numberline {4.6.3}Création de Tournée}{24}{subsection.4.6.3}%
+\contentsline {subsection}{\numberline {4.6.4}Détail de Tournée et Visualisation Cartographique}{25}{subsection.4.6.4}%
+\contentsline {subsection}{\numberline {4.6.5}Profil Utilisateur}{26}{subsection.4.6.5}%
+\contentsline {subsection}{\numberline {4.6.6}Gestion des Clients}{26}{subsection.4.6.6}%
+\contentsline {subsection}{\numberline {4.6.7}Gestion des Dépôts}{27}{subsection.4.6.7}%
+\contentsline {subsection}{\numberline {4.6.8}Panel Administrateur}{27}{subsection.4.6.8}%
+\contentsline {subsection}{\numberline {4.6.9}Dashboard Analytique}{28}{subsection.4.6.9}%
+\contentsline {section}{\numberline {4.7}Conclusion}{28}{section.4.7}%
+\contentsline {chapter}{\numberline {5}Discussion et Évaluation}{29}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Introduction}{29}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Défis Techniques Rencontrés}{29}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Latence de l'Optimisation VRP}{29}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Coûts de Gas et Délais Blockchain}{29}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}Synchronisation MongoDB - Blockchain}{29}{subsection.5.2.3}%
+\contentsline {section}{\numberline {5.3}Gestion des Données et Intégrité}{30}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Mécanisme de Vérification par Hash}{30}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Distinction entre Données Mutables et Immuables}{30}{subsection.5.3.2}%
+\contentsline {section}{\numberline {5.4}Conclusion}{30}{section.5.4}%
+\contentsline {chapter}{Conclusion Générale}{31}{chapter*.57}%

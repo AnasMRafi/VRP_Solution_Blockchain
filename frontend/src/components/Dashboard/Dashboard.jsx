@@ -447,6 +447,12 @@ const Dashboard = () => {
                           <span className={`badge ${getStatusBadge(route.status)}`}>
                             {getStatusLabel(route.status)}
                           </span>
+                          {route.created_by && (
+                            <span className="px-2 py-0.5 text-xs bg-purple-50 text-purple-600 rounded-full flex items-center gap-1">
+                              <Users className="w-3 h-3" />
+                              {route.created_by}
+                            </span>
+                          )}
                         </div>
 
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">

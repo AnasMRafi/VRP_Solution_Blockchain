@@ -20,295 +20,846 @@ RouteChain adopte une architecture trois-tiers classique, séparant clairement l
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[
-    tier/.style={rectangle, draw=primaryblue, fill=primaryblue!15, thick, minimum width=13cm, minimum height=2.2cm, text centered, rounded corners=8pt, drop shadow},
-    component/.style={rectangle, draw=secondarypurple, fill=white, thick, minimum width=3.2cm, minimum height=1.1cm, text centered, rounded corners=5pt, font=\small\bfseries, drop shadow={opacity=0.3}},
-    arrow/.style={-{Stealth[length=4mm, width=3mm]}, line width=1.5pt, primaryblue}
-]
-    % Tiers with gradient effect
-    \node[tier] (presentation) at (0,7) {};
-    \node[font=\large\bfseries, primaryblue] at (0,8.2) {Couche Présentation};
-    
-    \node[tier, fill=successgreen!15, draw=successgreen] (logique) at (0,3.5) {};
-    \node[font=\large\bfseries, successgreen] at (0,4.7) {Couche Logique Métier};
-    
-    \node[tier, fill=warningorange!15, draw=warningorange] (donnees) at (0,0) {};
-    \node[font=\large\bfseries, warningorange] at (0,1.2) {Couche Données};
-    
-    % Components - Presentation
-    \node[component] at (-4,6.5) {React 18};
-    \node[component] at (0,6.5) {Leaflet Maps};
-    \node[component] at (4,6.5) {Tailwind CSS};
-    
-    % Components - Logic
-    \node[component, draw=successgreen] at (-4,3) {FastAPI};
-    \node[component, draw=successgreen] at (0,3) {Google OR-Tools};
-    \node[component, draw=successgreen] at (4,3) {Web3.py};
-    
-    % Components - Data
-    \node[component, draw=warningorange] at (-2.5,-0.5) {MongoDB Atlas};
-    \node[component, draw=warningorange] at (2.5,-0.5) {Ethereum};
-    
-    % Arrows
-    \draw[arrow] (0,5.8) -- (0,4.9);
-    \draw[arrow] (0,2.3) -- (0,1.4);
-    
-\end{tikzpicture}
+\includegraphics[width=0.85\textwidth]{diagrams/Layers_architecture.pdf}
 \caption{Architecture trois-tiers de RouteChain}
 \label{fig:architecture_3tiers}
 \end{figure}
 
+% COMMENTED OUT: Original TikZ diagram replaced by PNG image
+% \begin{tikzpicture}[
+%     tier/.style={rectangle, draw=primaryblue, fill=primaryblue!15, thick, minimum width=13cm, minimum height=2.2cm, text centered, rounded corners=8pt, drop shadow},
+%     component/.style={rectangle, draw=secondarypurple, fill=white, thick, minimum width=3.2cm, minimum height=1.1cm, text centered, rounded corners=5pt, font=\small\bfseries, drop shadow={opacity=0.3}},
+%     arrow/.style={-{Stealth[length=4mm, width=3mm]}, line width=1.5pt, primaryblue}
+% ]
+%     % Tiers with gradient effect
+%     \node[tier] (presentation) at (0,7) {};
+%     \node[font=\large\bfseries, primaryblue] at (0,8.2) {Couche Présentation};
+%     
+%     \node[tier, fill=successgreen!15, draw=successgreen] (logique) at (0,3.5) {};
+%     \node[font=\large\bfseries, successgreen] at (0,4.7) {Couche Logique Métier};
+%     
+%     \node[tier, fill=warningorange!15, draw=warningorange] (donnees) at (0,0) {};
+%     \node[font=\large\bfseries, warningorange] at (0,1.2) {Couche Données};
+%     
+%     % Components - Presentation
+%     \node[component] at (-4,6.5) {React 18};
+%     \node[component] at (0,6.5) {Leaflet Maps};
+%     \node[component] at (4,6.5) {Tailwind CSS};
+%     
+%     % Components - Logic
+%     \node[component, draw=successgreen] at (-4,3) {FastAPI};
+%     \node[component, draw=successgreen] at (0,3) {Google OR-Tools};
+%     \node[component, draw=successgreen] at (4,3) {Web3.py};
+%     
+%     % Components - Data
+%     \node[component, draw=warningorange] at (-2.5,-0.5) {MongoDB Atlas};
+%     \node[component, draw=warningorange] at (2.5,-0.5) {Ethereum};
+%     
+%     % Arrows
+%     \draw[arrow] (0,5.8) -- (0,4.9);
+%     \draw[arrow] (0,2.3) -- (0,1.4);
+%     
+% \end{tikzpicture}
+
 \subsection{Diagramme d'Interaction des Composants}
+
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[
-    box/.style={rectangle, draw=primaryblue, fill=primaryblue!10, thick, minimum width=2.8cm, minimum height=1.4cm, text centered, rounded corners=6pt, font=\small\bfseries, align=center, drop shadow={opacity=0.3}},
-    ext/.style={rectangle, draw=warningorange, fill=warningorange!10, thick, minimum width=2.8cm, minimum height=1.4cm, text centered, rounded corners=6pt, font=\small\bfseries, align=center, drop shadow={opacity=0.3}},
-    arrow/.style={-{Stealth[length=3mm]}, line width=1.2pt, gray!70},
-    label/.style={font=\tiny\bfseries, fill=white, inner sep=2pt}
-]
-    % Internal components
-    \node[box] (frontend) at (0,0) {Frontend\\React};
-    \node[box] (backend) at (4.5,0) {Backend\\FastAPI};
-    \node[box, fill=successgreen!10, draw=successgreen] (mongodb) at (9,2) {MongoDB\\Atlas};
-    \node[box, fill=secondarypurple!10, draw=secondarypurple] (blockchain) at (9,-2) {Ganache\\Ethereum};
-    
-    % External services
-    \node[ext] (ors) at (4.5,-3.5) {OpenRoute\\Service};
-    \node[ext] (nominatim) at (0,-3.5) {Nominatim\\Geocoding};
-    
-    % Arrows with labels
-    \draw[arrow] (frontend) -- node[label, above] {REST API} (backend);
-    \draw[arrow] (backend) -- node[label, sloped, above] {Motor} (mongodb);
-    \draw[arrow] (backend) -- node[label, sloped, above] {Web3} (blockchain);
-    \draw[arrow] (backend) -- node[label, right] {HTTP} (ors);
-    \draw[arrow] (frontend) -- node[label, left] {HTTP} (nominatim);
-    
-\end{tikzpicture}
+\includegraphics[width=0.85\textwidth]{diagrams/components_diag.pdf}
 \caption{Diagramme d'interaction des composants}
-\label{fig:composants}
+\label{fig:interaction}
 \end{figure}
+
+% COMMENTED OUT: Original TikZ diagram replaced by PNG image
+% \begin{figure}[H]
+% \centering
+% \begin{tikzpicture}[
+%     box/.style={rectangle, draw=primaryblue, fill=primaryblue!10, thick, minimum width=2.8cm, minimum height=1.4cm, text centered, rounded corners=6pt, font=\small\bfseries, align=center, drop shadow={opacity=0.3}},
+%     ext/.style={rectangle, draw=warningorange, fill=warningorange!10, thick, minimum width=2.8cm, minimum height=1.4cm, text centered, rounded corners=6pt, font=\small\bfseries, align=center, drop shadow={opacity=0.3}},
+%     arrow/.style={-{Stealth[length=3mm]}, line width=1.2pt, gray!70},
+%     label/.style={font=\tiny\bfseries, fill=white, inner sep=2pt}
+% ]
+%     % Internal components
+%     \node[box] (frontend) at (0,0) {Frontend\\React};
+%     \node[box] (leaflet) at (0,2.5) {Leaflet\\Maps};
+%     \node[box] (backend) at (4.5,0) {Backend\\FastAPI};
+%     \node[box, fill=successgreen!10, draw=successgreen] (ortools) at (4.5,2.5) {Google\\OR-Tools};
+%     \node[box, fill=successgreen!10, draw=successgreen] (mongodb) at (9,2) {MongoDB\\Atlas};
+%     \node[box, fill=secondarypurple!10, draw=secondarypurple] (blockchain) at (9,-2) {Ganache\\Ethereum};
+    
+%     % External services
+%     \node[ext] (ors) at (4.5,-3.5) {OpenRoute\\Service};
+%     \node[ext] (nominatim) at (0,-3.5) {Nominatim\\Geocoding};
+%     \node[ext] (osm) at (-4,2.5) {OpenStreetMap\\Tiles};
+    
+%     % Arrows with labels
+%     \draw[arrow] (frontend) -- node[label, above] {REST API} (backend);
+%     \draw[arrow] (backend) -- node[label, sloped, above] {Motor} (mongodb);
+%     \draw[arrow] (backend) -- node[label, sloped, above] {Web3} (blockchain);
+%     \draw[arrow] (backend) -- node[label, right] {HTTP} (ors);
+%     \draw[arrow] (frontend) -- node[label, left] {HTTP} (nominatim);
+%     \draw[arrow] (frontend) -- node[label, right] {uses} (leaflet);
+%     \draw[arrow] (leaflet) -- node[label, above] {HTTP} (osm);
+%     \draw[arrow] (backend) -- node[label, right] {VRP} (ortools);
+    
+% \end{tikzpicture}
+% \caption{Diagramme d'interaction des composants}
+% \label{fig:composants}
+% \end{figure}
 
 %---------------------------------------------------------------------
 \section{Modélisation UML : Diagrammes de Cas d'Utilisation}
 %---------------------------------------------------------------------
 
-% Define stick figure command
-\newcommand{\stickman}[1]{%
-    \begin{scope}[shift={#1}, scale=0.4]
-        \draw[thick] (0,2) circle (0.4); % head
-        \draw[thick] (0,1.6) -- (0,0.5); % body
-        \draw[thick] (-0.5,1.3) -- (0,1.1) -- (0.5,1.3); % arms
-        \draw[thick] (0,0.5) -- (-0.4,0) -- (-0.5,-0.5); % left leg
-        \draw[thick] (0,0.5) -- (0.4,0) -- (0.5,-0.5); % right leg
-    \end{scope}
-}
-
-\subsection{Diagramme de Cas d'Utilisation Global}
-
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[
-    usecase/.style={ellipse, draw=primaryblue, fill=primaryblue!8, thick, minimum width=4cm, minimum height=1.2cm, text centered, font=\small, drop shadow={opacity=0.2}},
-    system/.style={rectangle, draw=primaryblue!50, fill=blue!3, thick, rounded corners=10pt},
-    actorbox/.style={rectangle, draw=none, fill=none}
-]
-    % System boundary - no title inside
-    \draw[system] (1,-5.5) rectangle (10,3.5);
-    
-    % Actor - Chauffeur
-    \stickman{(-1, 0.5)}
-    \node[font=\small\bfseries] at (-1, -1) {Chauffeur};
-    
-    % Actor - Admin
-    \stickman{(-1, -4)}
-    \node[font=\small\bfseries] at (-1, -5.5) {Admin};
-    
-    % Use cases - positioned to fit within boundary
-    \node[usecase] (auth) at (5.5, 3) {S'authentifier};
-    \node[usecase] (create) at (5.5, 1.5) {Créer une tournée};
-    \node[usecase] (optimize) at (5.5, 0) {Optimiser itinéraire};
-    \node[usecase] (confirm) at (5.5, -1.5) {Confirmer livraison};
-    \node[usecase, fill=secondarypurple!8, draw=secondarypurple] (verify) at (5.5, -3) {Vérifier blockchain};
-    \node[usecase, fill=successgreen!8, draw=successgreen] (stats) at (5.5, -4.5) {Consulter analytics};
-    
-    % Connections - Driver (blue)
-    \draw[->, thick, primaryblue!70] (-0.2, 1.4) -- (auth.west);
-    \draw[->, thick, primaryblue!70] (-0.2, 1) -- (create.west);
-    \draw[->, thick, primaryblue!70] (-0.2, 0.6) -- (optimize.west);
-    \draw[->, thick, primaryblue!70] (-0.2, 0.2) -- (confirm.west);
-    \draw[->, thick, secondarypurple!70] (-0.2, -0.2) -- (verify.west);
-    
-    % Connections - Admin (orange)
-    \draw[->, thick, warningorange!70] (-0.2, -3.6) -- (auth.west);
-    \draw[->, thick, warningorange!70] (-0.2, -4) -- (stats.west);
-    \draw[->, thick, warningorange!70] (-0.2, -4.4) -- (verify.west);
-    
-\end{tikzpicture}
-\caption{Diagramme de cas d'utilisation global du système RouteChain}
-\label{fig:uc_global}
+\includegraphics[width=1.1\textwidth]{diagrams/route_chain_use_case.pdf}
+\caption{Diagramme de cas d'utilisation global}
+\label{fig:use_case}
 \end{figure}
 
-\subsection{Diagramme de Cas d'Utilisation : Sous-système Chauffeur}
+% % Define stick figure command
+% \newcommand{\stickman}[1]{%
+%     \begin{scope}[shift={#1}, scale=0.4]
+%         \draw[thick] (0,2) circle (0.4); % head
+%         \draw[thick] (0,1.6) -- (0,0.5); % body
+%         \draw[thick] (-0.5,1.3) -- (0,1.1) -- (0.5,1.3); % arms
+%         \draw[thick] (0,0.5) -- (-0.4,0) -- (-0.5,-0.5); % left leg
+%         \draw[thick] (0,0.5) -- (0.4,0) -- (0.5,-0.5); % right leg
+%     \end{scope}
+% }
 
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[
-    usecase/.style={ellipse, draw=primaryblue, fill=primaryblue!8, thick, minimum width=3.8cm, minimum height=1cm, text centered, font=\footnotesize, drop shadow={opacity=0.2}},
-    system/.style={rectangle, draw=primaryblue!50, fill=blue!3, thick, rounded corners=10pt},
-    include/.style={->, dashed, thick, gray}
-]
-    % System boundary - no title inside
-    \draw[system] (1,-5) rectangle (9,2.5);
-    
-    % Actor
-    \stickman{(-1, -1)}
-    \node[font=\small\bfseries] at (-1, -2.5) {Chauffeur};
-    
-    % Use cases - positioned to fit within boundary
-    \node[usecase] (new) at (5, 2) {Créer nouvelle tournée};
-    \node[usecase] (add) at (5, 0.7) {Ajouter points de livraison};
-    \node[usecase] (opt) at (5, -0.6) {Lancer optimisation VRP};
-    \node[usecase] (view) at (5, -1.9) {Visualiser sur carte};
-    \node[usecase] (start) at (5, -3.2) {Démarrer la tournée};
-    \node[usecase, fill=successgreen!8, draw=successgreen] (deliver) at (5, -4.5) {Confirmer livraison};
-    
-    % Connections
-    \draw[->, thick, primaryblue!70] (-0.2, -0.6) -- (new.west);
-    \draw[->, thick, primaryblue!70] (-0.2, -0.8) -- (add.west);
-    \draw[->, thick, primaryblue!70] (-0.2, -1) -- (opt.west);
-    \draw[->, thick, primaryblue!70] (-0.2, -1.2) -- (view.west);
-    \draw[->, thick, primaryblue!70] (-0.2, -1.4) -- (start.west);
-    \draw[->, thick, successgreen!70] (-0.2, -1.6) -- (deliver.west);
-    
-    % Include relationships
-    \draw[include] (new.south) -- node[font=\tiny, right, pos=0.5] {<<include>>} (add.north);
-    \draw[include] (add.south) -- node[font=\tiny, right, pos=0.5] {<<include>>} (opt.north);
-    
-\end{tikzpicture}
-\caption{Diagramme de cas d'utilisation - Sous-système Chauffeur}
-\label{fig:uc_driver}
-\end{figure}
+% \subsection{Diagramme de Cas d'Utilisation Global}
 
-\subsection{Diagramme de Cas d'Utilisation : Sous-système Administrateur}
+% \begin{figure}[H]
+% \centering
+% \begin{tikzpicture}[
+%     usecase/.style={ellipse, draw=primaryblue, fill=primaryblue!8, thick, minimum width=4cm, minimum height=1.2cm, text centered, font=\small, drop shadow={opacity=0.2}},
+%     system/.style={rectangle, draw=primaryblue!50, fill=blue!3, thick, rounded corners=10pt},
+%     actorbox/.style={rectangle, draw=none, fill=none},
+%     extsystem/.style={rectangle, draw=secondarypurple, fill=secondarypurple!10, thick, minimum width=2cm, minimum height=1.2cm, text centered, font=\small\bfseries, rounded corners=5pt, align=center}
+% ]
+%     % System boundary - no title inside
+%     \draw[system] (1,-5.5) rectangle (10,3.5);
+    
+%     % Actor - Chauffeur
+%     \stickman{(-1, 0.5)}
+%     \node[font=\small\bfseries] at (-1, -1) {Chauffeur};
+    
+%     % Actor - Admin
+%     \stickman{(-1, -4)}
+%     \node[font=\small\bfseries] at (-1, -5.5) {Admin};
+    
+%     % External System - Blockchain (right side)
+%     \node[extsystem] (blockchain) at (12.5, -3) {Blockchain\\Ethereum};
+    
+%     % Use cases - positioned to fit within boundary
+%     \node[usecase] (auth) at (5.5, 3) {S'authentifier};
+%     \node[usecase] (create) at (5.5, 1.5) {Créer une tournée};
+%     \node[usecase] (optimize) at (5.5, 0) {Optimiser itinéraire};
+%     \node[usecase] (confirm) at (5.5, -1.5) {Confirmer livraison};
+%     \node[usecase, fill=secondarypurple!8, draw=secondarypurple] (verify) at (5.5, -3) {Vérifier blockchain};
+%     \node[usecase, fill=successgreen!8, draw=successgreen] (stats) at (5.5, -4.5) {Consulter analytics};
+    
+%     % Connections - Driver (blue)
+%     \draw[->, thick, primaryblue!70] (-0.2, 1.4) -- (auth.west);
+%     \draw[->, thick, primaryblue!70] (-0.2, 1) -- (create.west);
+%     \draw[->, thick, primaryblue!70] (-0.2, 0.6) -- (optimize.west);
+%     \draw[->, thick, primaryblue!70] (-0.2, 0.2) -- (confirm.west);
+%     \draw[->, thick, secondarypurple!70] (-0.2, -0.2) -- (verify.west);
+    
+%     % Connections - Admin (orange)
+%     \draw[->, thick, warningorange!70] (-0.2, -3.6) -- (auth.west);
+%     \draw[->, thick, warningorange!70] (-0.2, -4) -- (stats.west);
+%     \draw[->, thick, warningorange!70] (-0.2, -4.4) -- (verify.west);
+    
+%     % Connection - External system (blockchain)
+%     \draw[->, thick, secondarypurple!70] (verify.east) -- (blockchain.west);
+    
+% \end{tikzpicture}
+% \caption{Diagramme de cas d'utilisation global du système RouteChain}
+% \label{fig:uc_global}
+% \end{figure}
 
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[
-    usecase/.style={ellipse, draw=secondarypurple, fill=secondarypurple!8, thick, minimum width=3.8cm, minimum height=1cm, text centered, font=\footnotesize, drop shadow={opacity=0.2}},
-    system/.style={rectangle, draw=secondarypurple!50, fill=purple!3, thick, rounded corners=10pt}
-]
-    % System boundary - no title inside
-    \draw[system] (1,-4.5) rectangle (9,2);
+% \subsection{Diagramme de Cas d'Utilisation : Sous-système Chauffeur}
+
+% \begin{figure}[H]
+% \centering
+% \begin{tikzpicture}[
+%     usecase/.style={ellipse, draw=primaryblue, fill=primaryblue!8, thick, minimum width=3.8cm, minimum height=1cm, text centered, font=\footnotesize, drop shadow={opacity=0.2}},
+%     system/.style={rectangle, draw=primaryblue!50, fill=blue!3, thick, rounded corners=10pt},
+%     include/.style={->, dashed, thick, gray}
+% ]
+%     % System boundary - no title inside
+%     \draw[system] (1,-5) rectangle (9,2.5);
     
-    % Actor
-    \stickman{(-1, -0.5)}
-    \node[font=\small\bfseries] at (-1, -2) {Admin};
+%     % Actor
+%     \stickman{(-1, -1)}
+%     \node[font=\small\bfseries] at (-1, -2.5) {Chauffeur};
     
-    % Use cases - positioned to fit within boundary
-    \node[usecase] (drivers) at (5, 1.5) {Lister tous les chauffeurs};
-    \node[usecase] (role) at (5, 0.2) {Modifier rôle utilisateur};
-    \node[usecase] (routes) at (5, -1.1) {Voir toutes les tournées};
-    \node[usecase, fill=successgreen!8, draw=successgreen] (analytics) at (5, -2.4) {Accéder aux analytics};
-    \node[usecase] (manage) at (5, -3.7) {Gérer clients et dépôts};
+%     % Use cases - positioned to fit within boundary
+%     \node[usecase] (new) at (5, 2) {Créer nouvelle tournée};
+%     \node[usecase] (add) at (5, 0.7) {Ajouter points de livraison};
+%     \node[usecase] (opt) at (5, -0.6) {Lancer optimisation VRP};
+%     \node[usecase] (view) at (5, -1.9) {Visualiser sur carte};
+%     \node[usecase] (start) at (5, -3.2) {Démarrer la tournée};
+%     \node[usecase, fill=successgreen!8, draw=successgreen] (deliver) at (5, -4.5) {Confirmer livraison};
     
-    % Connections
-    \draw[->, thick, secondarypurple!70] (-0.2, -0.1) -- (drivers.west);
-    \draw[->, thick, secondarypurple!70] (-0.2, -0.3) -- (role.west);
-    \draw[->, thick, secondarypurple!70] (-0.2, -0.5) -- (routes.west);
-    \draw[->, thick, successgreen!70] (-0.2, -0.7) -- (analytics.west);
-    \draw[->, thick, secondarypurple!70] (-0.2, -0.9) -- (manage.west);
+%     % Connections
+%     \draw[->, thick, primaryblue!70] (-0.2, -0.6) -- (new.west);
+%     \draw[->, thick, primaryblue!70] (-0.2, -0.8) -- (add.west);
+%     \draw[->, thick, primaryblue!70] (-0.2, -1) -- (opt.west);
+%     \draw[->, thick, primaryblue!70] (-0.2, -1.2) -- (view.west);
+%     \draw[->, thick, primaryblue!70] (-0.2, -1.4) -- (start.west);
+%     \draw[->, thick, successgreen!70] (-0.2, -1.6) -- (deliver.west);
     
-\end{tikzpicture}
-\caption{Diagramme de cas d'utilisation - Sous-système Administrateur}
-\label{fig:uc_admin}
-\end{figure}
+%     % Include relationships
+%     \draw[include] (new.south) -- node[font=\tiny, right, pos=0.5] {<<include>>} (add.north);
+%     \draw[include] (add.south) -- node[font=\tiny, right, pos=0.5] {<<include>>} (opt.north);
+    
+% \end{tikzpicture}
+% \caption{Diagramme de cas d'utilisation - Sous-système Chauffeur}
+% \label{fig:uc_driver}
+% \end{figure}
+
+% \subsection{Diagramme de Cas d'Utilisation : Sous-système Administrateur}
+
+% \begin{figure}[H]
+% \centering
+% \begin{tikzpicture}[
+%     usecase/.style={ellipse, draw=secondarypurple, fill=secondarypurple!8, thick, minimum width=3.8cm, minimum height=1cm, text centered, font=\footnotesize, drop shadow={opacity=0.2}},
+%     system/.style={rectangle, draw=secondarypurple!50, fill=purple!3, thick, rounded corners=10pt}
+% ]
+%     % System boundary - no title inside
+%     \draw[system] (1,-4.5) rectangle (9,2);
+    
+%     % Actor
+%     \stickman{(-1, -0.5)}
+%     \node[font=\small\bfseries] at (-1, -2) {Admin};
+    
+%     % Use cases - positioned to fit within boundary
+%     \node[usecase] (drivers) at (5, 1.5) {Lister tous les chauffeurs};
+%     \node[usecase] (role) at (5, 0.2) {Modifier rôle utilisateur};
+%     \node[usecase] (routes) at (5, -1.1) {Voir toutes les tournées};
+%     \node[usecase, fill=successgreen!8, draw=successgreen] (analytics) at (5, -2.4) {Accéder aux analytics};
+%     \node[usecase] (manage) at (5, -3.7) {Gérer clients et dépôts};
+    
+%     % Connections
+%     \draw[->, thick, secondarypurple!70] (-0.2, -0.1) -- (drivers.west);
+%     \draw[->, thick, secondarypurple!70] (-0.2, -0.3) -- (role.west);
+%     \draw[->, thick, secondarypurple!70] (-0.2, -0.5) -- (routes.west);
+%     \draw[->, thick, successgreen!70] (-0.2, -0.7) -- (analytics.west);
+%     \draw[->, thick, secondarypurple!70] (-0.2, -0.9) -- (manage.west);
+    
+% \end{tikzpicture}
+% \caption{Diagramme de cas d'utilisation - Sous-système Administrateur}
+% \label{fig:uc_admin}
+% \end{figure}
 
 %---------------------------------------------------------------------
 \section{Modélisation UML : Diagramme de Classes}
 %---------------------------------------------------------------------
 
-\subsection{Modèle du Domaine}
-
 \begin{figure}[H]
 \centering
-\resizebox{\textwidth}{!}{
-\begin{tikzpicture}[
-    classhead/.style={rectangle, draw=primaryblue, fill=primaryblue!20, thick, text width=4.2cm, text centered, font=\small\bfseries, minimum height=0.7cm},
-    classbody/.style={rectangle, draw=primaryblue, fill=white, thick, text width=4.2cm, font=\footnotesize, minimum height=2cm, align=left},
-    arrow/.style={->, thick, gray},
-    comp/.style={-{Diamond[fill=black, length=3mm, width=2mm]}, thick},
-    assoc/.style={-, thick},
-    mult/.style={font=\tiny\bfseries, fill=white, inner sep=1pt}
-]
-    % Driver class
-    \node[classhead] (driver_h) at (0, 5) {Driver};
-    \node[classbody, anchor=north] (driver_b) at (0, 4.65) {
-        \texttt{- driver\_id: String}\\
-        \texttt{- email: String}\\
-        \texttt{- password\_hash: String}\\
-        \texttt{- first\_name: String}\\
-        \texttt{- last\_name: String}\\
-        \texttt{- role: String}\\
-        \texttt{- created\_at: DateTime}
-    };
-    
-    % Route class
-    \node[classhead, fill=successgreen!20, draw=successgreen] (route_h) at (6, 5) {Route};
-    \node[classbody, draw=successgreen, anchor=north] (route_b) at (6, 4.65) {
-        \texttt{- route\_id: String}\\
-        \texttt{- route\_name: String}\\
-        \texttt{- status: String}\\
-        \texttt{- total\_distance: Float}\\
-        \texttt{- blockchain\_tx: String}\\
-        \texttt{- data\_hash: String}\\
-        \texttt{- created\_at: DateTime}
-    };
-    
-    % DeliveryPoint class
-    \node[classhead, fill=warningorange!20, draw=warningorange] (point_h) at (12, 5) {DeliveryPoint};
-    \node[classbody, draw=warningorange, anchor=north] (point_b) at (12, 4.65) {
-        \texttt{- point\_id: String}\\
-        \texttt{- customer\_name: String}\\
-        \texttt{- address: String}\\
-        \texttt{- latitude: Float}\\
-        \texttt{- longitude: Float}\\
-        \texttt{- status: String}\\
-        \texttt{- sequence\_order: Int}
-    };
-    
-    % Customer class
-    \node[classhead, fill=secondarypurple!20, draw=secondarypurple] (cust_h) at (0, -1) {Customer};
-    \node[classbody, draw=secondarypurple, anchor=north] (cust_b) at (0, -1.35) {
-        \texttt{- customer\_id: String}\\
-        \texttt{- name: String}\\
-        \texttt{- email: String}\\
-        \texttt{- phone: String}\\
-        \texttt{- address: String}
-    };
-    
-    % Depot class
-    \node[classhead] (depot_h) at (6, -1) {Depot};
-    \node[classbody, anchor=north] (depot_b) at (6, -1.35) {
-        \texttt{- depot\_id: String}\\
-        \texttt{- name: String}\\
-        \texttt{- address: String}\\
-        \texttt{- latitude: Float}\\
-        \texttt{- longitude: Float}
-    };
-    
-    % Relationships with multiplicities
-    \draw[assoc] (driver_b.east) -- node[mult, above, pos=0.2] {1} node[mult, above, pos=0.8] {*} node[mult, below, pos=0.5] {possède} (route_b.west);
-    \draw[comp] (route_b.east) -- node[mult, above, pos=0.2] {1} node[mult, above, pos=0.8] {*} node[mult, below, pos=0.5] {contient} (point_b.west);
-    \draw[assoc] (route_b.south) -- ++(0,-0.8) -| node[mult, above left, pos=0.25] {*} node[mult, below, pos=0.5] {part de} (depot_h.north) node[mult, above right, pos=0.95] {1};
-    \draw[assoc] (point_b.south) -- ++(0,-1.5) -| node[mult, above left, pos=0.25] {*} node[mult, below, pos=0.5] {référence} (cust_h.north) node[mult, above right, pos=0.95] {0..1};
-    
-\end{tikzpicture}
-}
-\caption{Diagramme de classes - Modèle du domaine}
-\label{fig:class_diagram}
+\includegraphics[width=1\textwidth]{diagrams/routechain_classs.pdf}
+\caption{Diagramme des classes}
+\label{fig:classes_diag}
 \end{figure}
+
+% \subsection{Modèle du Domaine}
+
+% Le diagramme de classes présente l'ensemble des entités, objets de valeur, énumérations et services qui composent le système RouteChain.
+
+% %--- ENTITY CLASSES ---
+% \subsubsection{Classes Entités Principales}
+
+% \begin{figure}[H]
+% \centering
+% \resizebox{\textwidth}{!}{
+% \begin{tikzpicture}[
+%     classhead/.style={rectangle, draw=primaryblue, fill=primaryblue!20, thick, text width=5cm, text centered, font=\small\bfseries, minimum height=0.7cm},
+%     classbody/.style={rectangle, draw=primaryblue, fill=white, thick, text width=5cm, font=\tiny, align=left},
+%     classmethods/.style={rectangle, draw=primaryblue, fill=primaryblue!5, thick, text width=5cm, font=\tiny, align=left},
+%     stereotype/.style={font=\tiny\itshape, text centered},
+%     arrow/.style={->, thick, gray},
+%     comp/.style={-{Diamond[fill=black, length=3mm, width=2mm]}, thick},
+%     assoc/.style={-, thick},
+%     mult/.style={font=\tiny\bfseries, fill=white, inner sep=1pt}
+% ]
+%     % ========== DRIVER CLASS ==========
+%     \node[classhead] (driver_h) at (0, 8) {Driver};
+%     \node[stereotype] at (0, 8.5) {<<entity>>};
+%     \node[classbody, anchor=north, minimum height=3.5cm] (driver_b) at (0, 7.65) {
+%         \texttt{- driver\_id: String}\\
+%         \texttt{- full\_name: String}\\
+%         \texttt{- email: EmailStr}\\
+%         \texttt{- phone: String}\\
+%         \texttt{- hashed\_password: String}\\
+%         \texttt{- vehicle\_type: VehicleType}\\
+%         \texttt{- license\_plate: String}\\
+%         \texttt{- max\_capacity: Integer}\\
+%         \texttt{- status: DriverStatus}\\
+%         \texttt{- role: DriverRole}\\
+%         \texttt{- home\_store\_id: String}\\
+%         \texttt{- is\_active: Boolean}\\
+%         \texttt{- is\_verified: Boolean}\\
+%         \texttt{- total\_deliveries: Integer}\\
+%         \texttt{- rating: Float}\\
+%         \texttt{- created\_at: DateTime}\\
+%         \texttt{- updated\_at: DateTime}\\
+%         \texttt{- last\_login: DateTime}
+%     };
+%     \node[classmethods, anchor=north, minimum height=1.2cm] (driver_m) at (0, 4.1) {
+%         \texttt{+ register()}\\
+%         \texttt{+ login(): Token}\\
+%         \texttt{+ updateProfile()}\\
+%         \texttt{+ changePassword()}\\
+%         \texttt{+ logout()}
+%     };
+    
+%     % ========== ROUTE CLASS ==========
+%     \node[classhead, fill=successgreen!20, draw=successgreen] (route_h) at (6.5, 8) {Route};
+%     \node[stereotype] at (6.5, 8.5) {<<entity>>};
+%     \node[classbody, draw=successgreen, anchor=north, minimum height=3.5cm] (route_b) at (6.5, 7.65) {
+%         \texttt{- route\_id: String}\\
+%         \texttt{- route\_name: String}\\
+%         \texttt{- depot\_location: Location}\\
+%         \texttt{- depot\_address: Address}\\
+%         \texttt{- driver\_id: String}\\
+%         \texttt{- status: RouteStatus}\\
+%         \texttt{- delivery\_points: DeliveryPoint[]}\\
+%         \texttt{- optimization\_result: OptResult}\\
+%         \texttt{- planned\_start\_time: DateTime}\\
+%         \texttt{- actual\_start\_time: DateTime}\\
+%         \texttt{- completed\_at: DateTime}\\
+%         \texttt{- blockchain\_tx\_hash: String}\\
+%         \texttt{- blockchain\_block: Integer}\\
+%         \texttt{- data\_hash: String}\\
+%         \texttt{- created\_at: DateTime}\\
+%         \texttt{- updated\_at: DateTime}
+%     };
+%     \node[classmethods, draw=successgreen, fill=successgreen!5, anchor=north, minimum height=2cm] (route_m) at (6.5, 4.1) {
+%         \texttt{+ create()}\\
+%         \texttt{+ optimize(): OptResult}\\
+%         \texttt{+ start()}\\
+%         \texttt{+ complete()}\\
+%         \texttt{+ cancel()}\\
+%         \texttt{+ delete()}\\
+%         \texttt{+ updateStatus(status)}\\
+%         \texttt{+ confirmDelivery(point\_id)}\\
+%         \texttt{+ exportCSV(): File}\\
+%         \texttt{+ exportPDF(): File}\\
+%         \texttt{+ verifyBlockchain(): Boolean}
+%     };
+    
+%     % ========== DELIVERYPOINT CLASS ==========
+%     \node[classhead, fill=warningorange!20, draw=warningorange] (point_h) at (13, 8) {DeliveryPoint};
+%     \node[stereotype] at (13, 8.5) {<<entity>>};
+%     \node[classbody, draw=warningorange, anchor=north, minimum height=3.5cm] (point_b) at (13, 7.65) {
+%         \texttt{- point\_id: String}\\
+%         \texttt{- customer\_name: String}\\
+%         \texttt{- address: Address}\\
+%         \texttt{- location: Location}\\
+%         \texttt{- phone: String}\\
+%         \texttt{- instructions: String}\\
+%         \texttt{- time\_window\_start: String}\\
+%         \texttt{- time\_window\_end: String}\\
+%         \texttt{- package\_count: Integer}\\
+%         \texttt{- status: DeliveryStatus}\\
+%         \texttt{- sequence\_number: Integer}\\
+%         \texttt{- estimated\_arrival: DateTime}\\
+%         \texttt{- delivered\_at: DateTime}\\
+%         \texttt{- driver\_notes: String}\\
+%         \texttt{- proof\_of\_delivery: String}
+%     };
+%     \node[classmethods, draw=warningorange, fill=warningorange!5, anchor=north, minimum height=0.8cm] (point_m) at (13, 4.1) {
+%         \texttt{+ confirm(notes, photo)}\\
+%         \texttt{+ markFailed(reason)}
+%     };
+    
+%     % ========== CUSTOMER CLASS ==========
+%     \node[classhead, fill=secondarypurple!20, draw=secondarypurple] (cust_h) at (0, -0.5) {Customer};
+%     \node[stereotype] at (0, 0) {<<entity>>};
+%     \node[classbody, draw=secondarypurple, anchor=north, minimum height=2.5cm] (cust_b) at (0, -0.85) {
+%         \texttt{- customer\_id: String}\\
+%         \texttt{- driver\_id: String}\\
+%         \texttt{- name: String}\\
+%         \texttt{- email: EmailStr}\\
+%         \texttt{- phone: String}\\
+%         \texttt{- company: String}\\
+%         \texttt{- address: CustomerAddress}\\
+%         \texttt{- tags: String[]}\\
+%         \texttt{- notes: String}\\
+%         \texttt{- delivery\_count: Integer}\\
+%         \texttt{- last\_delivery: DateTime}\\
+%         \texttt{- created\_at: DateTime}\\
+%         \texttt{- updated\_at: DateTime}
+%     };
+%     \node[classmethods, draw=secondarypurple, fill=secondarypurple!5, anchor=north, minimum height=0.8cm] (cust_m) at (0, -3.4) {
+%         \texttt{+ create()}\\
+%         \texttt{+ update()}\\
+%         \texttt{+ delete()}\\
+%         \texttt{+ getDeliveryHistory()}
+%     };
+    
+%     % ========== DEPOT CLASS ==========
+%     \node[classhead] (depot_h) at (6.5, -0.5) {Depot};
+%     \node[stereotype] at (6.5, 0) {<<entity>>};
+%     \node[classbody, anchor=north, minimum height=2.5cm] (depot_b) at (6.5, -0.85) {
+%         \texttt{- depot\_id: String}\\
+%         \texttt{- driver\_id: String}\\
+%         \texttt{- name: String}\\
+%         \texttt{- location: DepotLocation}\\
+%         \texttt{- is\_default: Boolean}\\
+%         \texttt{- capacity: Integer}\\
+%         \texttt{- operating\_hours: String}\\
+%         \texttt{- contact\_phone: String}\\
+%         \texttt{- notes: String}\\
+%         \texttt{- routes\_count: Integer}\\
+%         \texttt{- created\_at: DateTime}\\
+%         \texttt{- updated\_at: DateTime}
+%     };
+%     \node[classmethods, anchor=north, minimum height=0.8cm] (depot_m) at (6.5, -3.4) {
+%         \texttt{+ create()}\\
+%         \texttt{+ update()}\\
+%         \texttt{+ delete()}\\
+%         \texttt{+ setDefault()}
+%     };
+    
+%     % ========== RELATIONSHIPS ==========
+%     \draw[assoc] (driver_m.east) -- node[mult, above, pos=0.15] {1} node[mult, above, pos=0.85] {0..*} (route_m.west);
+%     \draw[comp] (route_b.east) -- node[mult, above, pos=0.15] {1} node[mult, above, pos=0.85] {5..20} (point_b.west);
+%     \draw[assoc] (driver_m.south) -- ++(0,-0.3) -| node[mult, left, pos=0.25] {1} (cust_h.north) node[mult, right, pos=0.95] {0..*};
+%     \draw[assoc] (driver_m.south) -- ++(0,-0.3) -| node[mult, left, pos=0.25] {1} (depot_h.north) node[mult, right, pos=0.95] {0..*};
+%     \draw[assoc] (route_m.south) -- ++(0,-0.5) -| node[mult, left, pos=0.25] {0..*} (depot_h.north) node[mult, right, pos=0.95] {1};
+    
+% \end{tikzpicture}
+% }
+% \caption{Diagramme de classes - Entités principales du domaine}
+% \label{fig:class_diagram_entities}
+% \end{figure}
+
+% %--- ENUMERATIONS ---
+% \subsubsection{Classes Énumérations}
+
+% \begin{figure}[H]
+% \centering
+% \begin{tikzpicture}[
+%     enumhead/.style={rectangle, draw=gray!80, fill=gray!20, thick, text width=3.2cm, text centered, font=\small\bfseries, minimum height=0.6cm},
+%     enumbody/.style={rectangle, draw=gray!80, fill=white, thick, text width=3.2cm, font=\footnotesize, align=left, minimum height=1.5cm},
+%     stereotype/.style={font=\tiny\itshape, text centered}
+% ]
+%     % DriverStatus
+%     \node[enumhead] (dstatus_h) at (0, 0) {DriverStatus};
+%     \node[stereotype] at (0, 0.4) {<<enumeration>>};
+%     \node[enumbody, anchor=north] (dstatus_b) at (0, -0.35) {
+%         \texttt{AVAILABLE}\\
+%         \texttt{ON\_ROUTE}\\
+%         \texttt{OFF\_DUTY}\\
+%         \texttt{ON\_BREAK}
+%     };
+    
+%     % DriverRole
+%     \node[enumhead] (drole_h) at (4, 0) {DriverRole};
+%     \node[stereotype] at (4, 0.4) {<<enumeration>>};
+%     \node[enumbody, anchor=north] (drole_b) at (4, -0.35) {
+%         \texttt{DRIVER}\\
+%         \texttt{ADMIN}\\
+%         \texttt{DISPATCHER}
+%     };
+    
+%     % VehicleType
+%     \node[enumhead] (vtype_h) at (8, 0) {VehicleType};
+%     \node[stereotype] at (8, 0.4) {<<enumeration>>};
+%     \node[enumbody, anchor=north] (vtype_b) at (8, -0.35) {
+%         \texttt{BIKE}\\
+%         \texttt{CAR}\\
+%         \texttt{VAN}\\
+%         \texttt{TRUCK}
+%     };
+    
+%     % RouteStatus
+%     \node[enumhead, fill=successgreen!20, draw=successgreen] (rstatus_h) at (0, -3.5) {RouteStatus};
+%     \node[stereotype] at (0, -3.1) {<<enumeration>>};
+%     \node[enumbody, draw=successgreen, anchor=north, minimum height=2cm] (rstatus_b) at (0, -3.85) {
+%         \texttt{DRAFT}\\
+%         \texttt{OPTIMIZED}\\
+%         \texttt{ASSIGNED}\\
+%         \texttt{IN\_PROGRESS}\\
+%         \texttt{COMPLETED}\\
+%         \texttt{CANCELLED}
+%     };
+    
+%     % DeliveryStatus
+%     \node[enumhead, fill=warningorange!20, draw=warningorange] (delstatus_h) at (4, -3.5) {DeliveryStatus};
+%     \node[stereotype] at (4, -3.1) {<<enumeration>>};
+%     \node[enumbody, draw=warningorange, anchor=north, minimum height=2cm] (delstatus_b) at (4, -3.85) {
+%         \texttt{PENDING}\\
+%         \texttt{IN\_PROGRESS}\\
+%         \texttt{DELIVERED}\\
+%         \texttt{FAILED}\\
+%         \texttt{CANCELLED}
+%     };
+    
+% \end{tikzpicture}
+% \caption{Diagramme de classes - Énumérations}
+% \label{fig:class_diagram_enums}
+% \end{figure}
+
+% %--- VALUE OBJECTS ---
+% \subsubsection{Classes Objets de Valeur}
+
+% \begin{figure}[H]
+% \centering
+% \resizebox{\textwidth}{!}{
+% \begin{tikzpicture}[
+%     vohead/.style={rectangle, draw=primaryblue!70, fill=primaryblue!10, thick, text width=4cm, text centered, font=\small\bfseries, minimum height=0.6cm},
+%     vobody/.style={rectangle, draw=primaryblue!70, fill=white, thick, text width=4cm, font=\footnotesize, align=left},
+%     stereotype/.style={font=\tiny\itshape, text centered}
+% ]
+%     % Location
+%     \node[vohead] (loc_h) at (0, 0) {Location};
+%     \node[stereotype] at (0, 0.4) {<<value object>>};
+%     \node[vobody, anchor=north, minimum height=1cm] (loc_b) at (0, -0.35) {
+%         \texttt{- latitude: Float}\\
+%         \texttt{- longitude: Float}
+%     };
+    
+%     % Address
+%     \node[vohead] (addr_h) at (5, 0) {Address};
+%     \node[stereotype] at (5, 0.4) {<<value object>>};
+%     \node[vobody, anchor=north, minimum height=1.5cm] (addr_b) at (5, -0.35) {
+%         \texttt{- street: String}\\
+%         \texttt{- city: String}\\
+%         \texttt{- postal\_code: String}\\
+%         \texttt{- country: String}\\
+%         \texttt{- full\_address: String}
+%     };
+    
+%     % DepotLocation
+%     \node[vohead] (deploc_h) at (10, 0) {DepotLocation};
+%     \node[stereotype] at (10, 0.4) {<<value object>>};
+%     \node[vobody, anchor=north, minimum height=1cm] (deploc_b) at (10, -0.35) {
+%         \texttt{- latitude: Float}\\
+%         \texttt{- longitude: Float}\\
+%         \texttt{- address: String}
+%     };
+    
+%     % CustomerAddress
+%     \node[vohead] (custaddr_h) at (15, 0) {CustomerAddress};
+%     \node[stereotype] at (15, 0.4) {<<value object>>};
+%     \node[vobody, anchor=north, minimum height=1.5cm] (custaddr_b) at (15, -0.35) {
+%         \texttt{- street: String}\\
+%         \texttt{- city: String}\\
+%         \texttt{- postal\_code: String}\\
+%         \texttt{- country: String}\\
+%         \texttt{- latitude: Float}\\
+%         \texttt{- longitude: Float}\\
+%         \texttt{- notes: String}
+%     };
+    
+%     % OptResult (RouteOptimizationResult)
+%     \node[vohead, fill=successgreen!10, draw=successgreen!70] (opt_h) at (0, -3.5) {OptResult};
+%     \node[stereotype] at (0, -3.1) {<<value object>>};
+%     \node[vobody, draw=successgreen!70, anchor=north, minimum height=1.8cm] (opt_b) at (0, -3.85) {
+%         \texttt{- optimized\_sequence: DeliveryPoint[]}\\
+%         \texttt{- route\_segments: RouteSegment[]}\\
+%         \texttt{- total\_distance\_km: Float}\\
+%         \texttt{- total\_duration\_minutes: Float}\\
+%         \texttt{- estimated\_cost: Float}\\
+%         \texttt{- solver\_info: Dict}
+%     };
+    
+%     % RouteSegment
+%     \node[vohead, fill=successgreen!10, draw=successgreen!70] (seg_h) at (5, -3.5) {RouteSegment};
+%     \node[stereotype] at (5, -3.1) {<<value object>>};
+%     \node[vobody, draw=successgreen!70, anchor=north, minimum height=1.5cm] (seg_b) at (5, -3.85) {
+%         \texttt{- from\_point\_id: String}\\
+%         \texttt{- to\_point\_id: String}\\
+%         \texttt{- distance\_meters: Float}\\
+%         \texttt{- duration\_minutes: Float}\\
+%         \texttt{- segment\_order: Integer}
+%     };
+    
+%     % Token
+%     \node[vohead] (tok_h) at (10, -3.5) {Token};
+%     \node[stereotype] at (10, -3.1) {<<value object>>};
+%     \node[vobody, anchor=north, minimum height=1cm] (tok_b) at (10, -3.85) {
+%         \texttt{- access\_token: String}\\
+%         \texttt{- token\_type: String}\\
+%         \texttt{- driver\_id: String}
+%     };
+    
+%     % DeliveryConfirmation
+%     \node[vohead, fill=warningorange!10, draw=warningorange!70] (conf_h) at (15, -3.5) {DeliveryConfirmation};
+%     \node[stereotype] at (15, -3.1) {<<value object>>};
+%     \node[vobody, draw=warningorange!70, anchor=north, minimum height=2cm] (conf_b) at (15, -3.85) {
+%         \texttt{- route\_id: String}\\
+%         \texttt{- point\_id: String}\\
+%         \texttt{- confirmed\_at: DateTime}\\
+%         \texttt{- notes: String}\\
+%         \texttt{- proof\_photo: String}\\
+%         \texttt{- signature: String}\\
+%         \texttt{- success: Boolean}\\
+%         \texttt{- failure\_reason: String}
+%     };
+    
+% \end{tikzpicture}
+% }
+% \caption{Diagramme de classes - Objets de valeur}
+% \label{fig:class_diagram_valueobjects}
+% \end{figure}
+
+% %--- SERVICE CLASS ---
+% \subsubsection{Classe Service Blockchain}
+
+% \begin{figure}[H]
+% \centering
+% \begin{tikzpicture}[
+%     svchead/.style={rectangle, draw=secondarypurple, fill=secondarypurple!20, thick, text width=6cm, text centered, font=\small\bfseries, minimum height=0.6cm},
+%     svcbody/.style={rectangle, draw=secondarypurple, fill=white, thick, text width=6cm, font=\footnotesize, align=left},
+%     svcmethods/.style={rectangle, draw=secondarypurple, fill=secondarypurple!5, thick, text width=6cm, font=\footnotesize, align=left},
+%     stereotype/.style={font=\tiny\itshape, text centered}
+% ]
+%     % BlockchainService
+%     \node[svchead] (bc_h) at (0, 0) {BlockchainService};
+%     \node[stereotype] at (0, 0.4) {<<service>>};
+%     \node[svcbody, anchor=north, minimum height=1cm] (bc_b) at (0, -0.35) {
+%         \texttt{- web3: Web3}\\
+%         \texttt{- contract: Contract}\\
+%         \texttt{- account: Account}
+%     };
+%     \node[svcmethods, anchor=north, minimum height=1.8cm] (bc_m) at (0, -1.4) {
+%         \texttt{+ recordRouteCreation(route\_id, route\_data)}\\
+%         \texttt{+ updateRouteStatus(route\_id, status)}\\
+%         \texttt{+ verifyRoute(route\_id): Boolean}\\
+%         \texttt{+ getRouteFromBlockchain(route\_id)}\\
+%         \texttt{+ calculateDataHash(data): String}
+%     };
+    
+% \end{tikzpicture}
+% \caption{Diagramme de classes - Service Blockchain}
+% \label{fig:class_diagram_service}
+% \end{figure}
+
+% %--- SUMMARY TABLE ---
+% \subsubsection{Récapitulatif des Classes}
+
+% \begin{table}[H]
+% \centering
+% \begin{tabular}{|l|l|c|}
+% \hline
+% \textbf{Catégorie} & \textbf{Classes} & \textbf{Nombre} \\
+% \hline
+% \textbf{Entités} & Driver, Route, DeliveryPoint, Customer, Depot & 5 \\
+% \hline
+% \textbf{Objets de valeur} & Location, Address, CustomerAddress, DepotLocation, & 8 \\
+%  & OptResult, RouteSegment, Token, DeliveryConfirmation & \\
+% \hline
+% \textbf{Énumérations} & DriverStatus, DriverRole, VehicleType, & 5 \\
+%  & RouteStatus, DeliveryStatus & \\
+% \hline
+% \textbf{Services} & BlockchainService & 1 \\
+% \hline
+% \textbf{Total} & & \textbf{19} \\
+% \hline
+% \end{tabular}
+% \caption{Récapitulatif des classes du modèle du domaine}
+% \label{tab:class_summary}
+% \end{table}
+
+% %--- RELATIONSHIPS DIAGRAM ---
+% \subsubsection{Diagramme des Relations UML}
+
+% Ce diagramme montre les relations entre les entités, les énumérations (dépendance en pointillés) et les objets de valeur (composition avec losange plein).
+
+% \begin{figure}[H]
+% \centering
+% \resizebox{\textwidth}{!}{
+% \begin{tikzpicture}[
+%     entity/.style={rectangle, draw=primaryblue, fill=primaryblue!15, thick, text width=3.5cm, text centered, font=\small\bfseries, minimum height=1.2cm, rounded corners=4pt},
+%     enum/.style={rectangle, draw=gray!70, fill=gray!15, thick, text width=2.8cm, text centered, font=\footnotesize\bfseries, minimum height=1cm, rounded corners=3pt},
+%     valueobj/.style={rectangle, draw=successgreen!70, fill=successgreen!10, thick, text width=2.8cm, text centered, font=\footnotesize\bfseries, minimum height=1cm, rounded corners=3pt},
+%     service/.style={rectangle, draw=secondarypurple, fill=secondarypurple!15, thick, text width=3.5cm, text centered, font=\small\bfseries, minimum height=1.2cm, rounded corners=4pt},
+%     stereotype/.style={font=\scriptsize\itshape},
+%     % Relationship styles
+%     dependency/.style={-{Stealth[length=3mm]}, dashed, thick, gray!70},
+%     composition/.style={-{Diamond[fill=black, length=4mm, width=2.5mm]}, thick},
+%     association/.style={-, thick},
+%     uses/.style={-{Stealth[length=3mm]}, thick, secondarypurple!70},
+%     mult/.style={font=\scriptsize\bfseries, fill=white, inner sep=2pt}
+% ]
+%     % ========== ENTITY CLASSES (CENTER ROW) ==========
+%     \node[entity] (driver) at (0, 0) {Driver};
+%     \node[stereotype] at (0, 0.9) {<<entity>>};
+    
+%     \node[entity, fill=successgreen!15, draw=successgreen] (route) at (8, 0) {Route};
+%     \node[stereotype] at (8, 0.9) {<<entity>>};
+    
+%     \node[entity, fill=warningorange!15, draw=warningorange] (point) at (16, 0) {DeliveryPoint};
+%     \node[stereotype] at (16, 0.9) {<<entity>>};
+    
+%     % ========== BOTTOM ENTITIES ==========
+%     \node[entity, fill=secondarypurple!15, draw=secondarypurple] (customer) at (0, -8) {Customer};
+%     \node[stereotype] at (0, -7.1) {<<entity>>};
+    
+%     \node[entity] (depot) at (8, -8) {Depot};
+%     \node[stereotype] at (8, -7.1) {<<entity>>};
+    
+%     % ========== ENUMERATIONS (TOP ROW - spaced out) ==========
+%     \node[enum] (dstatus) at (-4, 5) {DriverStatus};
+%     \node[stereotype] at (-4, 5.7) {<<enumeration>>};
+    
+%     \node[enum] (drole) at (0, 5) {DriverRole};
+%     \node[stereotype] at (0, 5.7) {<<enumeration>>};
+    
+%     \node[enum] (vtype) at (4, 5) {VehicleType};
+%     \node[stereotype] at (4, 5.7) {<<enumeration>>};
+    
+%     \node[enum, fill=successgreen!15, draw=successgreen!70] (rstatus) at (8, 5) {RouteStatus};
+%     \node[stereotype] at (8, 5.7) {<<enumeration>>};
+    
+%     \node[enum, fill=warningorange!15, draw=warningorange!70] (delstatus) at (16, 5) {DeliveryStatus};
+%     \node[stereotype] at (16, 5.7) {<<enumeration>>};
+    
+%     % ========== VALUE OBJECTS (distributed with more space) ==========
+%     % Around Route
+%     \node[valueobj] (location) at (12, -4) {Location};
+%     \node[stereotype] at (12, -3.3) {<<value object>>};
+    
+%     \node[valueobj] (address) at (16, -4) {Address};
+%     \node[stereotype] at (16, -3.3) {<<value object>>};
+    
+%     \node[valueobj] (optresult) at (12, 3) {OptResult};
+%     \node[stereotype] at (12, 3.7) {<<value object>>};
+    
+%     \node[valueobj] (segment) at (16, 3) {RouteSegment};
+%     \node[stereotype] at (16, 3.7) {<<value object>>};
+    
+%     % Around Depot
+%     \node[valueobj] (deploc) at (12, -8) {DepotLocation};
+%     \node[stereotype] at (12, -7.3) {<<value object>>};
+    
+%     % Around Customer
+%     \node[valueobj] (custaddr) at (4, -8) {CustomerAddress};
+%     \node[stereotype] at (4, -7.3) {<<value object>>};
+    
+%     % Around Driver
+%     \node[valueobj] (token) at (-4, -4) {Token};
+%     \node[stereotype] at (-4, -3.3) {<<value object>>};
+    
+%     % Around DeliveryPoint
+%     \node[valueobj, fill=warningorange!10, draw=warningorange!70] (confirm) at (20, -4) {DeliveryConfirmation};
+%     \node[stereotype] at (20, -3.3) {<<value object>>};
+    
+%     % ========== SERVICE ==========
+%     \node[service] (blockchain) at (20, 0) {BlockchainService};
+%     \node[stereotype] at (20, 0.9) {<<service>>};
+    
+%     % ========== ENTITY RELATIONSHIPS (solid lines) ==========
+%     \draw[association] (driver.east) -- node[mult, above, pos=0.3] {1} node[mult, above, pos=0.7] {0..*} (route.west);
+%     \draw[composition] (route.east) -- node[mult, above, pos=0.3] {1} node[mult, above, pos=0.7] {5..20} (point.west);
+%     \draw[association] (driver.south) -- ++(0,-2) -| node[mult, above left, pos=0.1] {1} node[mult, above right, pos=0.9] {0..*} (customer.north);
+%     \draw[association] (driver.south) -- ++(0,-2) -| node[mult, above left, pos=0.1] {1} node[mult, above right, pos=0.9] {0..*} (depot.north);
+%     \draw[association] (route.south) -- ++(0,-1.5) -| node[mult, above left, pos=0.1] {0..*} node[mult, above right, pos=0.9] {1} (depot.north);
+    
+%     % ========== ENUMERATION DEPENDENCIES (dashed arrows) ==========
+%     \draw[dependency] (driver.north) -- ++(-2,1.5) -- node[mult, above, pos=0.7] {1} (dstatus.south);
+%     \draw[dependency] (driver.north) -- node[mult, right, pos=0.5] {1} (drole.south);
+%     \draw[dependency] (driver.north) -- ++(2,1.5) -- node[mult, above, pos=0.7] {1} (vtype.south);
+%     \draw[dependency] (route.north) -- node[mult, right, pos=0.5] {1} (rstatus.south);
+%     \draw[dependency] (point.north) -- node[mult, right, pos=0.5] {1} (delstatus.south);
+    
+%     % ========== VALUE OBJECT COMPOSITIONS (filled diamond with cardinalities) ==========
+%     % Route compositions
+%     \draw[composition] (route.south) -- ++(0,-1) -| node[mult, left, pos=0.8] {1} (location.north);
+%     \draw[composition] (route.south) -- ++(0,-1) -| node[mult, left, pos=0.8] {0..1} (address.north);
+%     \draw[composition] (route.north) -- ++(0,0.5) -| node[mult, left, pos=0.8] {0..1} (optresult.west);
+    
+%     % DeliveryPoint compositions
+%     \draw[composition] (point.south) -- ++(0,-0.8) -| node[mult, right, pos=0.8] {1} (location.north east);
+%     \draw[composition] (point.south) -- ++(0,-0.8) -| node[mult, left, pos=0.8] {1} (address.north);
+%     \draw[composition] (point.south) -- ++(0,-1) -| node[mult, left, pos=0.8] {0..1} (confirm.north);
+    
+%     % Depot composition
+%     \draw[composition] (depot.east) -- node[mult, above, pos=0.5] {1} (deploc.west);
+    
+%     % Customer composition
+%     \draw[composition] (customer.east) -- node[mult, above, pos=0.5] {1} (custaddr.west);
+    
+%     % Driver returns Token
+%     \draw[composition] (driver.south) -- ++(0,-1) -| node[mult, left, pos=0.8] {0..1} (token.north);
+    
+%     % OptResult contains RouteSegments
+%     \draw[composition] (optresult.east) -- node[mult, above, pos=0.5] {1..*} (segment.west);
+    
+%     % Service uses Route
+%     \draw[uses] (blockchain.west) -- node[font=\scriptsize, above, pos=0.5] {uses} (point.east);
+    
+%     % ========== LEGEND (bottom left) ==========
+%     \node[font=\small\bfseries] at (-4, -10.5) {Légende :};
+%     \draw[dependency] (-4, -11.2) -- (-2, -11.2) node[right, font=\scriptsize] {Dépendance (utilise enum)};
+%     \draw[composition] (-4, -12) -- (-2, -12) node[right, font=\scriptsize] {Composition (possède value object)};
+%     \draw[association] (-4, -12.8) -- (-2, -12.8) node[right, font=\scriptsize] {Association (référence entité)};
+    
+% \end{tikzpicture}
+% }
+% \caption{Diagramme de classes complet avec toutes les relations UML}
+% \label{fig:class_diagram_relationships}
+% \end{figure}
+
+% %--- CARDINALITY TABLE ---
+% \subsubsection{Tableau des Cardinalités}
+
+% \begin{table}[H]
+% \centering
+% \small
+% \begin{tabular}{|l|l|l|c|l|}
+% \hline
+% \textbf{Classe Source} & \textbf{Relation} & \textbf{Classe Cible} & \textbf{Cardinalité} & \textbf{Description} \\
+% \hline
+% \multicolumn{5}{|c|}{\textit{\textbf{Associations entre Entités}}} \\
+% \hline
+% Driver & possède & Route & 1 -- 0..* & Un driver peut avoir plusieurs routes \\
+% Route & contient & DeliveryPoint & 1 -- 5..20 & Une route contient 5 à 20 points \\
+% Driver & gère & Customer & 1 -- 0..* & Un driver gère ses propres clients \\
+% Driver & possède & Depot & 1 -- 0..* & Un driver peut avoir plusieurs dépôts \\
+% Route & part de & Depot & 0..* -- 1 & Une route part d'un seul dépôt \\
+% \hline
+% \multicolumn{5}{|c|}{\textit{\textbf{Compositions avec Value Objects}}} \\
+% \hline
+% Route & a & Location & 1 -- 1 & Position GPS du dépôt (obligatoire) \\
+% Route & a & Address & 1 -- 0..1 & Adresse du dépôt (optionnelle) \\
+% Route & a & OptResult & 1 -- 0..1 & Résultat optimisation (après VRP) \\
+% DeliveryPoint & a & Location & 1 -- 1 & Coordonnées GPS (obligatoire) \\
+% DeliveryPoint & a & Address & 1 -- 1 & Adresse de livraison (obligatoire) \\
+% DeliveryPoint & a & DeliveryConfirmation & 1 -- 0..1 & Confirmation (après livraison) \\
+% Customer & a & CustomerAddress & 1 -- 1 & Adresse client (obligatoire) \\
+% Depot & a & DepotLocation & 1 -- 1 & Position du dépôt (obligatoire) \\
+% Driver & génère & Token & 1 -- 0..1 & Token JWT (après login) \\
+% OptResult & contient & RouteSegment & 1 -- 1..* & Segments de route (au moins 1) \\
+% \hline
+% \multicolumn{5}{|c|}{\textit{\textbf{Dépendances avec Énumérations}}} \\
+% \hline
+% Driver & utilise & DriverStatus & 1 -- 1 & Statut unique obligatoire \\
+% Driver & utilise & DriverRole & 1 -- 1 & Rôle unique obligatoire \\
+% Driver & utilise & VehicleType & 1 -- 1 & Type véhicule obligatoire \\
+% Route & utilise & RouteStatus & 1 -- 1 & Statut route obligatoire \\
+% DeliveryPoint & utilise & DeliveryStatus & 1 -- 1 & Statut livraison obligatoire \\
+% \hline
+% \end{tabular}
+% \caption{Tableau complet des cardinalités du modèle de domaine}
+% \label{tab:cardinalities}
+% \end{table}
+
+% \textbf{Types de relations UML utilisées :}
+% \begin{itemize}
+%     \item \textbf{Dépendance (- - - $\rightarrow$)} : Les entités \textit{utilisent} les énumérations comme types d'attributs. La flèche pointillée indique que l'entité dépend de l'énumération.
+%     \item \textbf{Composition ($\blacklozenge$---)} : Les entités \textit{possèdent} les objets de valeur. Le losange plein indique que l'objet de valeur fait partie intégrante de l'entité et n'existe pas indépendamment.
+%     \item \textbf{Association (---)} : Relations entre entités avec multiplicités (1, 0..*, 5..20, etc.).
+% \end{itemize}
 
 %---------------------------------------------------------------------
 \section{Modélisation UML : Diagrammes de Séquence}
@@ -318,163 +869,304 @@ RouteChain adopte une architecture trois-tiers classique, séparant clairement l
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[
-    actor/.style={rectangle, draw=primaryblue, fill=primaryblue!15, minimum width=2cm, minimum height=0.8cm, font=\footnotesize\bfseries, rounded corners=3pt, drop shadow={opacity=0.2}},
-    lifeline/.style={dashed, thick, gray!60},
-    message/.style={-{Stealth[length=2.5mm]}, thick, primaryblue},
-    return/.style={-{Stealth[length=2.5mm]}, dashed, thick, successgreen},
-    activation/.style={fill=primaryblue!20, draw=primaryblue},
-    note/.style={rectangle, draw=warningorange, fill=warningorange!10, font=\tiny, text width=2cm, rounded corners=2pt}
-]
-    % Actors/Objects
-    \node[actor] (user) at (0,0) {Utilisateur};
-    \node[actor] (front) at (3.5,0) {Frontend};
-    \node[actor, fill=successgreen!15, draw=successgreen] (back) at (7,0) {Backend};
-    \node[actor, fill=warningorange!15, draw=warningorange] (db) at (10.5,0) {MongoDB};
-    
-    % Lifelines
-    \draw[lifeline] (0,-0.4) -- (0,-8);
-    \draw[lifeline] (3.5,-0.4) -- (3.5,-8);
-    \draw[lifeline] (7,-0.4) -- (7,-8);
-    \draw[lifeline] (10.5,-0.4) -- (10.5,-8);
-    
-    % Activation boxes
-    \draw[activation] (6.85,-2) rectangle (7.15,-5.5);
-    
-    % Messages
-    \draw[message] (0,-1) -- node[above, font=\tiny\bfseries] {1: saisie credentials} (3.5,-1);
-    \draw[message] (3.5,-2) -- node[above, font=\tiny\bfseries] {2: POST /auth/login} (7,-2);
-    \draw[message] (7,-2.8) -- node[above, font=\tiny\bfseries] {3: find\_one(email)} (10.5,-2.8);
-    \draw[return] (10.5,-3.5) -- node[above, font=\tiny\bfseries] {4: driver\_document} (7,-3.5);
-    
-    % Note for processing
-    \node[note] at (9,-4.5) {verify\_password\\generate\_jwt()};
-    
-    \draw[return] (7,-5.8) -- node[above, font=\tiny\bfseries] {5: \{token, user\}} (3.5,-5.8);
-    \draw[message] (3.5,-6.5) -- node[right, font=\tiny\bfseries] {6: store token} (3.5,-6.8);
-    \draw[return] (3.5,-7.2) -- node[above, font=\tiny\bfseries] {7: redirect dashboard} (0,-7.2);
-    
-\end{tikzpicture}
-\caption{Diagramme de séquence - Processus d'authentification JWT}
-\label{fig:seq_auth}
+\includegraphics[width=1.1\textwidth]{diagrams/authSequence.png}
+\caption{Diagramme de séquence : Authentification}
+\label{fig:auth_sequence_diag}
 \end{figure}
+
+% \begin{figure}[H]
+% \centering
+% \resizebox{\textwidth}{!}{
+% \begin{tikzpicture}[
+%     % Component box style (orange/yellow like the reference)
+%     component/.style={rectangle, draw=warningorange!80, fill=warningorange!20, thick, minimum width=2.5cm, minimum height=0.9cm, font=\small\bfseries, rounded corners=2pt},
+%     % Lifeline style
+%     lifeline/.style={dashed, thick, gray!60},
+%     % Message arrow style
+%     message/.style={-{Stealth[length=3mm]}, thick, black},
+%     % Return arrow style (dashed)
+%     return/.style={-{Stealth[length=3mm]}, dashed, thick, black},
+%     % Activation box style (orange)
+%     activation/.style={fill=warningorange!30, draw=warningorange!80, minimum width=0.4cm},
+%     % Fragment style
+%     fragment/.style={rectangle, draw=black, thick},
+%     fragmentlabel/.style={rectangle, fill=warningorange!40, draw=black, font=\scriptsize\bfseries, inner sep=3pt},
+%     % Self message
+%     selfmsg/.style={thick, black}
+% ]
+%     % ========== ACTOR (Stick Figure) ==========
+%     \begin{scope}[shift={(0,0)}]
+%         \draw[thick] (0,0.8) circle (0.25); % head
+%         \draw[thick] (0,0.55) -- (0,0); % body
+%         \draw[thick] (-0.3,0.4) -- (0,0.25) -- (0.3,0.4); % arms
+%         \draw[thick] (0,0) -- (-0.2,-0.5); % left leg
+%         \draw[thick] (0,0) -- (0.2,-0.5); % right leg
+%         \node[font=\small\bfseries] at (0,-0.8) {User};
+%     \end{scope}
+    
+%     % ========== COMPONENTS ==========
+%     \node[component] (client) at (4,0.5) {Client App};
+%     \node[component] (server) at (8,0.5) {Server Side};
+%     \node[component] (db) at (12,0.5) {Database};
+    
+%     % ========== LIFELINES ==========
+%     \draw[lifeline] (0,-1) -- (0,-18);
+%     \draw[lifeline] (4,-0.1) -- (4,-18);
+%     \draw[lifeline] (8,-0.1) -- (8,-18);
+%     \draw[lifeline] (12,-0.1) -- (12,-18);
+    
+%     % ========== ACTIVATION BOXES ==========
+%     \draw[activation] (3.8,-2) rectangle (4.2,-4);
+%     \draw[activation] (7.8,-3) rectangle (8.2,-6);
+%     \draw[activation] (11.8,-4) rectangle (12.2,-5.5);
+%     \draw[activation] (7.8,-8) rectangle (8.2,-11);
+%     \draw[activation] (3.8,-10) rectangle (4.2,-12);
+    
+%     % ========== MESSAGES ==========
+%     % Initial request
+%     \draw[message] (0,-2) -- node[above, font=\scriptsize] {Request credentials (email,password)} (3.8,-2);
+%     \draw[message] (0,-3) -- node[above, font=\scriptsize] {Send Credentials (email,password)} (3.8,-3);
+%     \draw[message] (4.2,-3.5) -- node[above, font=\scriptsize] {Send login request (email,password)} (7.8,-3.5);
+%     \draw[message] (8.2,-4.2) -- node[above, font=\scriptsize] {Verify credentials (email,password)} (11.8,-4.2);
+    
+%     % Self-call at database
+%     \draw[selfmsg] (12.2,-4.5) -- ++(0.8,0) -- ++(0,-0.6) -- ++(-0.8,0);
+%     \node[font=\scriptsize, anchor=west] at (12.4,-4.8) {Verify credentials (email,password)};
+    
+%     % ========== LOOP FRAGMENT (Invalid Credentials) ==========
+%     \draw[fragment] (-0.8,-6) rectangle (13,-9);
+%     \node[fragmentlabel] at (-0.3,-6) {Boucle};
+%     \node[font=\scriptsize, anchor=west] at (-0.6,-6.6) {[Invalid Credentials]};
+    
+%     \draw[return] (11.8,-6.8) -- node[above, font=\scriptsize] {Invalid credentials} (8.2,-6.8);
+%     \draw[message] (0,-7.2) -- node[above, font=\scriptsize] {Request credentials (email,password)} (3.8,-7.2);
+%     \draw[return] (7.8,-7.5) -- node[above, font=\scriptsize] {Invalid credentials} (4.2,-7.5);
+%     \draw[message] (0,-8) -- node[above, font=\scriptsize] {Send Credentials (email,password)} (3.8,-8);
+%     \draw[message] (4.2,-8.5) -- node[above, font=\scriptsize] {Send login request (email,password)} (7.8,-8.5);
+    
+%     % After loop - valid credentials
+%     \draw[message] (8.2,-9.5) -- node[above, font=\scriptsize] {Verify credentials (email,password)} (11.8,-9.5);
+%     \draw[return] (11.8,-10) -- node[above, font=\scriptsize] {Valid credentials} (8.2,-10);
+    
+%     % Generate JWT - self call
+%     \draw[selfmsg] (8.2,-10.5) -- ++(1,0) -- ++(0,-0.6) -- ++(-1,0);
+%     \node[font=\scriptsize, anchor=west] at (8.4,-10.8) {Generates JWT};
+    
+%     \draw[return] (7.8,-11.5) -- node[above, font=\scriptsize] {Send JWT} (4.2,-11.5);
+    
+%     % Store JWT - self call
+%     \draw[selfmsg] (4.2,-12) -- ++(1,0) -- ++(0,-0.5) -- ++(-1,0);
+%     \node[font=\scriptsize, anchor=west] at (4.4,-12.2) {Stores JWT in cookies};
+    
+%     % Access request
+%     \draw[message] (0,-13) -- node[above, font=\scriptsize] {Makes an access request} (3.8,-13);
+%     \draw[message] (4.2,-13.5) -- node[above, font=\scriptsize] {Send request + JWT} (7.8,-13.5);
+    
+%     % Verify JWT - self call
+%     \draw[selfmsg] (8.2,-14) -- ++(1,0) -- ++(0,-0.5) -- ++(-1,0);
+%     \node[font=\scriptsize, anchor=west] at (8.4,-14.2) {Verify JWT};
+    
+%     % ========== ALTERNATIVE FRAGMENT ==========
+%     \draw[fragment] (-0.8,-15) rectangle (9,-17.5);
+%     \node[fragmentlabel] at (-0.3,-15) {Alternative};
+%     \node[font=\scriptsize, anchor=west] at (-0.6,-15.6) {[Valid JWT]};
+%     \draw[dashed, thick] (-0.8,-16.2) -- (9,-16.2);
+%     \node[font=\scriptsize, anchor=west] at (-0.6,-16.6) {[Invalid JWT]};
+    
+%     \draw[return] (7.8,-15.8) -- node[above, font=\scriptsize] {Allow access} (4.2,-15.8);
+%     \draw[return] (7.8,-17) -- node[above, font=\scriptsize] {Reject access} (4.2,-17);
+    
+% \end{tikzpicture}
+% }
+% \caption{Diagramme de séquence - Processus d'authentification JWT}
+% \label{fig:seq_auth}
+% \end{figure}
 
 \subsection{Diagramme de Séquence : Processus d'Optimisation VRP}
 
 \begin{figure}[H]
 \centering
-\resizebox{\textwidth}{!}{
-\begin{tikzpicture}[
-    actor/.style={rectangle, draw=primaryblue, fill=primaryblue!15, minimum width=1.6cm, minimum height=0.7cm, font=\tiny\bfseries, rounded corners=3pt},
-    lifeline/.style={dashed, thick, gray!50},
-    message/.style={-{Stealth[length=2mm]}, thick, primaryblue},
-    return/.style={-{Stealth[length=2mm]}, dashed, thick, successgreen},
-    activation/.style={fill=primaryblue!20, draw=primaryblue}
-]
-    % Actors/Objects
-    \node[actor] (user) at (0,0) {Chauffeur};
-    \node[actor] (front) at (2.5,0) {Frontend};
-    \node[actor, fill=successgreen!15, draw=successgreen] (back) at (5,0) {Backend};
-    \node[actor, fill=warningorange!15, draw=warningorange] (ors) at (7.5,0) {ORS API};
-    \node[actor, fill=secondarypurple!15, draw=secondarypurple] (vrp) at (10,0) {OR-Tools};
-    \node[actor] (db) at (12.5,0) {MongoDB};
-    \node[actor, fill=gray!20, draw=gray] (bc) at (15,0) {Blockchain};
-    
-    % Lifelines
-    \foreach \x in {0,2.5,5,7.5,10,12.5,15} {
-        \draw[lifeline] (\x,-0.35) -- (\x,-11);
-    }
-    
-    % Activation box for backend
-    \draw[activation] (4.85,-1.5) rectangle (5.15,-9.5);
-    
-    % Messages
-    \draw[message] (0,-0.8) -- node[above, font=\tiny\bfseries] {1: submit points} (2.5,-0.8);
-    \draw[message] (2.5,-1.5) -- node[above, font=\tiny\bfseries] {2: POST /routes/optimize} (5,-1.5);
-    
-    \draw[message] (5,-2.2) -- node[above, font=\tiny\bfseries] {3: distance\_matrix()} (7.5,-2.2);
-    \draw[return] (7.5,-3) -- node[above, font=\tiny\bfseries] {4: matrix[n×n]} (5,-3);
-    
-    \draw[message] (5,-3.8) -- node[above, font=\tiny\bfseries] {5: solve\_vrp(matrix)} (10,-3.8);
-    \draw[return] (10,-4.6) -- node[above, font=\tiny\bfseries] {6: optimal\_sequence} (5,-4.6);
-    
-    \draw[message] (5,-5.4) -- node[above, font=\tiny\bfseries] {7: insert\_one(route)} (12.5,-5.4);
-    \draw[return] (12.5,-6) -- node[above, font=\tiny\bfseries] {8: route\_id} (5,-6);
-    
-    \draw[message] (5,-6.8) -- node[above, font=\tiny\bfseries] {9: sha256(data)} (5,-7.1);
-    \draw[message] (5,-7.5) -- node[above, font=\tiny\bfseries] {10: createRoute(hash)} (15,-7.5);
-    \draw[return] (15,-8.3) -- node[above, font=\tiny\bfseries] {11: tx\_hash, block} (5,-8.3);
-    
-    \draw[message] (5,-9) -- node[above, font=\tiny\bfseries] {12: update\_one(tx)} (12.5,-9);
-    
-    \draw[return] (5,-9.8) -- node[above, font=\tiny\bfseries] {13: route\_response} (2.5,-9.8);
-    \draw[return] (2.5,-10.3) -- node[above, font=\tiny\bfseries] {14: display map} (0,-10.3);
-    
-\end{tikzpicture}
-}
-\caption{Diagramme de séquence - Processus complet d'optimisation VRP avec enregistrement blockchain}
-\label{fig:seq_vrp}
+\includegraphics[width=1\textwidth]{diagrams/routechain_sequence_vrp.pdf}
+\caption{Diagramme de séquence : Processus d'Optimisation VRP}
+\label{fig:vrp_sequence_diag}
 \end{figure}
+
+% \begin{figure}[H]
+% \centering
+% \resizebox{\textwidth}{!}{
+% \begin{tikzpicture}[
+%     component/.style={rectangle, draw=warningorange!80, fill=warningorange!20, thick, minimum width=2cm, minimum height=0.8cm, font=\footnotesize\bfseries, rounded corners=2pt},
+%     lifeline/.style={dashed, thick, gray!60},
+%     message/.style={-{Stealth[length=2.5mm]}, thick, black},
+%     return/.style={-{Stealth[length=2.5mm]}, dashed, thick, black},
+%     activation/.style={fill=warningorange!30, draw=warningorange!80, minimum width=0.35cm},
+%     fragment/.style={rectangle, draw=black, thick},
+%     fragmentlabel/.style={rectangle, fill=warningorange!40, draw=black, font=\scriptsize\bfseries, inner sep=2pt},
+%     selfmsg/.style={thick, black}
+% ]
+%     % ========== ACTOR (Stick Figure) ==========
+%     \begin{scope}[shift={(0,0)}]
+%         \draw[thick] (0,0.7) circle (0.22);
+%         \draw[thick] (0,0.48) -- (0,0);
+%         \draw[thick] (-0.25,0.35) -- (0,0.2) -- (0.25,0.35);
+%         \draw[thick] (0,0) -- (-0.18,-0.4);
+%         \draw[thick] (0,0) -- (0.18,-0.4);
+%         \node[font=\footnotesize\bfseries] at (0,-0.7) {Chauffeur};
+%     \end{scope}
+    
+%     % ========== COMPONENTS ==========
+%     \node[component] (front) at (3,0.4) {Frontend};
+%     \node[component] (back) at (6,0.4) {Backend API};
+%     \node[component] (ors) at (9,0.4) {ORS Service};
+%     \node[component] (vrp) at (12,0.4) {OR-Tools};
+%     \node[component] (db) at (15,0.4) {MongoDB};
+%     \node[component] (bc) at (18,0.4) {Blockchain};
+    
+%     % ========== LIFELINES ==========
+%     \draw[lifeline] (0,-1) -- (0,-16);
+%     \draw[lifeline] (3,-0.1) -- (3,-16);
+%     \draw[lifeline] (6,-0.1) -- (6,-16);
+%     \draw[lifeline] (9,-0.1) -- (9,-16);
+%     \draw[lifeline] (12,-0.1) -- (12,-16);
+%     \draw[lifeline] (15,-0.1) -- (15,-16);
+%     \draw[lifeline] (18,-0.1) -- (18,-16);
+    
+%     % ========== ACTIVATION BOXES ==========
+%     \draw[activation] (2.82,-1.5) rectangle (3.18,-2.5);
+%     \draw[activation] (5.82,-2) rectangle (6.18,-13);
+%     \draw[activation] (8.82,-3) rectangle (9.18,-4.5);
+%     \draw[activation] (11.82,-5) rectangle (12.18,-6.5);
+%     \draw[activation] (14.82,-7.5) rectangle (15.18,-8.5);
+%     \draw[activation] (17.82,-10) rectangle (18.18,-11.5);
+    
+%     % ========== MESSAGES ==========
+%     % Step 1-2: User submits points
+%     \draw[message] (0,-1.5) -- node[above, font=\scriptsize] {1: Submit delivery points} (2.82,-1.5);
+%     \draw[message] (3.18,-2) -- node[above, font=\scriptsize] {2: optimize\_route()} (5.82,-2);
+    
+%     % Step 3-4: Distance matrix
+%     \draw[message] (6.18,-3) -- node[above, font=\scriptsize] {3: get\_distance\_matrix()} (8.82,-3);
+%     \draw[return] (8.82,-4.2) -- node[above, font=\scriptsize] {4: Return matrix[n×n]} (6.18,-4.2);
+    
+%     % Step 5-6: VRP optimization
+%     \draw[message] (6.18,-5) -- node[above, font=\scriptsize] {5: solve\_vrp()} (11.82,-5);
+%     \draw[return] (11.82,-6.2) -- node[above, font=\scriptsize] {6: optimal\_sequence} (6.18,-6.2);
+    
+%     % Step 7-8: Save to database
+%     \draw[message] (6.18,-7.5) -- node[above, font=\scriptsize] {7: save\_route()} (14.82,-7.5);
+%     \draw[return] (14.82,-8.2) -- node[above, font=\scriptsize] {8: route\_id} (6.18,-8.2);
+    
+%     % Step 9: Calculate hash (self-call)
+%     \draw[selfmsg] (6.18,-9) -- ++(1,0) -- ++(0,-0.5) -- ++(-1,0);
+%     \node[font=\scriptsize, anchor=west] at (6.4,-9.2) {9: hashing\_sha256()};
+    
+%     % Step 10-11: Blockchain
+%     \draw[message] (6.18,-10) -- node[above, font=\scriptsize] {10: record\_on\_blockchain()} (17.82,-10);
+%     \draw[return] (17.82,-11.2) -- node[above, font=\scriptsize] {11: tx\_hash, block\_number} (6.18,-11.2);
+    
+%     % Step 12: Update database
+%     \draw[message] (6.18,-12) -- node[above, font=\scriptsize] {12: update\_blockchain\_info()} (14.82,-12);
+    
+%     % Step 13-14: Return to user
+%     \draw[return] (5.82,-13.5) -- node[above, font=\scriptsize] {13: optimized\_route\_response} (3.18,-13.5);
+%     \draw[return] (2.82,-14.5) -- node[above, font=\scriptsize] {14: Display route on map} (0,-14.5);
+    
+% \end{tikzpicture}
+% }
+% \caption{Diagramme de séquence - Processus complet d'optimisation VRP avec enregistrement blockchain}
+% \label{fig:seq_vrp}
+% \end{figure}
 
 \subsection{Diagramme de Séquence : Vérification de l'Intégrité Blockchain}
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[
-    actor/.style={rectangle, draw=primaryblue, fill=primaryblue!15, minimum width=2cm, minimum height=0.8cm, font=\footnotesize\bfseries, rounded corners=3pt},
-    lifeline/.style={dashed, thick, gray!50},
-    message/.style={-{Stealth[length=2.5mm]}, thick, primaryblue},
-    return/.style={-{Stealth[length=2.5mm]}, dashed, thick, successgreen},
-    activation/.style={fill=successgreen!20, draw=successgreen},
-    alt/.style={rectangle, draw=gray, thick, rounded corners=3pt},
-    altlabel/.style={font=\tiny\bfseries, fill=gray!20, inner sep=2pt}
-]
-    % Actors/Objects
-    \node[actor] (user) at (0,0) {Utilisateur};
-    \node[actor] (front) at (3.5,0) {Frontend};
-    \node[actor, fill=successgreen!15, draw=successgreen] (back) at (7,0) {Backend};
-    \node[actor, fill=warningorange!15, draw=warningorange] (db) at (10.5,0) {MongoDB};
-    
-    % Lifelines
-    \draw[lifeline] (0,-0.4) -- (0,-9);
-    \draw[lifeline] (3.5,-0.4) -- (3.5,-9);
-    \draw[lifeline] (7,-0.4) -- (7,-9);
-    \draw[lifeline] (10.5,-0.4) -- (10.5,-9);
-    
-    % Activation box
-    \draw[activation] (6.85,-2) rectangle (7.15,-6.5);
-    
-    % Messages
-    \draw[message] (0,-1) -- node[above, font=\tiny\bfseries] {1: click "Vérifier"} (3.5,-1);
-    \draw[message] (3.5,-2) -- node[above, font=\tiny\bfseries] {2: GET /routes/\{id\}/verify} (7,-2);
-    \draw[message] (7,-2.8) -- node[above, font=\tiny\bfseries] {3: find\_one(route\_id)} (10.5,-2.8);
-    \draw[return] (10.5,-3.5) -- node[above, font=\tiny\bfseries] {4: route\_data} (7,-3.5);
-    
-    % Processing note
-    \node[rectangle, draw=secondarypurple, fill=secondarypurple!10, font=\tiny, text width=3cm, rounded corners=2pt, align=left] at (10,-5) {
-        stored = route.data\_hash\\
-        current = sha256(data)\\
-        result = (stored == current)
-    };
-    
-    % Alt fragment
-    \draw[alt, fill=blue!3] (2.8,-6.8) rectangle (11,-8.8);
-    \node[altlabel] at (3.3,-6.95) {alt};
-    \draw[dashed, gray] (2.8,-7.7) -- (11,-7.7);
-    
-    \node[font=\tiny, anchor=west] at (3,-7.3) {[hashes égaux]};
-    \draw[return] (7,-7.4) -- node[above, font=\tiny\bfseries, fill=successgreen!20] {\{verified: true, status: "VALIDE"\}} (3.5,-7.4);
-    
-    \node[font=\tiny, anchor=west] at (3,-8) {[hashes différents]};
-    \draw[return, warningorange] (7,-8.4) -- node[above, font=\tiny\bfseries, fill=warningorange!20] {\{verified: false, status: "MODIFIÉ"\}} (3.5,-8.4);
-    
-    % Final return
-    \draw[return] (3.5,-8.8) -- node[above, font=\tiny\bfseries] {5: afficher résultat} (0,-8.8);
-    
-\end{tikzpicture}
-\caption{Diagramme de séquence - Vérification de l'intégrité via blockchain}
-\label{fig:seq_verify}
+\includegraphics[width=1\textwidth]{diagrams/routechain_seq_blockchain.pdf}
+\caption{Diagramme de séquence : Vérification de l'Intégrité Blockchain}
+\label{fig:blockchain_sequence_diag}
 \end{figure}
+% \begin{figure}[H]
+% \centering
+% \resizebox{\textwidth}{!}{
+% \begin{tikzpicture}[
+%     component/.style={rectangle, draw=warningorange!80, fill=warningorange!20, thick, minimum width=3cm, minimum height=1cm, font=\small\bfseries, rounded corners=2pt},
+%     lifeline/.style={dashed, thick, gray!60},
+%     message/.style={-{Stealth[length=3mm]}, thick, black},
+%     return/.style={-{Stealth[length=3mm]}, dashed, thick, black},
+%     activation/.style={fill=warningorange!30, draw=warningorange!80, minimum width=0.45cm},
+%     fragment/.style={rectangle, draw=black, thick},
+%     fragmentlabel/.style={rectangle, fill=warningorange!40, draw=black, font=\scriptsize\bfseries, inner sep=4pt},
+%     selfmsg/.style={thick, black}
+% ]
+%     % ========== ACTOR (Stick Figure) ==========
+%     \begin{scope}[shift={(0,0)}]
+%         \draw[thick] (0,0.9) circle (0.3);
+%         \draw[thick] (0,0.6) -- (0,-0.1);
+%         \draw[thick] (-0.35,0.45) -- (0,0.25) -- (0.35,0.45);
+%         \draw[thick] (0,-0.1) -- (-0.25,-0.7);
+%         \draw[thick] (0,-0.1) -- (0.25,-0.7);
+%         \node[font=\small\bfseries] at (0,-1.1) {User};
+%     \end{scope}
+    
+%     % ========== COMPONENTS (more spaced) ==========
+%     \node[component] (front) at (5,0.5) {Frontend};
+%     \node[component] (back) at (11,0.5) {Backend API};
+%     \node[component] (db) at (17,0.5) {MongoDB};
+    
+%     % ========== LIFELINES (longer) ==========
+%     \draw[lifeline] (0,-1.5) -- (0,-20);
+%     \draw[lifeline] (5,-0.1) -- (5,-20);
+%     \draw[lifeline] (11,-0.1) -- (11,-20);
+%     \draw[lifeline] (17,-0.1) -- (17,-20);
+    
+%     % ========== ACTIVATION BOXES ==========
+%     \draw[activation] (4.77,-2) rectangle (5.23,-3.5);
+%     \draw[activation] (10.77,-3.5) rectangle (11.23,-13);
+%     \draw[activation] (16.77,-5) rectangle (17.23,-7);
+    
+%     % ========== MESSAGES ==========
+%     % Step 1: User clicks verify
+%     \draw[message] (0,-2.5) -- node[above, font=\scriptsize] {1: click\_verify\_button()} (4.77,-2.5);
+    
+%     % Step 2: Frontend calls backend
+%     \draw[message] (5.23,-3.5) -- node[above, font=\scriptsize] {2: verify\_route\_integrity(route\_id)} (10.77,-3.5);
+    
+%     % Step 3-4: Get route from database
+%     \draw[message] (11.23,-5) -- node[above, font=\scriptsize] {3: get\_route(route\_id)} (16.77,-5);
+%     \draw[return] (16.77,-6.5) -- node[above, font=\scriptsize] {4: route\_document (with stored\_hash)} (11.23,-6.5);
+    
+%     % Step 5: Extract stored hash (self-call)
+%     \draw[selfmsg] (11.23,-8) -- ++(1.5,0) -- ++(0,-0.7) -- ++(-1.5,0);
+%     \node[font=\scriptsize, anchor=west] at (11.5,-8.3) {5: extract\_stored\_hash(route\_data)};
+    
+%     % Step 6: Calculate current hash (self-call)
+%     \draw[selfmsg] (11.23,-9.5) -- ++(1.5,0) -- ++(0,-0.7) -- ++(-1.5,0);
+%     \node[font=\scriptsize, anchor=west] at (11.5,-9.8) {6: calculate\_hash\_sha256(route\_data)};
+    
+%     % Step 7: Compare hashes (self-call)
+%     \draw[selfmsg] (11.23,-11) -- ++(1.5,0) -- ++(0,-0.7) -- ++(-1.5,0);
+%     \node[font=\scriptsize, anchor=west] at (11.5,-11.3) {7: compare\_hashes(stored, current)};
+    
+%     % ========== ALTERNATIVE FRAGMENT ==========
+%     \draw[fragment] (-0.8,-14) rectangle (16,-19);
+%     \node[fragmentlabel] at (-0.2,-14) {Alternative};
+%     \node[font=\scriptsize\bfseries, anchor=west] at (-0.5,-14.8) {[stored\_hash == current\_hash]};
+%     \draw[dashed, thick] (-0.8,-16.3) -- (16,-16.3);
+%     \node[font=\scriptsize\bfseries, anchor=west] at (-0.5,-17) {[stored\_hash != current\_hash]};
+    
+%     % Valid case - green arrows
+%     \draw[return, green!60!black] (10.77,-15.3) -- node[above, font=\scriptsize, fill=green!15, rounded corners=2pt] {8a: \{verified: true, integrity: "VALID"\}} (5.23,-15.3);
+%     \draw[return, green!60!black] (4.77,-15.8) -- node[above, font=\scriptsize] {9a: Display $\checkmark$ Data Integrity Verified} (0,-15.8);
+    
+%     % Invalid case - red arrows
+%     \draw[return, red!70] (10.77,-17.8) -- node[above, font=\scriptsize, fill=red!15, rounded corners=2pt] {8b: \{verified: false, integrity: "TAMPERED"\}} (5.23,-17.8);
+%     \draw[return, red!70] (4.77,-18.3) -- node[above, font=\scriptsize] {9b: Display $\times$ Data Has Been Modified!} (0,-18.3);
+    
+% \end{tikzpicture}
+% }
+% \caption{Diagramme de séquence - Vérification de l'intégrité via blockchain}
+% \label{fig:seq_verify}
+% \end{figure}
 
 %---------------------------------------------------------------------
 \section{Conception du Schéma de Base de Données}
@@ -538,43 +1230,87 @@ Le smart contract \texttt{RouteRegistry} est déployé sur la blockchain Ethereu
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[
-    contract/.style={rectangle, draw=secondarypurple, fill=secondarypurple!10, thick, minimum width=10cm, rounded corners=8pt},
-    section/.style={rectangle, draw=gray, fill=white, thick, minimum width=9cm, rounded corners=5pt, font=\footnotesize, align=left},
-    title/.style={font=\large\bfseries, secondarypurple}
+    contract/.style={rectangle, draw=secondarypurple!80, fill=secondarypurple!5, very thick, minimum width=12cm, rounded corners=8pt},
+    section/.style={rectangle, draw=gray!60, fill=white, thick, minimum width=11cm, rounded corners=4pt, inner sep=8pt, font=\footnotesize, align=left},
+    title/.style={font=\large\bfseries, secondarypurple},
+    keyword/.style={font=\scriptsize\bfseries, color=primaryblue!80},
+    type/.style={font=\scriptsize\ttfamily, color=gray!80}
 ]
-    % Contract box
-    \node[contract, minimum height=8cm] (c) at (0,0) {};
-    \node[title] at (0,3.5) {<<contract>> RouteRegistry};
+    % Contract box - reduced height
+    \node[contract, minimum height=11.5cm] (c) at (0,-0.5) {};
+    \node[title] at (0,4.5) {<<contract>> RouteRegistry};
+    % \node[font=\scriptsize\itshape, gray] at (0,4.0) {Solidity 0.8.0};
     
-    % State variables
-    \node[section, anchor=north] at (0,3) {
-        \textbf{State Variables}\\[2pt]
-        \texttt{mapping(string => RouteRecord) routes}\\
-        \texttt{string[] routeIds}
+    % Struct - moved up
+    \node[section, fill=primaryblue!5, draw=primaryblue!60] at (0,2.5) {
+        \textbf{Struct RouteRecord}\\[4pt]
+        \texttt{\textcolor{primaryblue}{string} routeId}\\
+        \texttt{\textcolor{primaryblue}{bytes32} dataHash}\\
+        \texttt{\textcolor{primaryblue}{uint256} timestamp, totalDistance, deliveryCount}\\
+        \texttt{\textcolor{primaryblue}{address} driver}\\
+        \texttt{\textcolor{primaryblue}{string} status \textcolor{gray}{\textit{// optimized|in\_progress|completed}}}\\
+        \texttt{\textcolor{primaryblue}{bool} exists}
     };
     
-    % Functions
-    \node[section, anchor=north] at (0,1.3) {
-        \textbf{Functions}\\[2pt]
-        \texttt{+ createRoute(routeId, dataHash, status, distance, count)}\\
-        \texttt{+ updateRoute(routeId, newHash, newStatus, completedCount)}\\
-        \texttt{+ getRoute(routeId) : RouteRecord}\\
-        \texttt{+ verifyRoute(routeId, dataHash) : bool}\\
-        \texttt{+ getRouteCount() : uint256}
+    % State Variables - moved up
+    \node[section] at (0,-0.03) {
+        \textbf{State Variables}\\[4pt]
+        \texttt{\textcolor{primaryblue}{mapping}(string => RouteRecord) \textbf{routes}} \hfill \textcolor{gray}{\textit{// Storage}}\\
+        \texttt{\textcolor{primaryblue}{string[]} \textbf{routeIds}} \hfill \textcolor{gray}{\textit{// Index}}
     };
     
-    % Events
-    \node[section, anchor=north, fill=successgreen!10, draw=successgreen] at (0,-1.2) {
-        \textbf{Events}\\[2pt]
-        \texttt{event RouteCreated(routeId, dataHash, timestamp, driver)}\\
-        \texttt{event RouteUpdated(routeId, newHash, newStatus, timestamp)}\\
-        \texttt{event RouteCompleted(routeId, finalHash, completedCount)}
+    % Functions - moved up
+    \node[section, fill=successgreen!5, draw=successgreen!60] at (0,-2.5) {
+        \textbf{Functions}\\[4pt]
+        \texttt{+ createRoute(...) \hfill \textcolor{successgreen}{[external]}}\\
+        \texttt{+ updateRoute(...) \hfill \textcolor{successgreen}{[external]}}\\
+        \texttt{+ verifyRoute(...) : bool \hfill \textcolor{primaryblue}{[view]}}\\
+        \texttt{+ getRoute(...) : RouteRecord \hfill \textcolor{primaryblue}{[view]}}\\
+        \texttt{+ getRouteCount() : uint256 \hfill \textcolor{primaryblue}{[view]}}\\
+        \texttt{+ getRouteIdByIndex(...) : string \hfill \textcolor{primaryblue}{[view]}}
+    };
+    
+    % Events - moved up
+    \node[section, fill=warningorange!5, draw=warningorange!60] at (0,-5.2) {
+        \textbf{Events}\\[4pt]
+        \texttt{* RouteCreated(\textbf{indexed} routeId, dataHash, ...)}\\
+        \texttt{* RouteUpdated(\textbf{indexed} routeId, newDataHash, ...)}\\
+        \texttt{* RouteCompleted(\textbf{indexed} routeId, finalHash, ...)}
     };
     
 \end{tikzpicture}
 \caption{Structure du smart contract RouteRegistry}
 \label{fig:smart_contract}
 \end{figure}
+
+\subsubsection{Estimation du Gas Consommé}
+
+Le tableau suivant présente l'estimation du coût en gas pour chaque fonction du smart contract :
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Fonction Solidity} & \textbf{Type} & \textbf{Gas estimé} & \textbf{Coût ETH (20 gwei)} & \textbf{Coût en MAD} \\
+\hline
+\texttt{createRoute} & write & $\sim$80 000 gas & 0.0016 ETH & $\sim$45 MAD \\
+\hline
+\texttt{updateRoute} & write & $\sim$50 000 gas & 0.001 ETH & $\sim$28 MAD \\
+\hline
+\texttt{verifyRoute} & view & 0 & 0 & 0 \\
+\hline
+\texttt{getRoute} & view & 0 & 0 & 0 \\
+\hline
+\texttt{getRouteCount} & view & 0 & 0 & 0 \\
+\hline
+\end{tabular}
+\caption{Estimation du gas consommé par fonction}
+\label{tab:gas_estimation}
+\end{table}
+
+\textbf{Note :} Les fonctions de type \texttt{view} ne consomment pas de gas car elles ne modifient pas l'état de la blockchain.
+
+\textbf{Explication :} Le \textit{gas} est l'unité de mesure du coût computationnel sur Ethereum. Chaque opération (écriture, calcul, stockage) consomme une quantité de gas. Les fonctions d'écriture (\texttt{write}) modifient l'état de la blockchain et nécessitent une transaction payante, tandis que les fonctions de lecture (\texttt{view}) sont gratuites car elles interrogent uniquement les données existantes. Le coût en MAD est estimé sur la base du taux de change ETH/MAD au moment du développement.
 
 %---------------------------------------------------------------------
 \section{Conclusion}
@@ -585,3 +1321,7 @@ Ce chapitre a présenté la conception complète du système RouteChain à trave
 Les diagrammes de séquence mettent particulièrement en évidence les deux aspects innovants de l'application : le processus d'optimisation VRP avec ses multiples composants et l'interaction avec la blockchain pour la traçabilité des données.
 
 Le chapitre suivant sera consacré à la réalisation technique, présentant les technologies utilisées et les interfaces développées.
+
+
+
+    

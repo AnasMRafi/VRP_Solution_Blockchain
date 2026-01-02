@@ -21,7 +21,8 @@ import {
     ArrowLeft,
     X,
     Save,
-    CheckCircle
+    CheckCircle,
+    User
 } from 'lucide-react';
 
 const DepotList = () => {
@@ -216,6 +217,12 @@ const DepotList = () => {
                                                     {depot.is_default && (
                                                         <span className="px-2 py-0.5 text-xs bg-primary-100 text-primary-700 rounded-full">
                                                             Default
+                                                        </span>
+                                                    )}
+                                                    {depot.created_by && (
+                                                        <span className="px-2 py-0.5 text-xs bg-purple-50 text-purple-600 rounded-full flex items-center gap-1">
+                                                            <User className="w-3 h-3" />
+                                                            {depot.created_by}
                                                         </span>
                                                     )}
                                                 </div>

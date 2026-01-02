@@ -51,6 +51,7 @@ class DepotResponse(DepotBase):
     created_at: datetime
     updated_at: datetime
     routes_count: int = 0
+    created_by: Optional[str] = None  # Creator name for admin view
 
     class Config:
         from_attributes = True
